@@ -15,11 +15,12 @@ Every thing below just brainstroming.....
 ## Intro course (1 Day)
 
 Draft outline
+Step 1: choose the dataset we will build this around
+Write - intro to R for ecologists
 
 1. Getting data into R, RProjects, naming things
 2. Plotting your data
 3. Cleaning and wrangling your data
-    - Do we do loops/functions in intro day?
     - long vs. wide format data
 4. Simple analysis/summary stats?? How deep do we go in intro - maybe a simple linear model testing for differences between sites?
 
@@ -29,7 +30,6 @@ Draft outline
 
 Draft outline
 
-1. Using R as a GIS
 2. Building a spatial model
 3. Mapping model output
 4. ...multivariate?
