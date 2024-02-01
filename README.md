@@ -27,15 +27,15 @@ Write - intro to R for ecologists
 ## Advanced Course (2 Days)
 
 ### Day 1 - Spatial analysis/SDMs
-
 Draft outline
 
-2. Building a spatial model
-3. Mapping model output
-4. ...multivariate?
+R projects
+
+Non bayesian GLM (monring)
+Bayesian GLM ()
 
 ### Day 2 - Shiny apps/dashboards, advanced data wrangling (?)
 
-Somebody asked about doing a population model - could build a shiny app/dashboard around that and also showcase advanced data wrangling?
+Spatial day
 
-Alt. build a shiny app to showcase summary stats/info Bush Heritage will want to routinely display and update?
+End with interacive dashboard or shiny
