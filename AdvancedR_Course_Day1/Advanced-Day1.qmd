@@ -14,16 +14,24 @@ editor: visual
 embed-resources: true
 ---
 
-# Welcome
+# Statistical modelling in R for ecologists
 
-Day 1 (Morning): Simple linear models
+## Day 1 (Morning): Simple linear models
 
-- Frequentist lm
-- Frequentist glm
+### Frequentist lm
+
+Example: Tree health dataset - species circumference as indication of age?
+   - Expect older trees in less disturbed sites?
+   - Can use a lm to test
+
+### Frequentist glm - Tree health or Vegetation quadrat 
+  - Species richness - is species richness higher in less disturbed sites?
+  - Use glm to test
+  
 - OLS to max likelihoood
 - Model checking - residuals
 
-Day 1 (Afternoon): Complex multivariate models
+## Day 1 (Afternoon): Complex multivariate models
 
 - Bayesian glm (univariate)
 - Bayesian parameter estimation
