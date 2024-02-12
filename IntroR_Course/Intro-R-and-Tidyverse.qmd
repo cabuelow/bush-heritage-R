@@ -1,5 +1,17 @@
 ---
-title: "Intro-R-and-Tidyverse"
+title: "Intro to R and Tidyverse"
 format: html
+theme: sandstone
+author-title: Made for
+author: Bush Heritage
+toc: true
+toc-location: left
+toc-title: Content
+toc-depth: 4
+published-title: Date
+date: 2024-02-13
 editor: visual
+embed-resources: true
 ---
+
+# Welcome
