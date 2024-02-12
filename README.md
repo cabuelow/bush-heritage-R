@@ -6,36 +6,41 @@ Google planning doc link [here](https://docs.google.com/document/d/1NH1JeWwIhgxL
 
 # TODO
 
-- [ ] Decide on course structure/topics
+- [X] Decide on course structure/topics
 - [ ] Write notes
 - [ ] ....
 
-Every thing below just brainstroming.....
+## PROPOSED COURSE OUTLINE 
+ 
+We will develop and lead a 1-day introductory and 2-day Advanced R workshop for Bush Heritage Australia. The course material will build in complexity, using datasets commonly used in Bush Heritage analyses and reporting. Participants will need to commit to attending the full day session. Participation in all three days is encouraged but not required. Full course notes will be provided so researchers can revisit material in their own time.
+ 
+### Introductory course (1 day) - Data wrangling and visualisation in R
+ 
+This course assumes little to no knowledge of R. It will teach researchers the basic concepts, skills, and tools for working with ecological data - in the hopes to get more done in less time, and with less pain. You will briefly learn R syntax and data formats, including the functionality of R projects, followed by data wrangling techniques using the tidyverse R package and principles. You will also learn how to plot data using the ggplot2 R package. The course will culminate with developing summary statistics and a simple linear model. Further model development and skills will be provided in the Advanced course for those interested.
+ 
+**Course Structure**
+Day 1 (Morning): R syntax, data formats, and data wrangling
+Day 1 (Afternoon): Data wrangling continued, plotting and visualization, summary statistics and simple models
+ 
+### Advanced Course (2 days) – Modelling in R
+ 
+This course assumes familiarity with reading data into R and wrangling it to produce basic summary statistics and plots. You will learn the basics of fitting statistical models to data to answer ecological questions. We will start by fitting simple models in a frequentist framework and build towards using more advanced Bayesian hierarchical models which are flexible enough to address a large number of modelling challenges typical of ecological data such as:
+-         non-independence of samples, including spatial autocorrelation,
+-         univariate or multivariate response variables with non-normal error structures.
+ 
+We will discuss how this modelling framework can be used to answer many ecological questions, including:
+-         testing for differences between ecological indicators of interest between sites,
+-         mapping joint species’ distributions,
+-         identifying indicator species, and
+-         how it is a type of model-based ordination (as opposed to algorithmic approaches to community analyses, e.g., nMDS).
+ 
+In short, you will learn what the instructors think of as ‘the one model to rule them all’ – it can do almost everything! Finally, we will also learn how to use R to plot and map spatial model output and make an interactive dashboard to share with colleagues.
+ 
+**Course Structure**
+Day 1 (Morning): Simple linear models
+Day 1 (Afternoon): Complex multivariate models
+ 
+Day 2 (Morning): Spatial models
+Day 2 (Afternoon): Interactive dashboard
+ 
 
-## Intro course (1 Day)
-
-Draft outline
-Step 1: choose the dataset we will build this around
-Write - intro to R for ecologists
-
-1. Getting data into R, RProjects, naming things
-2. Plotting your data
-3. Cleaning and wrangling your data
-    - long vs. wide format data
-4. Simple analysis/summary stats?? How deep do we go in intro - maybe a simple linear model testing for differences between sites?
-
-## Advanced Course (2 Days)
-
-### Day 1 - Spatial analysis/SDMs
-Draft outline
-
-R projects
-
-Non bayesian GLM (monring)
-Bayesian GLM ()
-
-### Day 2 - Shiny apps/dashboards, advanced data wrangling (?)
-
-Spatial day
-
-End with interacive dashboard or shiny
