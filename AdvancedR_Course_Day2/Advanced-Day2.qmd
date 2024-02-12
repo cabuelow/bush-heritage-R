@@ -15,3 +15,6 @@ embed-resources: true
 ---
 
 # Welcome
+
+Day 2 (Morning): Spatial models
+Day 2 (Afternoon): Interactive dashboard

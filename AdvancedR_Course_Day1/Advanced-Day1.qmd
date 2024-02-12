@@ -15,3 +15,22 @@ embed-resources: true
 ---
 
 # Welcome
+
+Day 1 (Morning): Simple linear models
+
+- Frequentist lm
+- Frequentist glm
+- OLS to max likelihoood
+- Model checking - residuals
+
+Day 1 (Afternoon): Complex multivariate models
+
+- Bayesian glm (univariate)
+- Bayesian parameter estimation
+- max likelihood to MCMC sampling
+- Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
+
+- multivariate GLM (or wait till day 2 and make it a spatial example?)
+
+
+
