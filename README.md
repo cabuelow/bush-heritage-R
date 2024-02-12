@@ -9,6 +9,7 @@ Google planning doc link [here](https://docs.google.com/document/d/1NH1JeWwIhgxL
 - [X] Decide on course structure/topics
 - [ ] Write notes
 - [ ] ....
+- [ ] For Advanced days put an R project file in the data folder, for Intro Day we will show them how to make an R project
 
 ## PROPOSED COURSE OUTLINE 
  
