@@ -116,24 +116,54 @@ summary(m2)
 ```{r}
 plot(m)
 ```
+How are the coefficients of the model (the intercept and the beta coefficient (b_1) estimated? For a simple, general linear model like this, we (meaning R) uses Ordinarly Least Squares (OLS) to estimate the model coefficients. If you're a visual learner like me, check out [this great tool to see how OLS works](https://seeing-theory.brown.edu/regression-analysis/index.html). In a nutshell, we're iteratively rotating the straight line between our y and x variables until we get the best fit (i.e. have minimised the sums of squared error).
 
-### General linear models
+### Generalised linear models
 
-Example: Tree health dataset - species circumference as indication of age?
-   - Expect older trees in less disturbed sites?
-   - Can use a lm to test
+What if, in addition to tree age, we also wanted to ask whether species abundance is higher in disturbed compared to undisturbed sites. Could we use the same model and just swap out circumference for abundance?
 
-### Frequentist glm - Tree health or Vegetation quadrat 
-  - Species richness - is species richness higher in less disturbed sites?
-  - Use glm to test
-  
-- OLS to max likelihoood
-- Model checking - residuals
+Let's think about one of our model assumptions - `\epsilon`, the error term, is normally distributed. Continuous data, like circumference, conforms to this assumption. Observation of species' abundance, however, can only be whole numbers (i.e., is discrete instead of continuous) and is bounded from 0 to $∞$.
+
+So, we need to *generalise* our linear model a bit to accommodate this non-normal error structure. We can use a **link** function to transform our model predictions. [TODO explain this better]
+
+**R** makes this easy to do, we just need to tell is what error distribution (i.e., family) and link function to use.
+
+First let's simulate some abundance data at out survey sites.
+```{r}
+dat$abundance <- c(rpois(100, 10), rpois(100, 20))
+boxplot(dat$site, dat$abundance)
+```
+
+Now fit the model
+
+```{r}
+mspp <- glm(abundance ~ site, data = dat, family = 'poisson')
+summary(mspp)
+```
+
+Okay, so what's happened here? It has estimated mean species abundance at the Disturbed site as 2.27 and 0.67 at the Undisturbed site? It's provided the coefficients in the 'link scale' rather than on the 'natural scale'. Here, we've used a poisson distribution, for which the canonical link function is the 'log'. So these are estimates of logged species abundance, instead of raw species abundance. The inverse of the natural log is the exponent. Let's back transform and see what we get what we expect (mean spp abundance of 10 in disturbed and 20 in undistrubed. 
+
+```{r}
+exp(2.27213) # intercept (i.e. mean species abundance in disturbed)
+exp(0.67965) # beta coefficient
+```
+
+So the intercept makes sense, but what about that beta coefficient? Because we are in log space, the relationship is multiplicative rather than additive. 
+
+```{r}
+exp(2.27213)*exp(0.67965) # multiply the intercept by the X coefficient rather than sum
+```
+
+Voila. Just what we expected.
+
+What else is unusual about this model summary? Now we have null and residual deviance instead of R^2? How come? To estimate coefficients for **generalised linear models** we can no longer use OLS. Instead we use **maximum likelihood**. Explain deviance...deviance residuals, etc. Also discuss dispersion parameter - negative binomial models...
+
+- Explain OLS to max likelihoood
 - Plotting and reporting model output
 
 ## Day 1 (Afternoon): Complex multivariate models
 
-- Bayesian glm (univariate) - start with same species richness example from previous day, or 
+- Bayesian glm (univariate) - start with same species richness example from previous day,
 - Bayesian parameter estimation
 - max likelihood to MCMC sampling
 - Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
