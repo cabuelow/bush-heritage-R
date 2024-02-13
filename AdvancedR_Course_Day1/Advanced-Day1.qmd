@@ -60,20 +60,62 @@ In the above example we only have one explanatory variable (X), but we can have 
 
 When we're fitting **general** linear models, we assume that `\epsilon`, the error term, is drawn from a normal (i.e., gaussian) distribution. We would expect this if our response variable (y) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.
 
+### Fitting a linear model to data
+
 Let's get started with a general linear model. We want to know, are trees in less disturbed sites on average older compared to disturbed sites.
 
 If you took a first year undergrad stats course, you might be thinking, let's use an ANOVA! ANOVA's are just linear models with a categorical predictor variable.
 
 Tree circumference, our response variable (y) of interest, is continuous and we would expect the error distribution to be normally distributed. So we will fit a general linear model.
 
+Before we fit a model to our data, we should always plot it.
 ```{r}
 dat <- data.frame(circum = c(rnorm(100, 10), rnorm(100, 20)),
                   site = factor(c(rep('Disturbed', 100), c(rep('Undisturbed', 100)))))
+boxplot(dat$site, dat$circum)
+```
 
+Now let's fit the linear model, `lm`.
+```{r}
 m <- lm(circum ~ site, data = dat)
 summary(m)
 ```
-Okay so let's unpack this. [Talk through model output, if time write notes to explain..]
+
+Let's unpack this model summary. [Talk through model output, if time write notes to explain..]
+
+#### Checking the model fit
+
+Without doing anything else, we already have one metric for assessing model fit - the R^2. It tells us our model has explained a whopping 96% of the variability in the data (note, use the adjusted R^2 if you have more than one explanatory variable). That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R^2 values due to the natural sources of variability that we can't explain.
+
+In addition to how much variability in the data our model is explaining, we also want to want to make sure the model isn't violating any structural assumptions, namely:
+
+1. Errors are normally distributed,
+2. Homogeneity of variance.
+
+We can use model diagnostic plots to check these assumptions:
+
+```{r}
+plot(m)
+```
+
+Talk through diagnostics [write notes if time...]
+
+#### Bonus: Adding error
+
+What might real data with random, natural variation in sampling look like? Let's add some in and try the model again.
+
+```{r}
+dat$circum <- dat$circum + rnorm(nrow(dat), 0, 5)
+boxplot(dat$site, dat$circum)
+```
+
+```{r}
+m2 <- lm(circum ~ site, data = dat)
+summary(m2)
+```
+```{r}
+plot(m)
+```
 
 ### General linear models
 
