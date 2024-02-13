@@ -3033,7 +3033,15 @@ vertical-align: -.125em;
     <h2 id="toc-title">Content</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#statistical-modelling-in-r-for-ecologists" id="toc-statistical-modelling-in-r-for-ecologists" class="nav-link active" data-scroll-target="#statistical-modelling-in-r-for-ecologists">Statistical modelling in R for ecologists</a>
+  <ul>
+  <li><a href="#linear-models" id="toc-linear-models" class="nav-link" data-scroll-target="#linear-models">Linear models</a>
+  <ul class="collapse">
+  <li><a href="#general-linear-models" id="toc-general-linear-models" class="nav-link" data-scroll-target="#general-linear-models">General linear models</a></li>
+  <li><a href="#frequentist-glm---tree-health-or-vegetation-quadrat" id="toc-frequentist-glm---tree-health-or-vegetation-quadrat" class="nav-link" data-scroll-target="#frequentist-glm---tree-health-or-vegetation-quadrat">Frequentist glm - Tree health or Vegetation quadrat</a></li>
+  </ul></li>
+  <li><a href="#day-1-afternoon-complex-multivariate-models" id="toc-day-1-afternoon-complex-multivariate-models" class="nav-link" data-scroll-target="#day-1-afternoon-complex-multivariate-models">Day 1 (Afternoon): Complex multivariate models</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3072,23 +3080,58 @@ vertical-align: -.125em;
 </header>
 
 
-<section id="welcome" class="level1">
-<h1>Welcome</h1>
-<p>Day 1 (Morning): Simple linear models</p>
+<section id="statistical-modelling-in-r-for-ecologists" class="level1">
+<h1>Statistical modelling in R for ecologists</h1>
+<p>Whenever you embark on a journey in statistical modelling, it’s good to be reminded of the following quote from <em>George E.P. Box</em>,</p>
+<p><strong>All models are wrong, but some are useful</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data:image/jpeg;base64,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" class="img-fluid figure-img"></p>
+<figcaption>Photograph of Geoge E.P. Box, “one of the great statistical minds of the 20th century”</figcaption>
+</figure>
+</div>
+<p>We build models to help us understand ecological relationships. But no model is perfect. Ecological data in particular is fraught with a lot of random, natural variation in observations that our models will be unable to explain.</p>
+<p>Modelling goals can be three-fold:</p>
+<ol type="1">
+<li><p><strong>Exploration</strong>, e.g. which environmental variables are associated with species richness?,</p></li>
+<li><p><strong>Inference</strong>, e.g., do protected areas cause increased species richness?,</p></li>
+<li><p><strong>Prediction</strong>, e.g., use correlations between environmental variables and species abundance to predict species habitat suitability across space.</p></li>
+</ol>
+<p>How we build and select models depends on our goals for the analysis. Check out this great guide to <a href="https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336">goal driven model selection in ecology</a></p>
+<p>Here, we will focus primarily on building exploratory and predictive models. Causal inference is beyond the scope, but see this great guide for ecologists [insert Arif paper]</p>
+<p>This course assumes an understanding of how to wrangle, summarise, and visualise data in <strong>R</strong>. We hope you will learn:</p>
 <ul>
-<li>Frequentist lm</li>
-<li>Frequentist glm</li>
-<li>OLS to max likelihoood</li>
-<li>Model checking - residuals</li>
+<li><p>The fundamentals of fitting statistical models to data,</p></li>
+<li><p>how to check your model fits the data well, and</p></li>
+<li><p>how to visualise model output in <strong>R</strong>.</p></li>
 </ul>
-<p>Day 1 (Afternoon): Complex multivariate models</p>
+<section id="linear-models" class="level2">
+<h2 class="anchored" data-anchor-id="linear-models">Linear models</h2>
+<section id="general-linear-models" class="level3">
+<h3 class="anchored" data-anchor-id="general-linear-models">General linear models</h3>
+<p>Example: Tree health dataset - species circumference as indication of age? - Expect older trees in less disturbed sites? - Can use a lm to test</p>
+</section>
+<section id="frequentist-glm---tree-health-or-vegetation-quadrat" class="level3">
+<h3 class="anchored" data-anchor-id="frequentist-glm---tree-health-or-vegetation-quadrat">Frequentist glm - Tree health or Vegetation quadrat</h3>
 <ul>
-<li><p>Bayesian glm (univariate)</p></li>
+<li><p>Species richness - is species richness higher in less disturbed sites?</p></li>
+<li><p>Use glm to test</p></li>
+<li><p>OLS to max likelihoood</p></li>
+<li><p>Model checking - residuals</p></li>
+<li><p>Plotting and reporting model output</p></li>
+</ul>
+</section>
+</section>
+<section id="day-1-afternoon-complex-multivariate-models" class="level2">
+<h2 class="anchored" data-anchor-id="day-1-afternoon-complex-multivariate-models">Day 1 (Afternoon): Complex multivariate models</h2>
+<ul>
+<li><p>Bayesian glm (univariate) - start with same species richness example from previous day, or</p></li>
 <li><p>Bayesian parameter estimation</p></li>
 <li><p>max likelihood to MCMC sampling</p></li>
 <li><p>Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information</p></li>
 <li><p>multivariate GLM (or wait till day 2 and make it a spatial example?)</p></li>
 </ul>
+</section>
 </section>
 
 </main>

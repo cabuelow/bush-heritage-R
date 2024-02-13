@@ -16,9 +16,37 @@ embed-resources: true
 
 # Statistical modelling in R for ecologists
 
-## Day 1 (Morning): Simple linear models
+Whenever you embark on a journey in statistical modelling, it's good to be reminded of the following quote from *George E.P. Box*,
 
-### Frequentist lm
+**All models are wrong, but some are useful**.
+
+![Photograph of Geoge E.P. Box, "one of the great statistical minds of the 20th century"](Images/Box.jpeg)
+
+We build models to help us understand ecological relationships. But no model is perfect. Ecological data in particular is fraught with a lot of random, natural variation in observations that our models will be unable to explain. 
+
+Modelling goals can be three-fold: 
+
+  1. **Exploration**, e.g. which environmental variables are associated with species richness?,
+  
+  2. **Inference**, e.g., do protected areas cause increased species richness?,
+  
+  3. **Prediction**, e.g., use correlations between environmental variables and species abundance to predict species habitat suitability across space.
+
+How we build and select models depends on our goals for the analysis. Check out this great guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
+
+Here, we will focus primarily on building exploratory and predictive models. Causal inference is beyond the scope, but see this great guide for ecologists [insert Arif paper]
+
+This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
+
+  - The fundamentals of fitting statistical models to data,
+  
+  - how to check your model fits the data well, and
+  
+  - how to visualise model output in **R**.
+
+## Linear models
+
+### General linear models
 
 Example: Tree health dataset - species circumference as indication of age?
    - Expect older trees in less disturbed sites?
@@ -30,10 +58,11 @@ Example: Tree health dataset - species circumference as indication of age?
   
 - OLS to max likelihoood
 - Model checking - residuals
+- Plotting and reporting model output
 
 ## Day 1 (Afternoon): Complex multivariate models
 
-- Bayesian glm (univariate)
+- Bayesian glm (univariate) - start with same species richness example from previous day, or 
 - Bayesian parameter estimation
 - max likelihood to MCMC sampling
 - Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
