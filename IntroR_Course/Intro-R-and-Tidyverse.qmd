@@ -14,7 +14,13 @@ editor: visual
 embed-resources: true
 ---
 
-# Introduction to R
+# Welcome to Introduction to R
+
+In this workshop you will learn basic concepts, skills, and tools for working with ecological data - in the hopes to get more done in less time, and with less pain. The course has been specifically tailored to use common Bush Heritage datasets, but assumes little to no knowledge of R.
+
+You will briefly learn R syntax and data formats, including the functionality of R projects, followed by data wrangling techniques using the tidyverse R package and principles. You will also learn how to plot data using the ggplot2 R package. The course will culminate by developing data summary statistics and a simple linear model. Further model development and skills will be provided in the Advanced course for those interested.
+
+Let's get started!
 
 ## Installing R and RStudio
 
@@ -30,7 +36,7 @@ embed-resources: true
 
 -   Double click the file to install it
 
--   Once it\'s installed, open RStudio to make sure it works and you don\'t get any error messages.
+-   Once it's installed, open RStudio to make sure it works and you don't get any error messages.
 
 ### MacOS
 
@@ -48,23 +54,23 @@ embed-resources: true
 
 -   Double click the file to install RStudio
 
--   Once it\'s installed, open RStudio to make sure it works and you don\'t get any error messages.
+-   Once it's installed, open RStudio to make sure it works and you don't get any error messages.
 
 ### Linux
 
--   Follow the instructions for your distribution from [CRAN](https://cloud.r-project.org/bin/linux), they provide information to get the most recent version of R for common distributions. For most distributions, you could use your package manager (e.g., for Debian/Ubuntu run `sudo apt-get install r-base`, and for Fedora `sudo yum install R`), but we don\'t recommend this approach as the versions provided by this are usually out of date. In any case, make sure you have at least R 3.3.1.
+-   Follow the instructions for your distribution from [CRAN](https://cloud.r-project.org/bin/linux), they provide information to get the most recent version of R for common distributions. For most distributions, you could use your package manager (e.g., for Debian/Ubuntu run `sudo apt-get install r-base`, and for Fedora `sudo yum install R`), but we don't recommend this approach as the versions provided by this are usually out of date. In any case, make sure you have at least R 3.3.1.
 
 -   Go to the [RStudio download page](https://www.rstudio.com/products/rstudio/download/#download)
 
 -   Under *All Installers*, select the version that matches your distribution and install it with your preferred method (e.g., with Debian/Ubuntu `sudo dpkg -i rstudio-YYYY.MM.X-ZZZ-amd64.deb` at the terminal).
 
--   Once it\'s installed, open RStudio to make sure it works and you don\'t get any error messages.
+-   Once it's installed, open RStudio to make sure it works and you don't get any error messages.
 
 ## Updating R and RStudio
 
 If you already have R and RStudio installed, first check if your R version is up to date:
 
--   When you open RStudio your R version will be printed in the console on the bottom left. Alternatively, you can type `sessionInfo()` into the console. If your R version is 4.0.0 or later, you don\'t need to update R for this lesson. If your version of R is older than that, download and install the latest version of R from the R project website [for Windows](https://cran.r-project.org/bin/windows/base/), [for MacOS](https://cran.r-project.org/bin/macosx/), or [for Linux](https://cran.r-project.org/bin/linux/)
+-   When you open RStudio your R version will be printed in the console on the bottom left. Alternatively, you can type `sessionInfo()` into the console. If your R version is 4.0.0 or later, you don't need to update R for this lesson. If your version of R is older than that, download and install the latest version of R from the R project website [for Windows](https://cran.r-project.org/bin/windows/base/), [for MacOS](https://cran.r-project.org/bin/macosx/), or [for Linux](https://cran.r-project.org/bin/linux/)
 
 -   It is not necessary to remove old versions of R from your system, but if you wish to do so you can check [How do I uninstall R?](https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f)
 
@@ -76,17 +82,105 @@ To update RStudio to the latest version, open RStudio and click on `Help > Check
 
 ## R vs RStudio
 
+## Navigating RStudio
+
+What is the RStudio IDE (integrated development environment)? The RStudio IDE is software that greatly improves your R experience.
+
+To launch RStudio, double-click on the RStudio icon. Launching RStudio also launches R, and you will probably never open R by itself.
+
+![](images/image-1955476925.png)
+
+## Notice the default panes:
+
+-   Console (entire left)
+
+-   Environment/History (tabbed in upper right)
+
+-   Files/Plots/Packages/Help (tabbed in lower right)
+
+We won't click through this all immediately but we will become familiar with more of the options and capabilities throughout the next few days.
+
+Something critical to know now is that you can make everything you see BIGGER by going to the navigation pane: View \> Zoom In. Learn these keyboard shortcuts; being able to see what you're typing will help avoid typos & help us help you.
+
+An important first question: **where are we?**
+
+If you've have opened RStudio for the first time, you'll be in your Home directory. This is noted by the `~/` at the top of the console. You can see too that the Files pane in the lower right shows what is in the Home directory where you are. You can navigate around within that Files pane and explore, but note that you won't change where you are: even as you click through you'll still be Home: `~/`.
+
+![](https://rstudio-conf-2020.github.io/r-for-excel/img/RStudio_IDE_homedir.png)
+
+We are going to have our first experience with R through RProjects and RMarkdown.
+
 ## RProjects
 
-## Getting help in R and online
+## RMarkdown
+
+Let's do this together:
+
+File -\> New File -\> RMarkdown... (or alternatively you can click the green plus in the top left -\> RMarkdown).
+
+Let's title it "Intro R workshop" and write our name as author, then click OK with the recommended Default Output Format, which is HTML.
+
+OK, first off: by opening a file, we are seeing the 4th pane of the RStudio console, which here is a text editor. This lets us dock and organize our files within RStudio instead of having a bunch of different windows open (but there are options to pop them out if that is what you prefer).
+
+Let's have a look at this file --- it's not blank; there is some initial text already provided for you. Let's have a high-level look through of it:
+
+-   The top part has the Title and Author we provided, as well as today's date and the output type as an HTML document like we selected above.
+
+-   There are white and grey sections. These are the 2 main languages that make up an RMarkdown file.
+
+    -   **Grey sections are R code**
+
+    -   **White sections are Markdown text**
+
+-   There is black and blue text (we'll ignore the green text for now).
 
 ## R syntax and data types
 
 ### Working directory
 
+### Installing and loading packages
+
+```{r}
+install.packages("here") # This package helps with reproducbility and file paths
+install.packages("tidyverse") # This package will be used for data wrangling and hosts the majority of functions we will be using today
+```
+
+```{r}
+library(here)
+library(tidyverse)
+```
+
 ### Functions
 
-### Vectors
+Like Excel, the power of R comes not from doing small operations individually (like `8*22.3`). R's power comes from being able to operate on whole suites of numbers and datasets.
+
+And also like Excel, some of the biggest power in R is that there are built-in functions that you can use in your analyses (and, as we'll see, R users can easily create and share functions, and it is this open source developer and contributor community that makes R so awesome).
+
+R has a mind-blowing collection of built-in functions that are used with the same syntax: function name with parentheses around what the function needs to do what it is supposed to do.
+
+Functions always have the same structure: a name, parentheses, and arguments that you can specify. `function_name(arguments)`. When we talk about function names, we use the convention `function_name()` (the name with empty parentheses), but in practice, we usually supply arguments to the function `function_name(arguments)` so that it works on some data. Let's see a few more function examples.
+
+Like in Excel, there is a function called "sum" to calculate a total. In R, it is spelled lowercase: `sum()`. (As I type in the Console, R will provide suggestions).
+
+Another function is simply called `c()`; which combines values together.
+
+So let's create a new R code chunk. And we'll write:
+
+```{r}
+c(1, 7:9)
+```
+
+So you can see that this combines these values all into the same place, which is called a vector here. We could also do this with a non-numeric examples, which are called "strings":
+
+```{r}
+c("Brisbane", "Sydney")
+```
+
+### Getting help in R and online
+
+Every function available to you should have a help page, and you access it by typing a question mark preceding the function name in the Console.
+
+Let's have a deeper look at the arguments for `plot()`, using the help pages.
 
 #### Subsetting vectors
 
@@ -96,17 +190,232 @@ To update RStudio to the latest version, open RStudio and click on `Help > Check
 
 ## Importing data into R
 
+```{r}
+tree_health<-read_csv(here("Data", "veg-tree-soil", "M06_071_Tree_Health_Quadrat_Analysis_Join_Parent_Child.csv"))
+```
+
 ### Data summary information
 
 ## Introduction to the tidyverse
 
+The **`tidyverse`** package is an "umbrella-package" that installs **`tidyr`**, **`dplyr`**, and several other useful packages for data analysis, such as **`ggplot2`**, **`tibble`**, etc.
+
+The **`tidyverse`** package tries to address 3 common issues that arise when doing data analysis in R:
+
+1.  The results from a base R function sometimes depend on the type of data.
+
+2.  R expressions are used in a non standard way, which can be confusing for new learners.
+
+3.  The existence of hidden arguments having default operations that new learners are not aware of.
+
+You should already have installed and loaded the **`tidyverse`** package. If you haven't already done so, you can type `install.packages("tidyverse")` straight into the console. Then, type [`library(tidyverse)`](https://tidyverse.tidyverse.org/) to load the package.
+
+#### dypr and tidyr
+
+The package **`dplyr`** provides helper tools for the most common data manipulation tasks. It is built to work directly with data frames, with many common tasks optimized by being written in a compiled language (C++). An additional feature is the ability to work directly with data stored in an external database. The benefits of doing this are that the data can be managed natively in a relational database, queries can be conducted on that database, and only the results of the query are returned.
+
+This addresses a common problem with R in that all operations are conducted in-memory and thus the amount of data you can work with is limited by available memory. The database connections essentially remove that limitation in that you can connect to a database of many hundreds of GB, conduct queries on it directly, and pull back into R only what you need for analysis.
+
+The package **`tidyr`** addresses the common problem of wanting to reshape your data for plotting and usage by different R functions. For example, sometimes we want data sets where we have one row per measurement. Other times we want a data frame where each measurement type has its own column, and rows are instead more aggregated groups (e.g., a time period, an experimental unit like a plot or a batch number). Moving back and forth between these formats is non-trivial, and **`tidyr`** gives you tools for this and more sophisticated data manipulation.
+
+To learn more about **`dplyr`** and **`tidyr`** after the workshop, you may want to check out this [handy data transformation with **`dplyr`** cheatsheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf) and this [one about **`tidyr`**](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf).
+
+As before, we'll read in our data using the `read_csv()` function from the tidyverse package **`readr`**.
+
+```{r}
+tree_health<-read_csv(here("Data", "veg-tree-soil", "M06_071_Tree_Health_Quadrat_Analysis_Join_Parent_Child.csv"))
+```
+
+We can see the contents of the first few lines of the data by typing its name: `tree_health`. By default, this will show you as many rows and columns of the data as fit on your screen. If you wanted the first 50 rows, you could type `print(tree_health, n = 50)`
+
+We can also extract the first few lines of this data using the function `head()`:
+
+```{r}
+head(tree_health)
+```
+
+Unlike the `print()` function, `head()` returns the extracted data. You could use it to assign the first 100 rows of `surveys` to an object using `veg_sample <- head(tree_health, 100)`. This can be useful if you want to try out complex computations on a subset of your data before you apply them to the whole data set. There is a similar function that lets you extract the last few lines of the data set. It is called (you might have guessed it) `tail()`.
+
+To open the dataset in RStudio's Data Viewer, use the `view()` function:
+
+```{r}
+View(tree_health)
+```
+
+#### Working with data frames
+
+When we loaded the data into R, it got stored as an object of class `tibble`, which is a special kind of data frame (the difference is not important for our purposes, but you can learn more about tibbles [here](https://tibble.tidyverse.org/)). Data frames are the *de facto* data structure for most tabular data, and what we use for statistics and plotting. Data frames can be created by hand, but most commonly they are generated by functions like `read_csv()`; in other words, when importing spreadsheets from your hard drive or the web.
+
+A data frame is the representation of data in the format of a table where the columns are vectors that all have the same length. Because columns are vectors, each column must contain a single type of data (e.g., characters, integers, factors). For example, here is a figure depicting a data frame comprising a numeric, a character, and a logical vector.
+
+![](https://datacarpentry.org/R-ecology-lesson/fig/data-frame.svg)
+
+We can see this also when inspecting the **str**ucture of a data frame with the function `str()`:
+
+```{r}
+str(tree_health)
+```
+
+We already saw how the functions `head()` and `str()` can be useful to check the content and the structure of a data frame. Here is a non-exhaustive list of functions to get a sense of the content/structure of the data. Let's try them out!
+
+-   Size:
+
+    -   `dim(tree_health)` - returns a vector with the number of rows in the first element, and the number of columns as the second element (the **dim**ensions of the object)
+
+    -   `nrow(tree_health)` - returns the number of rows
+
+    -   `ncol(tree_health)` - returns the number of columns
+
+-   Content:
+
+    -   `head(tree_health)` - shows the first 6 rows
+
+    -   `tail(tree_health)` - shows the last 6 rows
+
+-   Names:
+
+    -   `names(tree_health)` - returns the column names (synonym of `colnames()` for `data.frame` objects)
+
+    -   `rownames(tree_health)` - returns the row names
+
+-   Summary:
+
+    -   `str(tree_health)` - structure of the object and information about the class, length and content of each column
+
+    -   `summary(tree_health)` - summary statistics for each column
+
 #### Subsetting data frames
+
+Our tree health data frame has rows and columns (it has 2 dimensions), if we want to extract some specific data from it, we need to specify the "coordinates" we want from it. Row numbers come first, followed by column numbers. However, note that different ways of specifying these coordinates lead to results with different classes.
+
+We can extract specific values by specifying row and column indices in the format:
+
+```{r}
+tree_health[1,1]
+```
+
+First row, sixth column:
+
+```{r}
+tree_health[1,6]
+```
+
+We can also use shortcuts to select a number of rows or columns at once. To select all columns, leave the column index blank. For instance, to select all columns for the first row:
+
+```{r}
+tree_health[1,]
+```
+
+To select the first column across all rows
+
+```{r}
+tree_health[,4]
+```
+
+An even shorter way to select first column across all rows is to not use a comma
+
+```{r}
+tree_health[4]
+```
+
+To select multiple rows or columns, use vectors! To select the first three rows of the 5th and 6th column.
+
+```{r}
+tree_health[1:3, 3:4]
+```
+
+This is equivalent to head_surveys \<- head(surveys)
+
+```{r}
+head_tree_health<-tree_health[1:6]
+```
+
+As we've seen, when working with tibbles subsetting with single square brackets ("\[\]") always returns a data frame. If you want a vector, use double square brackets ("\[\[\]\]"). For instance to get the third column as a vector:
+
+```{r}
+tree_health[[3]]
+```
+
+To get the first value in our data frame
+
+```{r}
+tree_health[[1,1]]
+```
+
+Some other useful functions:
+
+```{r}
+colnames(tree_health)
+```
+
+```{r}
+unique(tree_health$Project_Name)
+unique(tree_health$Year)
+```
+
+```{r}
+sub_tree_health<- tree_health %>% 
+  select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+```
+
+```{r}
+head(sub_tree_health)
+```
+
+```{r}
+colnames(sub_tree_health)
+```
+
+```{r}
+small_trees<-sub_tree_health %>% 
+  filter(Circumference <40)
+
+large_trees<-sub_tree_health %>% 
+  filter(Circumference >=40)
+```
 
 #### Creating new columns
 
-#### Renaming columns
+```{r}
+sub_tree_health <- sub_tree_health %>% 
+  mutate(Size_group = ifelse(Circumference <40, "Small", "Large"))
+
+sub_tree_health <- sub_tree_health %>% 
+  mutate(Size_group = ifelse(Circumference >=40, "Large", "Small"))
+
+```
+
+```{r}
+head(sub_tree_health)
+```
+
+```{r}
+sub_tree_health <- sub_tree_health %>% 
+  mutate(Size_group = case_when(Circumference <40 ~ "Small",
+                                TRUE ~ "Large"))
+```
+
+```{r}
+head(sub_tree_health)
+```
+
+```{r}
+sub_tree_health <- sub_tree_health %>% 
+  mutate(Size_group = case_when(Circumference <40 ~ "Small",
+                                Circumference >=40 ~ "Large",
+                                TRUE ~ NA))
+```
+
+```{r}
+head(sub_tree_health)
+```
 
 #### Missing data
+
+```{r}
+sub_tree_health_narm<-sub_tree_health %>% 
+  filter(is.na(Circumference == FALSE))
+```
 
 #### Dealing with dates
 
