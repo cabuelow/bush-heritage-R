@@ -34,7 +34,7 @@ Modelling goals can be three-fold:
 
 How we build and select models depends on our goals for the analysis. Check out this great guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
 
-Here, we will focus primarily on building exploratory and predictive models. Causal inference is beyond the scope, but see this great guide for ecologists [insert Arif paper]
+Here, we will focus primarily on building exploratory and predictive models. Causal inference is beyond the scope, but see this great guide for ecologists [insert Arif paper]. We'll start with a basic linear model to explore how disturbance influences ecological characteristics across survey sites. We'll see how, depending on the type of data we are modelling, we might need use *generalised* linear models (as opposed to *general* linear models). We'll end with building complex spatial and multivariate models in **R**.
 
 This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
 
@@ -42,9 +42,38 @@ This course assumes an understanding of how to wrangle, summarise, and visualise
   
   - how to check your model fits the data well, and
   
-  - how to visualise model output in **R**.
+  - how to understand and visualise model output in **R**.
 
-## Linear models
+## General linear models
+
+We can use linear models to estimate the strength and direction of ecological relationships. The word 'linear' is important - when we use linear models we assume a straight (or linear) relationship between our response variable (also referred to as dependent variables) and our explanatory variables (also referred to as covariates or predictor variables - don't let the terms confuse you).
+
+To understand how they work, it helps to take a quick look at how we formulate linear models mathematically:
+
+ $$y_i = b_0 + b_{1}X_{1i} + \epsilon_i$$
+`y_i` is our response variable of interest,
+`b_0` is the is the intercept for the linear relationship between y and our explanatory variables (X's), 
+`b_1` is the coefficient representing the strength and direction of the relationship between y and X_1
+`\epsilon` is the random, unexplained error in our observations around the fitted relationship between y and X(s).
+
+In the above example we only have one explanatory variable (X), but we can have multiple. We would just add on another term, e.g. `b_{2}X_{2i}`. Explanatory variables can be categorical or continuous - we'll see the consequences of that later.
+
+When we're fitting **general** linear models, we assume that `\epsilon`, the error term, is drawn from a normal (i.e., gaussian) distribution. We would expect this if our response variable (y) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.
+
+Let's get started with a general linear model. We want to know, are trees in less disturbed sites on average older compared to disturbed sites.
+
+If you took a first year undergrad stats course, you might be thinking, let's use an ANOVA! ANOVA's are just linear models with a categorical predictor variable.
+
+Tree circumference, our response variable (y) of interest, is continuous and we would expect the error distribution to be normally distributed. So we will fit a general linear model.
+
+```{r}
+dat <- data.frame(circum = c(rnorm(100, 10), rnorm(100, 20)),
+                  site = factor(c(rep('Disturbed', 100), c(rep('Undisturbed', 100)))))
+
+m <- lm(circum ~ site, data = dat)
+summary(m)
+```
+Okay so let's unpack this. [Talk through model output, if time write notes to explain..]
 
 ### General linear models
 
