@@ -353,9 +353,12 @@ unique(tree_health$Project_Name)
 unique(tree_health$Year)
 ```
 
+The above examples were using column and row indexing to filter rows, however this approach can run into problems for reproducibility and transparency in your data wrangling. While useful to know how R handles rows and columns in this way, there are more intuitive ways to subset your data in R using the tidyverse.
+
+To select columns of a data frame, use `select()`.
+
 ```{r}
-sub_tree_health<- tree_health %>% 
-  select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+sub_tree_health<- select(tree_health, Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
 ```
 
 ```{r}
@@ -366,12 +369,63 @@ head(sub_tree_health)
 colnames(sub_tree_health)
 ```
 
-```{r}
-small_trees<-sub_tree_health %>% 
-  filter(Circumference <40)
+To select all columns *except* certain ones, put a \"-\" in front of the variable to exclude it.
 
-large_trees<-sub_tree_health %>% 
-  filter(Circumference >=40)
+```{r}
+sub_tree_health<- select(tree_health, -OID_, -Parent_ID, -Site_Longitude_GDA2020)
+```
+
+```{r}
+head(sub_tree_health2)
+```
+
+```{r}
+colnames(sub_tree_health)
+```
+
+To choose rows based on a specific criterion, use `filter()`:
+
+```{r}
+small_trees<-filter(tree_health, Circumference <40)
+
+large_trees<-filter(tree_health, Circumference >=40)
+```
+
+```{r}
+survey2022<-filter(tree_health, Year == 2022)
+```
+
+#### Pipes
+
+What if you want to select and filter at the same time? There are three ways to do this: use intermediate steps, nested functions, or pipes.
+
+With intermediate steps, you create a temporary data frame and use that as input to the next function, like this:
+
+```{r}
+sub_tree_health<-select(tree_health, Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+small_trees<- filter(sub_tree_health, Circumference <40)
+
+```
+
+```{r}
+tree_health_sml <- select(filter(tree_health, Circumference < 40), Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+
+```
+
+```{r}
+small_trees<-tree_health %>%
+  filter(Circumference< 40) %>%
+  select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+```
+
+**CHALLENGE**
+
+Create a data frame called large_trees that contains the same columns as the small_trees data frame and the trees with a circumference greater than or equal to 40.
+
+```{r}
+large_trees<-tree_health %>%
+  filter(Circumference>= 40) %>%
+  select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
 ```
 
 #### Creating new columns
@@ -407,17 +461,68 @@ sub_tree_health <- sub_tree_health %>%
 ```
 
 ```{r}
+sub_tree_health <- sub_tree_health %>% 
+  mutate(Size_group = case_when(Circumference <40 ~ "Small",
+                                Circumference >=40 ~ "Large",
+                                TRUE ~ NA))
+```
+
+```{r}
 head(sub_tree_health)
 ```
 
 #### Missing data
+
+As you could see previously, some values in our data frame do not have a measurement for circumference. Many datasets will have NA values for important variables and it is important to handle missing data in the appropriate way for the question you aim to ask.
+
+Case #1- NA is it's own category
+
+For the example above, perhaps we want to keep the NA values but have them be their own category. In this case, we would need to create a new category name in our Size_group column. As usual, there are multiple ways to do this.
+
+```{r}
+sub_tree_health_narm<-sub_tree_health
+sub_tree_health_narm$Size_group[is.na(sub_tree_health_narm$Size_group) == TRUE]<-"Unknown"
+```
+
+```{r}
+sub_tree_health_narm<-sub_tree_health
+sub_tree_health_narm<-sub_tree_health_narm %>% 
+  mutate(Size_group = replace_na(Size_group, "Unknown"))
+
+```
+
+```{r}
+sub_tree_health_narm <- sub_tree_health %>% 
+  mutate(Size_group = case_when(Circumference <40 ~ "Small",
+                                Circumference >=40 ~ "Large",
+                                TRUE ~ "Unknown"))
+```
 
 ```{r}
 sub_tree_health_narm<-sub_tree_health %>% 
   filter(is.na(Circumference == FALSE))
 ```
 
+Perhaps the NA values should be removed from the analysis, which we could do in several ways:
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+sub_tree_health_narm<-sub_tree_health %>% 
+  filter(is.na(Circumference != TRUE))
+```
+
 #### Dealing with dates
+
+```{r}
+
+```
 
 ## Manipulating and analysing data
 
