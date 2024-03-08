@@ -16,9 +16,9 @@ embed-resources: true
 
 # Welcome to Introduction to R
 
-In this workshop you will learn basic concepts, skills, and tools for working with ecological data - in the hopes to get more done in less time, and with less pain. The course has been specifically tailored to use common Bush Heritage datasets, but assumes little to no knowledge of R.
+In this workshop you will learn basic concepts, skills, and tools for working with ecological data - in the hopes to get more done in less time, and with less pain. The course has been specifically tailored to use common Bush Heritage data, but assumes little to no knowledge of R.
 
-You will briefly learn R syntax and data formats, including the functionality of R projects, followed by data wrangling techniques using the tidyverse R package and principles. You will also learn how to plot data using the ggplot2 R package. The course will culminate by developing data summary statistics and a simple linear model. Further model development and skills will be provided in the Advanced course for those interested.
+You will briefly learn R syntax and data formats, including the functionality of R projects, followed by data wrangling techniques and principles using the tidyverse R package. You will also learn how to plot data using the ggplot2 package. The course will culminate by developing data summary statistics and a simple linear model. Further model development and skills will be provided in the Advanced course for those interested.
 
 Let's get started!
 
@@ -112,13 +112,40 @@ We are going to have our first experience with R through RProjects and RMarkdown
 
 ## RProjects
 
+A project is simply a working directory designated with a `.RProj` file. When you open a project (using File/Open Project in RStudio or by double--clicking on the .Rproj file outside of R), the working directory will automatically be set to the directory that the `.RProj` file is located in.
+
+I recommend creating a new R Project whenever you are starting a new research project. Once you've created a new R project, you should immediately create folders in the directory which will contain your R code, data files, notes, and other material relevant to your project (you can do this outside of R on your computer, or in the Files window of RStudio). For example, you could create a folder called `R` that contains all of your R code, a folder called `data` that contains all your data (etc.).
+
+Creating an R project for each project you are working on facilitates organisation and scientific reproducibility.
+
+An RStudio project allows you to more easily: 1. Save data, files, variables, packages, etc. related to a specific analysis project 2. Restart work where you left off 3. Collaborate, especially if you are using version control such as git
+
+Let's practice making an RProject to organise our code and data for the workshop today.
+
+In RStudio click File--\>New Project--\>New Directory--\> New Project.
+
+Designate the name of your .Rproj and where you want this .RProj to live. This will become the location of your working directory. You should also see the name of your .RProj appear int he top right-hand conor of the RStudio IDE.
+
 ## RMarkdown
 
-Let's do this together:
+R Markdown provides an authoring framework for data science. You can use a single R Markdown file to both
 
-File -\> New File -\> RMarkdown... (or alternatively you can click the green plus in the top left -\> RMarkdown).
+-   save and execute code
 
-Let's title it "Intro R workshop" and write our name as author, then click OK with the recommended Default Output Format, which is HTML.
+-   generate high quality reports that can be shared with an audience
+
+R Markdown documents are fully reproducible and support dozens of static and dynamic output formats.
+
+Here is a general R Markdown Workflow:
+
+1.  Open a **new .Rmd file** in the RSutdio IDE by going ot File --\>New File --\> R Markdwon
+2.  **Embed code in chunks**. Run code by line, by chunk, or all at once
+3.  **Write text** and add tables, figures, images and citations. Format with Markdown syntax or the RStudio Visual Markdown Editor
+4.  S**et output format(s) and options in the YAML header**. Customise themes or add parameters to execute or add interactivity with Shiny
+5.  **Save and render** the whole document. Knit periodically to preview your work as you write
+6.  **Share your work**
+
+Let's give it a go by creating an .Rmd file and look through some of the features together.
 
 OK, first off: by opening a file, we are seeing the 4th pane of the RStudio console, which here is a text editor. This lets us dock and organize our files within RStudio instead of having a bunch of different windows open (but there are options to pop them out if that is what you prefer).
 
@@ -132,18 +159,28 @@ Let's have a look at this file --- it's not blank; there is some initial text al
 
     -   **White sections are Markdown text**
 
--   There is black and blue text (we'll ignore the green text for now).
+There are several advantages to using RMarkdown, one of the most useful may be the ability to keep your code, notes, and relevant links all in one place. If you are interested you can find more information on Rmarkdown online [here](https://rmarkdown.rstudio.com/lesson-1.html) and a cheat sheet [here](file:///Users/s2995128/Downloads/rmarkdown-2.0.pdf).
 
 ## R syntax and data types
 
+Alright - now that we have our RProject and RMarkdown file ready to go, let's dive into the syntax and data types in R.
+
 ### Working directory
 
+You may have heard the term "working directory" a few times now. The working directory where R will look for reading and writing your files. Since we are using RProjects, the working directory will be set to this location. There are also a few packages that can help with reproducibility and setting the working directory which we will discuss below. If you are ever curious where your working directory is set you can use the `getwd()` function to check.
+
 ### Installing and loading packages
+
+To take full advantage of R, you need to install R packages. R packages are loadable extensions that contain code, data, documentation, and tests in a standardized, share-able format that can easily be installed by R users.
+
+Let's install some packages now. You should only need to install a package once on your machine.
 
 ```{r}
 install.packages("here") # This package helps with reproducbility and file paths
 install.packages("tidyverse") # This package will be used for data wrangling and hosts the majority of functions we will be using today
 ```
+
+Once a package is install we need to load and attach the packages we would like to use in our script. Once a package is loaded using **`library()`**, you can access its functions and datasets directly without having to explicitly refer to the package name each time. This is because the functions and datasets from the package are attached to the search path of the R session.
 
 ```{r}
 library(here)
@@ -178,53 +215,55 @@ c("Brisbane", "Sydney")
 
 ### Getting help in R and online
 
-Every function available to you should have a help page, and you access it by typing a question mark preceding the function name in the Console.
+Every function available to you should have a help page.
 
-Let's have a deeper look at the arguments for `plot()`, using the help pages.
+The `help()` function and `?` help operator in R provide access to the documentation pages for R functions, data sets, and other objects, both for packages in the standard R distribution and for contributed packages. To access documentation for the here function that we installed earlier, for example, enter the command `help(here)` or `help("here")`, or `?here` or `?"here"` (i.e., the quotes are optional).
 
-#### Subsetting vectors
+Learning R is an exercise in learning to google! There are so many places online to ask for help, and I have yet to personally run into an issue that someone else hasn't had before. When searching for help try to be as specific as possible. Pasting error messages into google search, using the names of specific functions or packages, and adding "in R" to your searches can all help get you to a solution to your problem. [Stackoverflow](https://stackoverflow.com/) is a common place to find answers to R problems.
 
-#### Missing data
+### Data types in R
+
+1.  Basic data types
+    1.  Numeric: `(10.5, 55, 785)`
+
+    2.  Integer: `(1L, 55L, 100L, where the "L" declares this as an integer)`
+
+    3.  Complex: `(9+3i, where "i" is the imaginary part)`
+
+    4.  Character/string: `("k", "R is exciting", "FALSE", "11.5")`
+
+    5.  Logical/boolean: `(TRUE, FALSE)`
+2.  Vector: `c(1,2,3,"cat")`
+3.  Matrix: `as.matrix(1:10)`
+4.  Array: `array(1:3, c(2,4))`
+5.  List: `list(1,2,3)`
+6.  Data-frame: `data.frame(x = 1, y = 1:10)`
 
 ### Data frames
 
-## Importing data into R
+A data frame is the representation of data in the format of a table where the columns are vectors that all have the same length. Because columns are vectors, each column must contain a single type of data (e.g., characters, integers, factors). For example, here is a figure depicting a data frame comprising a numeric, a character, and a logical vector.
+
+![](images/data-frame.svg)
+
+#### Working with data frames
+
+When we loaded the data into R, it got stored as an object of class `tibble`, which is a special kind of data frame (the difference is not important for our purposes, but you can learn more about tibbles [here](https://tibble.tidyverse.org/)). Data frames are the *de facto* data structure for most tabular data, and what we use for statistics and plotting. Data frames can be created by hand, but most commonly they are generated by functions like `read_csv()`; in other words, when importing spreadsheets from your hard drive or the web.
+
+Now let's learn more about the `tidyverse`, which we will be using to wrangle and manipulate our data.
+
+### Read data into R
+
+Now the real fun begins! Let's read some data into R!
+
+Here we can use the `read_csv()` function from the tidyverse package coupled with the `here()` function from the here package. The `here` function helps with reproducibility, particularly when sharing your code with collaborators. Instead of having to set unique file paths, as long as the RProject is set up the same, the here function automatically creates the filepath. Let's try it out.
 
 ```{r}
 tree_health<-read_csv(here("Data", "veg-tree-soil", "M06_071_Tree_Health_Quadrat_Analysis_Join_Parent_Child.csv"))
 ```
 
-### Data summary information
+### Inspecting data frames
 
-## Introduction to the tidyverse
-
-The **`tidyverse`** package is an "umbrella-package" that installs **`tidyr`**, **`dplyr`**, and several other useful packages for data analysis, such as **`ggplot2`**, **`tibble`**, etc.
-
-The **`tidyverse`** package tries to address 3 common issues that arise when doing data analysis in R:
-
-1.  The results from a base R function sometimes depend on the type of data.
-
-2.  R expressions are used in a non standard way, which can be confusing for new learners.
-
-3.  The existence of hidden arguments having default operations that new learners are not aware of.
-
-You should already have installed and loaded the **`tidyverse`** package. If you haven't already done so, you can type `install.packages("tidyverse")` straight into the console. Then, type [`library(tidyverse)`](https://tidyverse.tidyverse.org/) to load the package.
-
-#### dypr and tidyr
-
-The package **`dplyr`** provides helper tools for the most common data manipulation tasks. It is built to work directly with data frames, with many common tasks optimized by being written in a compiled language (C++). An additional feature is the ability to work directly with data stored in an external database. The benefits of doing this are that the data can be managed natively in a relational database, queries can be conducted on that database, and only the results of the query are returned.
-
-This addresses a common problem with R in that all operations are conducted in-memory and thus the amount of data you can work with is limited by available memory. The database connections essentially remove that limitation in that you can connect to a database of many hundreds of GB, conduct queries on it directly, and pull back into R only what you need for analysis.
-
-The package **`tidyr`** addresses the common problem of wanting to reshape your data for plotting and usage by different R functions. For example, sometimes we want data sets where we have one row per measurement. Other times we want a data frame where each measurement type has its own column, and rows are instead more aggregated groups (e.g., a time period, an experimental unit like a plot or a batch number). Moving back and forth between these formats is non-trivial, and **`tidyr`** gives you tools for this and more sophisticated data manipulation.
-
-To learn more about **`dplyr`** and **`tidyr`** after the workshop, you may want to check out this [handy data transformation with **`dplyr`** cheatsheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf) and this [one about **`tidyr`**](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf).
-
-As before, we'll read in our data using the `read_csv()` function from the tidyverse package **`readr`**.
-
-```{r}
-tree_health<-read_csv(here("Data", "veg-tree-soil", "M06_071_Tree_Health_Quadrat_Analysis_Join_Parent_Child.csv"))
-```
+Once we read the data in, we may want to explore different attributes of the data and what the data looks like. There are several functions we can use to do this.
 
 We can see the contents of the first few lines of the data by typing its name: `tree_health`. By default, this will show you as many rows and columns of the data as fit on your screen. If you wanted the first 50 rows, you could type `print(tree_health, n = 50)`
 
@@ -242,13 +281,13 @@ To open the dataset in RStudio's Data Viewer, use the `view()` function:
 View(tree_health)
 ```
 
-#### Working with data frames
+We can see what "type" of data `tree_health` is by calling
 
-When we loaded the data into R, it got stored as an object of class `tibble`, which is a special kind of data frame (the difference is not important for our purposes, but you can learn more about tibbles [here](https://tibble.tidyverse.org/)). Data frames are the *de facto* data structure for most tabular data, and what we use for statistics and plotting. Data frames can be created by hand, but most commonly they are generated by functions like `read_csv()`; in other words, when importing spreadsheets from your hard drive or the web.
+```{r}
+class(tree_health)
+```
 
-A data frame is the representation of data in the format of a table where the columns are vectors that all have the same length. Because columns are vectors, each column must contain a single type of data (e.g., characters, integers, factors). For example, here is a figure depicting a data frame comprising a numeric, a character, and a logical vector.
-
-![](https://datacarpentry.org/R-ecology-lesson/fig/data-frame.svg)
+As you can see `tree_health` is a data.frame. There are several data types we may encounter in R. These include:
 
 We can see this also when inspecting the **str**ucture of a data frame with the function `str()`:
 
@@ -297,7 +336,7 @@ tree_health[1,1]
 First row, sixth column:
 
 ```{r}
-tree_health[1,6]
+tree_health[5,15]
 ```
 
 We can also use shortcuts to select a number of rows or columns at once. To select all columns, leave the column index blank. For instance, to select all columns for the first row:
@@ -355,10 +394,40 @@ unique(tree_health$Year)
 
 The above examples were using column and row indexing to filter rows, however this approach can run into problems for reproducibility and transparency in your data wrangling. While useful to know how R handles rows and columns in this way, there are more intuitive ways to subset your data in R using the tidyverse.
 
+## Introduction to the tidyverse
+
+The **`tidyverse`** package is an "umbrella-package" that installs **`tidyr`**, **`dplyr`**, and several other useful packages for data analysis, such as **`ggplot2`**, **`tibble`**, etc.
+
+The **`tidyverse`** package tries to address 3 common issues that arise when doing data analysis in R:
+
+1.  The results from a base R function sometimes depend on the type of data.
+
+2.  R expressions are used in a non standard way, which can be confusing for new learners.
+
+3.  The existence of hidden arguments having default operations that new learners are not aware of.
+
+You should already have installed and loaded the **`tidyverse`** package. If you haven't already done so, you can type `install.packages("tidyverse")` straight into the console. Then, type [`library(tidyverse)`](https://tidyverse.tidyverse.org/) to load the package.
+
+The suite of packages in the tidyverse follow the same principles and rely on a **tidy** data format. Tidy data is a standard way of mapping the meaning of a data to its structure as seen below. This format may be different than you may have previously used. We will explore how to transform data into a tidy format later in this course.
+
+![](images/tidydata_1.jpeg)
+
+#### dypr and tidyr
+
+The package **`dplyr`** provides helper tools for the most common data manipulation tasks. It is built to work directly with data frames, with many common tasks optimized by being written in a compiled language (C++). An additional feature is the ability to work directly with data stored in an external database. The benefits of doing this are that the data can be managed natively in a relational database, queries can be conducted on that database, and only the results of the query are returned.
+
+This addresses a common problem with R in that all operations are conducted in-memory and thus the amount of data you can work with is limited by available memory. The database connections essentially remove that limitation in that you can connect to a database of many hundreds of GB, conduct queries on it directly, and pull back into R only what you need for analysis.
+
+The package **`tidyr`** addresses the common problem of wanting to reshape your data for plotting and usage by different R functions. For example, sometimes we want data sets where we have one row per measurement. Other times we want a data frame where each measurement type has its own column, and rows are instead more aggregated groups (e.g., a time period, an experimental unit like a plot or a batch number). Moving back and forth between these formats is non-trivial, and **`tidyr`** gives you tools for this and more sophisticated data manipulation.
+
+To learn more about **`dplyr`** and **`tidyr`** after the workshop, you may want to check out this [handy data transformation with **`dplyr`** cheatsheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf) and this [one about **`tidyr`**](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf).Importing data into R
+
+#### Wrangling data with the tidyverse
+
 To select columns of a data frame, use `select()`.
 
 ```{r}
-sub_tree_health<- select(tree_health, Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
+sub_tree_health<- select(tree_health, Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Diameter, Date)
 ```
 
 ```{r}
@@ -369,14 +438,14 @@ head(sub_tree_health)
 colnames(sub_tree_health)
 ```
 
-To select all columns *except* certain ones, put a \"-\" in front of the variable to exclude it.
+To select all columns *except* certain ones, put a "-" in front of the variable to exclude it.
 
 ```{r}
 sub_tree_health<- select(tree_health, -OID_, -Parent_ID, -Site_Longitude_GDA2020)
 ```
 
 ```{r}
-head(sub_tree_health2)
+head(sub_tree_health)
 ```
 
 ```{r}
@@ -407,16 +476,26 @@ small_trees<- filter(sub_tree_health, Circumference <40)
 
 ```
 
+This works, but the workflow is a bit clunky since we create data frames we do not necessary need. Another option is to use nested functions like this:
+
 ```{r}
 tree_health_sml <- select(filter(tree_health, Circumference < 40), Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
 
 ```
+
+Again, this works! But it can be a bit hard to interpret and follow the steps between functions. Another option is using what we call **pipes**.
+
+To make R code more human readable, the Tidyverse tools use the pipe, `%>%`, which was acquired from the `magrittr` package and is now part of the `dplyr` package that is installed automatically with Tidyverse. **The pipe allows the output of a previous command to be used as input to another command instead of using nested functions.**
+
+Using pipes, selecting columns and filtering rows from our data looks like this:
 
 ```{r}
 small_trees<-tree_health %>%
   filter(Circumference< 40) %>%
   select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
 ```
+
+Pretty schnazzy huh? The pipe represents a much easier way of writing and deciphering R code.
 
 **CHALLENGE**
 
@@ -428,48 +507,63 @@ large_trees<-tree_health %>%
   select(Project_Name, Site_ID, Scientific_Name, English_Name, Circumference, Date)
 ```
 
+### Manipulating data
+
 #### Creating new columns
 
+Just as we may want to remove certain columns from our dataset, we may also want to create new columns based on other rows or information.
+
+Here let's add a column to classify our tress as either "Small" or "Large" based on the `Circumference` column.
+
+There are several ways to do this including an `ifelse` statement or using the `case_when` function. Let's try both!
+
 ```{r}
-sub_tree_health <- sub_tree_health %>% 
+sub_tree_health_cat <- sub_tree_health %>% 
   mutate(Size_group = ifelse(Circumference <40, "Small", "Large"))
 
-sub_tree_health <- sub_tree_health %>% 
+```
+
+OR
+
+```{r}
+sub_tree_health_cat <- sub_tree_health %>% 
   mutate(Size_group = ifelse(Circumference >=40, "Large", "Small"))
-
 ```
 
-```{r}
-head(sub_tree_health)
-```
+We always want to check our work and make sure that R produces what we expect.
 
 ```{r}
-sub_tree_health <- sub_tree_health %>% 
+head(sub_tree_health_cat)
+```
+
+Now with the `case_when` function:
+
+```{r}
+sub_tree_health_cat2 <- sub_tree_health %>% 
   mutate(Size_group = case_when(Circumference <40 ~ "Small",
                                 TRUE ~ "Large"))
 ```
 
 ```{r}
-head(sub_tree_health)
+head(sub_tree_health_cat2)
 ```
 
+Did it work as expected? Not quite! Trees with no circumference data get classified as "Large"! That's not right. Good thing we checked, now let's fix it:
+
 ```{r}
-sub_tree_health <- sub_tree_health %>% 
+sub_tree_health_cat2 <- sub_tree_health %>% 
   mutate(Size_group = case_when(Circumference <40 ~ "Small",
                                 Circumference >=40 ~ "Large",
                                 TRUE ~ NA))
 ```
 
 ```{r}
-sub_tree_health <- sub_tree_health %>% 
-  mutate(Size_group = case_when(Circumference <40 ~ "Small",
-                                Circumference >=40 ~ "Large",
-                                TRUE ~ NA))
+head(sub_tree_health_cat2)
 ```
 
-```{r}
-head(sub_tree_health)
-```
+There we go :) Now trees without circumferences values are not grouped into a category but instead also have an `NA`.
+
+As I'm sure most of you know - missing data is common. Let's explore how to deal with missing data in R.
 
 #### Missing data
 
@@ -480,37 +574,50 @@ Case #1- NA is it's own category
 For the example above, perhaps we want to keep the NA values but have them be their own category. In this case, we would need to create a new category name in our Size_group column. As usual, there are multiple ways to do this.
 
 ```{r}
-sub_tree_health_narm<-sub_tree_health
-sub_tree_health_narm$Size_group[is.na(sub_tree_health_narm$Size_group) == TRUE]<-"Unknown"
+sub_tree_health_cat<-sub_tree_health_cat
+sub_tree_health_cat$Size_group[is.na(sub_tree_health_cat$Size_group) == TRUE]<-"Unknown"
 ```
 
 ```{r}
-sub_tree_health_narm<-sub_tree_health
-sub_tree_health_narm<-sub_tree_health_narm %>% 
+head(sub_tree_health_cat)
+```
+
+This works - but it makes it look complicated! Let's try with the tidyverse.
+
+```{r}
+sub_tree_health_cat<-sub_tree_health_cat %>% 
   mutate(Size_group = replace_na(Size_group, "Unknown"))
 
 ```
 
 ```{r}
-sub_tree_health_narm <- sub_tree_health %>% 
+head(sub_tree_health_cat)
+```
+
+That's a bit better!
+
+We could have also accounted from NA's from the beginning in our `case_when` function like this:
+
+```{r}
+sub_tree_health_cat <- sub_tree_health %>% 
   mutate(Size_group = case_when(Circumference <40 ~ "Small",
                                 Circumference >=40 ~ "Large",
                                 TRUE ~ "Unknown"))
 ```
 
 ```{r}
-sub_tree_health_narm<-sub_tree_health %>% 
-  filter(is.na(Circumference == FALSE))
+head(sub_tree_health_cat)
 ```
 
 Perhaps the NA values should be removed from the analysis, which we could do in several ways:
 
 ```{r}
-
+sub_tree_health_narm<-sub_tree_health[complete.cases(sub_tree_health$Circumference),]
 ```
 
 ```{r}
-
+head(sub_tree_health_narm)
+length(which(is.na(sub_tree_health_narm) ==T))
 ```
 
 ```{r}
@@ -518,20 +625,847 @@ sub_tree_health_narm<-sub_tree_health %>%
   filter(is.na(Circumference != TRUE))
 ```
 
-#### Dealing with dates
+OR
 
 ```{r}
-
+sub_tree_health_narm<-sub_tree_health %>% 
+  filter(is.na(Circumference == FALSE))
 ```
 
-## Manipulating and analysing data
+OR
+
+```{r}
+sub_tree_health_narm<-sub_tree_health %>% 
+  filter(!is.na(Circumference))
+```
+
+**CHALLENGE**
+
+There are some NA values for Scientific Names and Project Names. Remove rows without information on the Scientific Name.
+
+```{r}
+sub_tree_health_narm<-sub_tree_health %>% 
+  filter(!is.na(Scientific_Name),
+         !is.na(Project_Name))
+```
+
+### The summarise function
+
+Now that we have done some data tidying, let's start summarising some of our data using the `summarise` function in tidyverse
+
+`group_by()` is often used together with `summarize()`, which collapses each group into a single-row summary of that group. `group_by()` takes as arguments the column names that contain the **categorical** variables for which you want to calculate the summary statistics. So to compute the mean `Circumference` by `Site`:
+
+```{r}
+sub_tree_health_narm %>% 
+  group_by(Project_Name) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = TRUE))
+```
+
+I noticed that several Circumferences are listed as 0, maybe we want to remove these before we calculate Circumference
+
+```{r}
+sub_tree_health_narm %>% 
+  filter(Circumference>0) %>% 
+  group_by(Project_Name) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = TRUE))
+```
+
+Once the data are grouped, you can also summarize multiple variables at the same time (and not necessarily on the same variable). For instance, we could add a column indicating the minimum circumference for each species for each Site:
+
+```{r}
+sub_tree_health_narm %>% 
+  filter(Circumference>0) %>% 
+  group_by(Project_Name, Scientific_Name) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = TRUE),
+            min_cir = min(Circumference, na.rm = TRUE))
+```
+
+It is sometimes useful to rearrange the result of a query to inspect the values. For instance, we can sort on `min_circ` to put the smaller species first:
+
+```{r}
+sub_tree_health_narm %>% 
+  filter(Circumference>0) %>% 
+  group_by(Project_Name, Scientific_Name) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = TRUE),
+            min_cir = min(Circumference, na.rm = TRUE)) %>% 
+  arrange(min_cir)
+```
+
+To sort in descending order, we need to add the `desc()` function. If we want to sort the results by decreasing order of mean circumference:
+
+```{r}
+sub_tree_health_narm %>% 
+  filter(Circumference>0) %>% 
+  group_by(Project_Name, Scientific_Name) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = TRUE),
+            min_cir = min(Circumference, na.rm = TRUE)) %>% 
+  arrange(desc(mean_cir))
+```
+
+**CHALLENGE**
+
+You may have noticed that our previous data manipulation was not being stored anywhere! Create a new variable called `sub_tree_health2` and summarise the data for mean, min, and max circumference for circumference values \>0 by Site_ID, removing missing data for Project Name and Scientific Name
+
+```{r}
+sub_tree_health2<-sub_tree_health_narm %>% 
+  filter(Circumference>0,
+         !is.na(Project_Name),
+         !is.na(Scientific_Name)) %>% 
+  group_by(Site_ID) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm =T),
+            min_cir = min(Circumference, na.rm = T),
+            max_cir = max(Circumference, na.rm = T))
+```
+
+#### Counts
+
+When working with data, we often want to know the number of observations found for each factor or combination of factors. For this task, **`dplyr`** provides `count()`. For example, if we wanted to count the number of rows of data for each species, we would do:
+
+```{r}
+sub_tree_health_narm %>% 
+  count(Scientific_Name)
+```
+
+If we want to count how many surveys were done in each project site we would enter:
+
+```{r}
+sub_tree_health_narm %>% 
+  count(Site_ID)
+```
+
+The `count()` function is shorthand for something we\'ve already seen: grouping by a variable, and summarizing it by counting the number of observations in that group. In other words, `surveys %>% count()` is equivalent to:
+
+```{r}
+sub_tree_health_narm %>% 
+  group_by(Site_ID) %>% 
+  summarise(count = n())
+```
+
+For convenience, `count()` provides the `sort` argument:
+
+```{r}
+sub_tree_health_narm %>% 
+  count(Scientific_Name, sort = TRUE)
+```
+
+Previous example shows the use of `count()` to count the number of rows/observations for *one* factor (i.e., `Scientific_Name`). If we wanted to count *combination of factors*, such as `Site_ID` and `Scientific_Name`, we would specify the first and the second factor as the arguments of `count()`:
+
+```{r}
+sub_tree_health_narm  %>% 
+  count(Site_ID, Scientific_Name)
+```
+
+With the above code, we can proceed with `arrange()` to sort the table according to a number of criteria so that we have a better comparison. For instance, we might want to arrange the table above in (i) an alphabetical order of the levels of the species and (ii) in descending order of the count:
+
+```{r}
+sub_tree_health_narm %>%
+  count(Site_ID, Scientific_Name) %>%
+  arrange(Scientific_Name, desc(n))
+```
+
+**CHALLENGE**\
+How many trees are in the "Large" and "Small" circumference classes we created earlier in the tutorial?
+
+```{r}
+count_size<-sub_tree_health_cat %>% 
+  count(Size_group)
+```
+
+```{r}
+count_size
+```
+
+**CHALLENGE 2**
+
+Which site has the largest circumference tree measured within each Project? Return the columns Project_Name, Site_ID, Scientific_Name, and Circumference.
+
+```{r}
+max_circumference<-sub_tree_health_narm %>%
+    filter(Circumference>0) %>%
+    group_by(Project_Name) %>%
+    filter(Circumference == max(Circumference)) %>%
+    select(Project_Name, Site_ID, Scientific_Name, Circumference) 
+```
+
+```{r}
+view(max_circumference)
+```
+
+#### Dealing with dates
+
+A common issue that new (and experienced!) R users have is converting date and time information into a variable that is suitable for analyses. One way to store date information is to store each component of the date in a separate column. Using `str()`, we can see that currently our date is stored in the YYYYMMDD format.
+
+```{r}
+str(sub_tree_health_narm)
+```
+
+Maybe we want the year, month, and day to be in separate columns. To do this we can use the `lubridate` package. First let's install and load the package.
+
+```{r}
+install.packages("lubridate")
+```
+
+```{r}
+library(lubridate)
+```
+
+The **`lubridate`** package has many useful functions for working with dates. These can help you extract dates from different string representations, convert between timezones, calculate time differences and more. You can find an overview of them in the [lubridate cheat sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/lubridate.pdf).
+
+```{r}
+sub_tree_health_yrs<-sub_tree_health_narm %>% 
+  mutate(Year = year(Date),
+         Month = month(Date),
+         Day = day(Date))
+```
+
+We can use the `unique()` function to see how many years are in our dataset
+
+```{r}
+unique(sub_tree_health_yrs$Year)
+```
+
+Three years! We can also look through some our summarising functions now with the date!
+
+**CHALLENGE**
+
+How many surveys were done each year?
+
+```{r}
+sub_tree_health_yrs %>% 
+  count(Year)
+
+table(sub_tree_health_yrs$Year)
+```
+
+How many sites were surveyed in each year? (hint: use the `unique()` function combined with the `length` function)
+
+```{r}
+sub_tree_health_yrs %>% 
+  group_by(Year) %>% 
+  summarise(count = length(unique(Site_ID)))
+```
+
+How many unique species were surveyed each year?
+
+```{r}
+sub_tree_health_yrs %>% 
+  group_by(Year) %>% 
+  summarise(count = length(unique(Scientific_Name)))
+```
+
+### Reshaping/pivoting data
+
+Early we discussed the "tidy" data format where:
+
+1.  Each variable has its own column
+
+2.  Each observation has its own row
+
+3.  Each value must have its own cell
+
+4.  Each type of observational unit forms a table
+
+Luckily, the data we have been working with thus far has already been in a tidy format. But this may not always be the case! Let's look at how we can reshape data betwee what we call a long vs. wide format.
+
+![](images/tidyr-pivot_wider_longer.gif)
+
+#### Pivoting from long to wide format
+
+`pivot_wider()` takes three principal arguments:
+
+1.  the data
+
+2.  the *names_from* column variable whose values will become new column names.
+
+3.  the *values_from* column variable whose values will fill the new column variables.
+
+Further arguments include `values_fill` which, if set, fills in missing values with the value provided.
+
+Let\'s use `pivot_wider()` to transform our dataset to find the mean circumference of each species in each plot over the entire survey period. We use `filter()`, `group_by()` and `summarize()` to filter our observations and variables of interest, and create a new variable for the `mean_circumference`.
+
+```{r}
+sub_gw <- sub_tree_health_narm %>%
+  filter(Circumference>0) %>%
+  group_by(Site_ID, Scientific_Name) %>%
+  summarize(mean_cir = mean(Circumference))
+```
+
+```{r}
+str(sub_gw)
+```
+
+This yields `sub_gw` where the observations for each plot are distributed across multiple rows. Using `pivot_wider()` with the names from `Scientific_Name` and with values from `mean_cir` this becomes:
+
+```{r}
+sub_wide<-sub_gw %>% 
+  pivot_wider(names_from = Scientific_Name, values_from = mean_cir)
+```
+
+There are a lot of NAs! We could fill them in:
+
+```{r}
+sub_wide<-sub_gw %>% 
+  pivot_wider(names_from = Scientific_Name, values_from = mean_cir, values_fill = 0)
+```
+
+Can you think of any reasons you may to have the data in this wide format?
+
+#### Pivoting from long to wide format
+
+The opposing situation could occur if we had been provided with data in the form of `sub_wide`, where the scientific names are column names, but we wish to treat them as values of a genus variable instead.
+
+In this situation we are reshaping the column names and turning them into a pair of new variables. One variable represents the column names as values, and the other variable contains the values previously associated with the column names.
+
+`pivot_longer()` takes four principal arguments:
+
+1.  the data
+
+2.  the *names_to* column variable we wish to create from column names.
+
+3.  the *values_to* column variable we wish to create and fill with values.
+
+4.  *cols* are the name of the columns we use to make this pivot (or to drop).
+
+    In pivoting longer, we also need to specify what columns to reshape.
+
+    ```{r}
+    sub_long <- sub_wide %>%
+      pivot_longer(names_to = "Scientific_Name", values_to = "mean_cir", cols = -Site_ID)
+    ```
+
+### Joining data
+
+In some cases, you may have two datasets with different information that you want to join and analyse together. There are several functions in the tidyverse to achieve this:
+
+![](images/07-dplyr_joins.svg)
+
+Let's read in another dataset so we can explore different joins.
+
+**CHALLENGE**
+
+Read in the data found in the "bird" folder. Name it `veg_quad` and explore the dataset with some of the functions we learned earlier. Then
+
+```{r}
+bird_survey<-read_csv(here("Data", "bird", "M05_050_Bird_Survey_Analysis_Join_Parent_Child.csv"))
+```
+
+```{r}
+sub_bird<-bird_survey %>% 
+  dplyr::select(Site_ID, Date, Year, Birdlife_bird_count, Scientific_Name) %>% 
+  filter(!is.na(Site_ID))
+```
+
+```{r}
+bird_avg<-sub_bird %>% 
+  group_by(Site_ID, Year) %>% 
+  summarise(mean_bird_count = mean(Birdlife_bird_count, na.rm = T),
+            count_bird_species = length(unique(Scientific_Name)))
+```
+
+```{r}
+tree_avg<-sub_tree_health_yrs %>% 
+  group_by(Site_ID, Year) %>% 
+  summarise(mean_cir = mean(Circumference, na.rm = T),
+            count_tree_species = length(unique(Scientific_Name)))
+```
+
+We can now try a `full_join` which will keep all rows from both datasets. We can just list the two datasets we want to join, and R will search for the common column names.
+
+```{r}
+tree_bird<-full_join(tree_avg, bird_avg)
+```
+
+However, we could also specify the column names that we want to join.
+
+```{r}
+tree_bird<-full_join(tree_avg, bird_avg, by = c("Site_ID", "Year"))
+```
+
+It looks like there is a lot more bird data than tree data. If we know this is the case, we could try a `left_join` . This will keep all the rows of the tree data and matching rows from the bird data.
+
+```{r}
+tree_bird<-left_join(tree_avg, bird_avg, by = c("Site_ID", "Year"))
+```
+
+We still have some missing values. Let's assume these are true missing data values and not 0s and remove them from our data
+
+```{r}
+tree_bird<-tree_bird %>% 
+  filter(!is.na(mean_bird_count))
+```
+
+Great! We have now created a brand new dataset. Let's look at how we could save this dataset.
 
 ## Exporting data
 
-## Data visualisation
+Similar to the `read_csv` function, we can use the `write_csv` function to save our data outputs. We can also use the `here` function again to help with file paths.
 
-## Summary statistics
+```{r}
+write_csv(tree_bird, here("output_data", "Tree_bird_join.csv"))
+```
+
+Let's check and see if it is there.
+
+Success!
 
 ## Simple models
+
+Before we move onto data visualisation, let's run a quick test to see if tree species richness is correlated to bird species richness.
+
+For this we will construct a linear regression using the `lm` function in the `lme4` package. First let's install and attach the package.
+
+```{r}
+install.packages("lme4")
+```
+
+```{r}
+library(lme4)
+```
+
+We can look at the help page of the `lm` function to get more information on what arguments it requires.
+
+Let's subset our data to the most recent year
+
+```{r}
+sub_tree_bird<-tree_bird %>% 
+  filter(Year == 2023)
+```
+
+Now let's test whether tree species richness has an effect on bird species richness across sites and years:
+
+```{r}
+tree_bird_reg<-lm(count_tree_species ~ count_bird_species, data = sub_tree_bird)
+```
+
+```{r}
+summary(tree_bird_reg)
+```
+
+Wow! Higher tree species richness leads to higher bird species richness!
+
+We can try plotting them using the base R function `plot` to see the relationship
+
+```{r}
+plot(sub_tree_bird$count_tree_species, sub_tree_bird$count_bird_species)
+```
+
+Oh no! There looks to be outliers that may be impacting our results. Let's remove it and try again.
+
+We can look for outliers using the `boxplot` function in base R.
+
+```{r}
+boxplot(sub_tree_bird$count_tree_species)
+boxplot(sub_tree_bird$count_bird_species)
+```
+
+```{r}
+sub_tree_bird2<-sub_tree_bird %>% 
+  filter(count_tree_species<7,
+         count_bird_species<100)
+```
+
+```{r}
+boxplot(sub_tree_bird2$count_tree_species)
+boxplot(sub_tree_bird2$count_bird_species)
+```
+
+And running our model again gives us:
+
+```{r}
+tree_bird_reg2<-lm(count_tree_species ~ count_bird_species, data = sub_tree_bird2)
+```
+
+```{r}
+summary(tree_bird_reg2)
+```
+
+Without the outliers, we no longer see a relationship between tree species richess and bird species richness.
+
+```{r}
+plot(sub_tree_bird2$count_tree_species, sub_tree_bird2$count_bird_species)
+```
+
+Perhaps we want to know whether tree species richness or bird species richness has changed through time
+
+```{r}
+tree_year_reg<-lm(Year ~ count_tree_species, data = tree_bird)
+```
+
+```{r}
+summary(tree_year_reg)
+```
+
+```{r}
+bird_year_reg<-lm(Year ~ count_bird_species, data = tree_bird)
+```
+
+```{r}
+summary(bird_year_reg)
+```
+
+We could look at outliers again, but it seems to be a low chance that there has been a change in species richness for either birds or trees in the short three year period that we tested.
+
+If these sorts of questions and modelling tools are of interest to you - make sure to check out the Advanced course where we will dive into more detail and nuances!
+
+## Data visualisation with ggplot2
+
+We've done all of the hard data wrangling and manipulation - now let's make some pretty figures using the `ggplot2` package in R.
+
+You know what we need to do first - install and load the package!
+
+```{r}
+install.packages("ggplot2")
+```
+
+```{r}
+library(ggplot2)
+```
+
+Remember you only need to install a package once. After installation, future scripts can just use the `library` call to load the package into the R session.
+
+### ggplot2
+
+**`ggplot2`** is a plotting package that provides helpful commands to create complex plots from data in a data frame. It provides a more programmatic interface for specifying what variables to plot, how they are displayed, and general visual properties. Therefore, we only need minimal changes if the underlying data change or if we decide to change from a bar plot to a scatterplot. This helps in creating publication quality plots with minimal amounts of adjustments and tweaking.
+
+**`ggplot2`** refers to the name of the package itself. When using the package we use the function **`ggplot()`** to generate the plots, and so references to using the function will be referred to as **`ggplot()`** and the package as a whole as **`ggplot2`**
+
+**`ggplot2`** plots work best with data in the 'tidy', \'long\' format, i.e., a column for every variable, and a row for every observation. Well-structured data will save you lots of time when making figures with **`ggplot2`**
+
+ggplot graphics are built layer by layer by adding new elements. Adding layers in this fashion allows for extensive flexibility and customization of plots.
+
+To build a ggplot, we will use the following basic template that can be used for different types of plots:
+
+    ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
+
+-   use the `ggplot()` function and bind the plot to a specific data frame using the `data` argument
+
+```{r}
+ggplot(data = tree_bird)
+```
+
+-   define an aesthetic mapping (using the aesthetic (`aes`) function), by selecting the variables to be plotted and specifying how to present them in the graph, e.g., as x/y positions or characteristics such as size, shape, color, etc.
+
+    ```{r}
+    ggplot(data = tree_bird, mapping = aes(x = count_tree_species, y = count_bird_species))
+
+    ```
+
+```{=html}
+<!-- -->
+```
+-   add \'geoms\' -- graphical representations of the data in the plot (points, lines, bars). **`ggplot2`** offers many different geoms; we will use some common ones today, including:
+
+    -   `geom_point()` for scatter plots, dot plots, etc.
+
+    -   `geom_boxplot()` for, well, boxplots!
+
+    -   `geom_line()` for trend lines, time series, etc.
+
+To add a geom to the plot use `+` operator. Because we have two continuous variables, let\'s use `geom_point()` first:
+
+```{r}
+ggplot(data = tree_bird, mapping = aes(x = count_tree_species, y = count_bird_species)) +
+  geom_point()
+
+```
+
+We can also add colors for points
+
+```{r}
+ggplot(data = tree_bird, mapping = aes(x = count_tree_species, y = count_bird_species)) +
+  geom_point(alpha = 0.1, color = "blue")
+```
+
+Or to color each species in the plot differently, you could use a vector as an input to the argument **color**. **`ggplot2`** will provide a different color corresponding to different values in the vector. Here is an example where we color with **`Site_ID`**:
+
+```{r}
+ggplot(data = tree_bird, mapping = aes(x = count_tree_species, y = count_bird_species)) +
+  geom_point(aes(color = as.factor(Year)))
+```
+
+**Challenge**
+
+Based on the tree health data where we classified trees as "small" or "large" based on circumference, plot tree circumference vs tree diameter and color the points by `Size_group`
+
+```{r}
+ggplot(data = sub_tree_health_cat, aes(x = Site_ID, y = Circumference)) +
+  geom_point(aes(color = Size_group))
+```
+
+### Boxplot
+
+Let's subset our tree health data to only include the top 10 most surveyed species
+
+```{r}
+tree_survey_count<-sub_tree_health_cat %>% 
+  filter(!is.na(Scientific_Name)) %>% 
+  count(Scientific_Name) %>% 
+  arrange(desc(n))
+
+toi<-tree_survey_count %>% 
+  filter(n>=73)
+
+top_tree<-sub_tree_health_cat %>% 
+  filter(Scientific_Name %in% toi$Scientific_Name)
+
+```
+
+We can use boxplots to visualize the distribution of weight within each species:
+
+```{r}
+ggplot(top_tree, aes(x = Scientific_Name, y = Circumference)) +
+  geom_boxplot()
+```
+
+It's a bit hard to read the x-axis labels, let's change that
+
+```{r}
+ggplot(top_tree, aes(x = Scientific_Name, y = Circumference)) +
+  geom_boxplot() +
+  coord_flip()
+```
+
+```{r}
+ggplot(data = top_tree, mapping = aes(x = Scientific_Name, y = Circumference)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(alpha = 0.3, color = "tomato") +
+    coord_flip()
+```
+
+**CHALLENGE**
+
+Replace the boxplot with a violon plot (hing: see `geom_violin`
+
+```{r}
+ggplot(data = top_tree, mapping = aes(x = Scientific_Name, y = Circumference)) +
+    geom_violin(outlier.shape = NA) +
+    geom_jitter(alpha = 0.3, color = "tomato") +
+    coord_flip()
+```
+
+### Plotting time series
+
+```{r}
+soil_quad<-read_csv(here("Data", "veg-tree-soil", "M04_020_Soil_Surface_Quadrat_Analysis_Join_Parent_Child.csv"))
+```
+
+```{r}
+soil_quad<-soil_quad %>% 
+  dplyr::select(Project_Name, Site_ID, Year, Quadrat_Function, Bare_ground_percent, Cryptogams_percent, Litter_percent, Fallen_branches_percent, Large_logs_percent, Plant_base_percent, Surface_rock_percent, Gravel_Gibber_Stones_percent) %>% 
+  filter(!is.na(Site_ID))
+```
+
+```{r}
+yearly_avg <- soil_quad %>%
+  group_by(Year) %>% 
+  summarise_at(vars(Bare_ground_percent:Gravel_Gibber_Stones_percent), mean, na.rm = T)
+```
+
+If you notice, this data is not in the "tidy" format. Let's pivot it so that it will be easier to work with in ggplot2.
+
+```{r}
+yearly_avg_long<-pivot_longer(data = yearly_avg, names_to = "Variable", values_to = "Avg_percent", cols = Bare_ground_percent:Gravel_Gibber_Stones_percent)
+```
+
+Timelapse data can be visualized as a line plot with years on the x-axis and counts on the y-axis:
+
+```{r}
+ggplot(data = yearly_avg_long, aes(x = Year, y = Avg_percent)) +
+     geom_line()
+```
+
+Unfortunately, this does not work because we plotted data for all the genera together. We need to tell ggplot to draw a line for each genus by modifying the aesthetic function to include `group = Variable`:
+
+```{r}
+ggplot(data = yearly_avg_long, aes(x = Year, y = Avg_percent, group = Variable)) +
+     geom_line()
+```
+
+We will be able to distinguish genera in the plot if we add colors (using `color` also automatically groups the data):\
+
+```{r}
+ggplot(data = yearly_avg_long, aes(x = Year, y = Avg_percent, group = Variable, color = Variable)) +
+     geom_line()
+```
+
+### Faceting
+
+`ggplot` has a special technique called *faceting* that allows the user to split one plot into multiple plots based on a factor included in the dataset. We will use it to make a time series plot for each genus:
+
+```{r}
+ggplot(data = yearly_avg_long, aes(x = Year, y = Avg_percent)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable))
+```
+
+You can facet by more than one variable. Let's go back and add in the quadrat function column to facet our data by quadrat function and our cover type.
+
+```{r}
+yearly_avg_fun <- soil_quad %>%
+  group_by(Year, Quadrat_Function) %>% 
+  summarise_at(vars(Bare_ground_percent:Gravel_Gibber_Stones_percent), mean, na.rm = T)
+```
+
+```{r}
+yearly_avg_fun_long<-pivot_longer(data = yearly_avg_fun, names_to = "Variable", values_to = "Avg_percent", cols = Bare_ground_percent:Gravel_Gibber_Stones_percent)
+```
+
+```{r}
+ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent)) +
+    geom_line() +
+    facet_grid(rows = vars(Quadrat_Function), cols = vars(Variable))
+```
+
+You can also organise the panels only by rows (or only by columns):
+
+```{r}
+# One column, facet by row
+ggplot(data = yearly_avg_fun_long,
+       mapping = aes(x = Year, y = Avg_percent, color = Quadrat_Function)) +
+  geom_line() +
+  facet_grid(rows = vars(Variable))
+```
+
+```{r}
+# One row, facet by column
+ggplot(data = yearly_avg_fun_long,
+       mapping = aes(x = Year, y = Avg_percent, color = Quadrat_Function)) +
+  geom_line() +
+  facet_grid(cols = vars(Variable))
+```
+
+### ggplot2 themes
+
+Usually plots with white background look more readable when printed. Every single component of a `ggplot` graph can be customized using the generic `theme()` function, as we will see below. However, there are pre-loaded themes available that change the overall appearance of the graph without much effort.
+
+For example, we can change our previous graph to have a simpler white background using the `theme_bw()` function:
+
+```{r}
+ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable)) +
+  theme_bw()
+```
+
+In addition to `theme_bw()`, which changes the plot background to white, **`ggplot2`** comes with several other themes which can be useful to quickly change the look of your visualization. The complete list of themes is available at <https://ggplot2.tidyverse.org/reference/ggtheme.html>. `theme_minimal()` and `theme_light()` are popular, and `theme_void()` can be useful as a starting point to create a new hand-crafted theme.
+
+### Customization
+
+Take a look at the [**`ggplot2`** cheat sheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf), and think of ways you could improve the plot.
+
+Now, let\'s change names of axes to something more informative than \'year\' and \'n\' and add a title to the figure:
+
+```{r}
+ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable)) + 
+  labs(x = "Year",
+       y = "Percent cover",
+       color = "Function") +
+  theme_bw()
+```
+
+```{r}
+ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable)) + 
+  labs(x = "Year",
+       y = "Percent cover",
+       color = "Function") +
+  theme_bw() +
+  theme(text = element_text(size = 16))
+```
+
+Note that it is also possible to change the fonts of your plots. If you are on Windows, you may have to install the [**`extrafont`** package](https://github.com/wch/extrafont), and follow the instructions included in the README for this package.
+
+After our manipulations, you may notice that the values on the x-axis are still not properly readable. Let\'s change the orientation of the labels and adjust them vertically and horizontally so they don\'t overlap. You can use a 90 degree angle, or experiment to find the appropriate angle for diagonally oriented labels. We can also modify the facet label text (`strip.text`) to italicize the genus names:
+
+```{r}
+ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable)) + 
+  labs(x = "Year",
+       y = "Percent cover",
+       color = "Function") +
+  theme_bw() +
+  theme(axis.text.x = element_text(colour = "grey20", size = 12, angle = 90, hjust = 0.5, vjust = 0.5),
+                        axis.text.y = element_text(colour = "grey20", size = 12),
+                        strip.text = element_text(face = "italic"),
+                        text = element_text(size = 16))
+
+```
+
+### Arranging plots
+
+Faceting is a great tool for splitting one plot into multiple plots, but sometimes you may want to produce a single figure that contains multiple plots using different variables or even different data frames. The **`patchwork`** package allows us to combine separate ggplots into a single figure while keeping everything aligned properly. Like most R packages, we can install `patchwork` from CRAN, the R package repository:
+
+```{r}
+install.packages("patchwork")
+```
+
+```{r}
+library(patchwork)
+```
+
+After you have loaded the `patchwork` package you can use `+` to place plots next to each other, `/` to arrange them vertically, and `plot_layout()` to determine how much space each plot uses. Note that you need to save the plots as new variables. They will not show up below now unless you type in the variable name.
+
+```{r}
+perc_cover_plot<-ggplot(data = yearly_avg_long, aes(x = Year, y = Avg_percent)) +
+    geom_line() +
+    facet_wrap(facets = vars(Variable)) +
+  labs(x = "Year",
+       y = "Average percent cover")
+```
+
+```{r}
+top_tree_plot<-ggplot(data = top_tree, mapping = aes(x = Scientific_Name, y = Circumference)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(alpha = 0.3, color = "tomato") +
+    coord_flip()
+```
+
+```{r}
+perc_cover_plot+top_tree_plot
+```
+
+You can also use parentheses `()` to create more complex layouts. There are many useful examples on the [patchwork website](https://patchwork.data-imaginist.com/)
+
+### Exporting plots
+
+After creating your plot, you can save it to a file in your favorite format. The Export tab in the **Plot** pane in RStudio will save your plots at low resolution, which will not be accepted by many journals and will not scale well for posters. The [**`ggplot2`** extensions website](https://exts.ggplot2.tidyverse.org/) provides a list of packages that extend the capabilities of **`ggplot2`**, including additional themes.
+
+Instead, use the `ggsave()` function, which allows you to easily change the dimension and resolution of your plot by adjusting the appropriate arguments (`width`, `height` and `dpi`):
+
+```{r}
+ggsave(here("figures", "Top_tree_boxplot.png"), top_tree_plot, width = 15, height = 10)
+```
+
+If you use the `ggsave` function without specifying a plot name, it will save the last printed plot like this:
+
+```{r}
+perc_cover_plot+top_tree_plot
+```
+
+```{r}
+ggsave(here("figures", "Joined_plot.png"),width = 20, height = 10)
+```
+
+Voila!
+
+## The finish line
+
+Phew! We have learned a lot today! Well done and we hope this has helped give you more confidence to tackle your next project in R. Remember - one of the greatest aspects of the R programming language is the community. There are loads of resources and ways to find help and grow your skills. As you continue to code you will only get better at trouble shooting problems, writing efficient code, and sufficiently documenting your scripts.
+
+As a note - you should save your script periodically as you go to make sure you don't lose any of your valuable work.
+
+One more useful function before we go! If you ever want to clear your R environment you can use the following (but be careful as it will wipe all the variables you have created!).
+
+```{r}
+rm(list=ls())
+```
+
+It's good practice to start with an empty environment to avoid mistakes.
+
+## 
 
 ## 
