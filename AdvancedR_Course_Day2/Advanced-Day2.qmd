@@ -16,5 +16,20 @@ embed-resources: true
 
 # Welcome
 
-Day 2 (Morning): Spatial models
-Day 2 (Afternoon): Interactive dashboard
+## General(ised) linear models in a Bayesian framework
+
+
+## Day 1 (Afternoon): Complex multivariate models
+
+-   Bayesian glm (univariate) - start with same species richness example from previous day,
+
+-   Bayesian parameter estimation
+
+-   max likelihood to MCMC sampling
+
+-   Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
+
+-   multivariate GLM (or wait till day 2 and make it a spatial example?)
+
+- do a presence absence example
+Day 2 (Morning): Spatial models Day 2 (Afternoon): Interactive dashboard
