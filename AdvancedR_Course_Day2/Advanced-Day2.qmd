@@ -1,5 +1,5 @@
 ---
-title: "Modelling in R"
+title: "Advanced Modelling in R"
 format: html
 theme: sandstone
 author-title: Made for
@@ -14,22 +14,31 @@ editor: visual
 embed-resources: true
 ---
 
-# Welcome
+# Statistical modelling in R for ecologists (Part 2)
+
+Here we build upon modelling skills developed in [Part 1](insert link) of this coarse. In **Part 1** we learned how to fit models to data in a *frequentist* paradigm. 
+
+Here we will fit the same models in a *bayesian* paradigm. Then we will build more complex, multivariate bayesian models, to demonstrate when they might be preferred over over frequentist approaches.
 
 ## General(ised) linear models in a Bayesian framework
-
-
-## Day 1 (Afternoon): Complex multivariate models
-
--   Bayesian glm (univariate) - start with same species richness example from previous day,
 
 -   Bayesian parameter estimation
 
 -   max likelihood to MCMC sampling
 
+-   Bayesian glm (univariate) - repeat same examples from yesterday
+
+## Multivariate response
+
+- nmds
+
+- multivariate GLM - its the same thing
+
+## Spatial multivariate GLM - a joing species distribution model
+
 -   Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
 
--   multivariate GLM (or wait till day 2 and make it a spatial example?)
+-   multivariate, spatial GLM (or wait till day 2 and make it a spatial example?)
 
-- do a presence absence example
-Day 2 (Morning): Spatial models Day 2 (Afternoon): Interactive dashboard
+- Make a spatial interactive map
+
