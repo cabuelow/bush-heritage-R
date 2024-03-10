@@ -50,6 +50,8 @@ This course assumes an understanding of how to wrangle, summarise, and visualise
 
 We can use linear models to estimate the strength and direction of ecological relationships. The word 'linear' is important - when we use linear models we assume a straight (or linear) relationship between our **response variable** (also referred to as dependent variables) and our **explanatory variables** (also referred to as covariates, predictor, or independent variables - don't let the different terms confuse you).
 
+In addition to linearity, there are three other assumptions: homoskedasticity (constant variance) and normality of the residuals, and independence of observations. Don't worry about those for now though, we'll discuss them a bit later.
+
 **Explanatory variables** can be either *continuous* (left plot below) or *categorical* (right plot below).
 
 ```{r, fig.width=5.5,fig.height=2.5, fig.align='center'}
