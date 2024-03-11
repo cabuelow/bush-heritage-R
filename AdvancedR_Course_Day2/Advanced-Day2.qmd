@@ -18,7 +18,7 @@ TODO: Lot's to tidy up and explain better, and last section on mapping predictio
 
 # Statistical modelling in R for ecologists (Part 2)
 
-Here we build upon modelling skills developed in [Part 1](insert%20link) of this coarse. In **Part 1** we learned how to fit models to data in a *frequentist* paradigm.
+Here we build upon modelling skills developed in [Part 1](insert%20link) of this course. In **Part 1** we learned how to fit models to data in a *frequentist* paradigm.
 
 Here we will fit the same models in a *bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models, to demonstrate when they might be preferred over over frequentist approaches.
 
