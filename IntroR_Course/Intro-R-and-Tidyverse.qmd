@@ -733,7 +733,7 @@ sub_tree_health_narm %>%
   count(Site_ID)
 ```
 
-The `count()` function is shorthand for something we\'ve already seen: grouping by a variable, and summarizing it by counting the number of observations in that group. In other words, `surveys %>% count()` is equivalent to:
+The `count()` function is shorthand for something we've already seen: grouping by a variable, and summarizing it by counting the number of observations in that group. In other words, `surveys %>% count()` is equivalent to:
 
 ```{r}
 sub_tree_health_narm %>% 
@@ -881,7 +881,7 @@ Luckily, the data we have been working with thus far has already been in a tidy 
 
 Further arguments include `values_fill` which, if set, fills in missing values with the value provided.
 
-Let\'s use `pivot_wider()` to transform our dataset to find the mean circumference of each species in each plot over the entire survey period. We use `filter()`, `group_by()` and `summarize()` to filter our observations and variables of interest, and create a new variable for the `mean_circumference`.
+Let's use `pivot_wider()` to transform our dataset to find the mean circumference of each species in each plot over the entire survey period. We use `filter()`, `group_by()` and `summarize()` to filter our observations and variables of interest, and create a new variable for the `mean_circumference`.
 
 ```{r}
 sub_gw <- sub_tree_health_narm %>%
@@ -1129,13 +1129,15 @@ Remember you only need to install a package once. After installation, future scr
 
 **`ggplot2`** refers to the name of the package itself. When using the package we use the function **`ggplot()`** to generate the plots, and so references to using the function will be referred to as **`ggplot()`** and the package as a whole as **`ggplot2`**
 
-**`ggplot2`** plots work best with data in the 'tidy', \'long\' format, i.e., a column for every variable, and a row for every observation. Well-structured data will save you lots of time when making figures with **`ggplot2`**
+**`ggplot2`** plots work best with data in the 'tidy', 'long' format, i.e., a column for every variable, and a row for every observation. Well-structured data will save you lots of time when making figures with **`ggplot2`**
 
 ggplot graphics are built layer by layer by adding new elements. Adding layers in this fashion allows for extensive flexibility and customization of plots.
 
 To build a ggplot, we will use the following basic template that can be used for different types of plots:
 
-    ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
+```         
+ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
+```
 
 -   use the `ggplot()` function and bind the plot to a specific data frame using the `data` argument
 
@@ -1150,10 +1152,9 @@ ggplot(data = tree_bird)
 
     ```
 
-```{=html}
 <!-- -->
-```
--   add \'geoms\' -- graphical representations of the data in the plot (points, lines, bars). **`ggplot2`** offers many different geoms; we will use some common ones today, including:
+
+-   add 'geoms' -- graphical representations of the data in the plot (points, lines, bars). **`ggplot2`** offers many different geoms; we will use some common ones today, including:
 
     -   `geom_point()` for scatter plots, dot plots, etc.
 
@@ -1161,7 +1162,7 @@ ggplot(data = tree_bird)
 
     -   `geom_line()` for trend lines, time series, etc.
 
-To add a geom to the plot use `+` operator. Because we have two continuous variables, let\'s use `geom_point()` first:
+To add a geom to the plot use `+` operator. Because we have two continuous variables, let's use `geom_point()` first:
 
 ```{r}
 ggplot(data = tree_bird, mapping = aes(x = count_tree_species, y = count_bird_species)) +
@@ -1353,7 +1354,7 @@ In addition to `theme_bw()`, which changes the plot background to white, **`ggpl
 
 Take a look at the [**`ggplot2`** cheat sheet](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf), and think of ways you could improve the plot.
 
-Now, let\'s change names of axes to something more informative than \'year\' and \'n\' and add a title to the figure:
+Now, let's change names of axes to something more informative than 'year' and 'n' and add a title to the figure:
 
 ```{r}
 ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +
@@ -1378,7 +1379,7 @@ ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_
 
 Note that it is also possible to change the fonts of your plots. If you are on Windows, you may have to install the [**`extrafont`** package](https://github.com/wch/extrafont), and follow the instructions included in the README for this package.
 
-After our manipulations, you may notice that the values on the x-axis are still not properly readable. Let\'s change the orientation of the labels and adjust them vertically and horizontally so they don\'t overlap. You can use a 90 degree angle, or experiment to find the appropriate angle for diagonally oriented labels. We can also modify the facet label text (`strip.text`) to italicize the genus names:
+After our manipulations, you may notice that the values on the x-axis are still not properly readable. Let's change the orientation of the labels and adjust them vertically and horizontally so they don't overlap. You can use a 90 degree angle, or experiment to find the appropriate angle for diagonally oriented labels. We can also modify the facet label text (`strip.text`) to italicize the genus names:
 
 ```{r}
 ggplot(data = yearly_avg_fun_long, aes(x = Year, y = Avg_percent, col = Quadrat_Function)) +

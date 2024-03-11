@@ -14,7 +14,7 @@ editor: visual
 embed-resources: true
 ---
 
-**TODO** - need to add in examples with real data
+**TODO** - need to add in examples with real data, and how to visualise and interpret model output - p-values, confidence intervals, etc.
 
 # Statistical modelling in R for ecologists (Part 1)
 
@@ -32,11 +32,11 @@ Modelling goals can be three-fold:
 2.  **Inference**, e.g., do protected areas cause increased species richness?,
 3.  **Prediction**, e.g., use correlations between environmental variables and species abundance to predict species habitat suitability across space.
 
-How we build and select models depends on our goals for the analysis. Check out this great guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336).
+How we build and select models depends on our goals, see this guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336).
 
-Here, we will focus primarily on building exploratory and predictive models. (Causal inference is beyond the scope, but there is an excellent introduction for ecologists [here](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecm.1554)).
+Here, we will focus on learning the **basics** of fitting models to answer ecological questions. You will be able to use these modelling skills regardless of whether your goal is exploration, inference, or prediction.
 
-We'll start with a basic linear model to explore how disturbance influences ecological characteristics across survey sites. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). We'll end by building more complex spatial and multivariate models in **R**.
+We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In the [second part of this course](insert link), we'll build more complex multivariate models in **R**.
 
 This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
 
@@ -89,7 +89,7 @@ b <- ggplot(df) +
 a+b
 ```
 
-If you took a first year undergrad stats course, you might be thinking, let's use a t-test/ANOVA for the *categorical* example above! A general linear model with a categorical explanatory variable is essentially the same thing - it will estimate the the mean difference between levels of a categorical variable.
+If you took a first year undergrad stats course, you might be thinking, let's use a t-test or ANOVA for the *categorical* example above! A general linear model with a categorical explanatory variable is essentially the same thing - it will estimate the the mean difference between levels of a categorical variable.
 
 *One other important thing to note*: although general linear models assumes a linear relationship between the response and explanatory variable, **they can accommodate non-linearity** via a non-linear transformation of the explanatory variable, e.g., this quadratic relationship between the explanatory and response.
 
@@ -154,7 +154,7 @@ C)  tree circumference is a continuous variable, and the natural variation (erro
 
 Given the above, we think that we can use a general linear model to estimate the size of the effect (relationship) between tree circumference ($y$) and fire severity ($x$).
 
-So, we will the equation for a linear model to simulate 20 tree circumference measurements ($y$):
+So, we will the equation for a linear model to simulate 100 tree circumference measurements ($y$):
 
 $$y_i = b_0 + b_{1}X_{1i} + \epsilon_i.$$ We'll assume that, on average, the magnitude of the negative effect of fire severity on tree circumference is `-1`, meaning a one unit increase in fire severity results in a 1 unit decrease in tree circumference. This is the $b_{1}$ coefficient in the above equation. When fitting models to real data, this is often the relationship that is **unknown** and we are trying to estimate.
 
@@ -507,7 +507,7 @@ plot(m)
 
 ### Count data and overdispersion
 
-Often, ecological count data is **over-dispersed**.  This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology.)
+Often, ecological count data is **over-dispersed**. This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology.)
 
 How can we check for over-dispersion? First, we can divide the residual deviance (the amount of left over variation we have in our data, after fitting the model) by the residual degrees of freedom (the amount of left over variation our model expects). It should be close to 1. If not, over-dispersion is likely a problem in our model fit.
 
@@ -515,11 +515,11 @@ How can we check for over-dispersion? First, we can divide the residual deviance
 m$deviance/m$df.residual
 ```
 
-So overdispersion is not a problem here (and also we didn't see anything indicative of overdispersion in the above diagnostic plots). 
+So overdispersion is not a problem here (and also we didn't see anything indicative of overdispersion in the above diagnostic plots).
 
-**The rule of thumb** is, if the ratio is >1.5, then overdispersion needs to be dealt with. We can try a **negative binomial** distribution instead of a poisson to deal with overdispersion. Alternatively, sometimes overdispersion is driven largely by an excess number of 0s in our count data (typical in ecology). In this case we might try a **zero-inflated poisson** or **zero-inflated negative binomial**.
+**The rule of thumb** is, if the ratio is \>1.5, then overdispersion needs to be dealt with. We can try a **negative binomial** distribution instead of a poisson to deal with overdispersion. Alternatively, sometimes overdispersion is driven largely by an excess number of 0s in our count data (typical in ecology). In this case we might try a **zero-inflated poisson** or **zero-inflated negative binomial**.
 
-We can also check the diagnostic plots. If we see a **'fan-shape'** in the residuals vs. fitted plot, implying errors are greater when fitted (predicted) abundance is higher, we can suspect that our data is over-dispersed for the model we are trying to fit to it. Of coarse, we didn't see overdispersion 
+We can also check the diagnostic plots. If we see a **'fan-shape'** in the residuals vs. fitted plot, implying errors are greater when fitted (predicted) abundance is higher, we can suspect that our data is over-dispersed for the model we are trying to fit to it. Of coarse, we didn't see overdispersion
 
 Let's simulate over-dispersed species abundance and see for ourselves. To simulate this data, we'll use the negative binomial distribution instead of the poisson. In contrast to the poisson, the mean of a prediction is not expected to equal the variance. Instead, we can define the mean and variance separately, and use this to simulate overdispersed counts from the negative binomial distribution.
 
@@ -545,6 +545,7 @@ Just as we expected, there is greater variability in species abundance than befo
 m <- glm(Species_abundance_overdisp ~ Fire_severity, data = df2, family = poisson(link = 'log'))
 summary(m)
 ```
+
 What do you notice right away about the model fit? The deviance is a lot higher than before.
 
 ```{r}
@@ -558,11 +559,11 @@ par(mfrow = c(2,2))
 plot(m)
 ```
 
-Not good. **But**, when dealing with high dispersion data (such as count data), we often wouldn't expect residuals to be normally distributed anyway. 
+Not good. **But**, when dealing with high dispersion data (such as count data), we often wouldn't expect residuals to be normally distributed anyway.
 
-[{DHARMa}](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html) offers a nice solution, simulating quantile residuals, which we would expect to be normally distributed if the glm is a good fit to the data. 
+[{DHARMa}](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html) offers a nice solution, simulating quantile residuals, which we would expect to be normally distributed if the glm is a good fit to the data.
 
-```{r}
+```{r,fig.width=6,fig.height=4, fig.align='center'}
 library(DHARMa)
 resid <- simulateResiduals(fittedModel = m, plot = F)
 plot(resid)
@@ -578,14 +579,14 @@ summary(m)
 
 Summary indicates over-dispersion is no longer a problem. Let's check our randomised quantile residuals to confirm this model is a good fit.
 
-```{r}
+```{r,fig.width=6,fig.height=4, fig.align='center'}
 resid <- simulateResiduals(fittedModel = m, plot = F)
 plot(resid)
 ```
 
 Much better.
 
-But, notice that the coefficient estimates of both the poisson and negative-binomial glms fitted to over-dispersed data were not biased. So why do we care? Well, notice the standard error of the coefficients is much lower than in the mis-specified model compared to the correct one. So, if we don't deal with overdispersion, we could wind up incorrectily inferring there is a significant effect, when there isn't.
+But, notice that the coefficient estimates of both the poisson and negative-binomial glms fitted to over-dispersed data were not biased. So why do we care? Well, the standard error of the coefficients is much lower than in the mis-specified model compared to the correct one. So, if we don't deal with over dispersion, we could wind up incorrectly inferring there is a significant effect, when there isn't.
 
 ### Fitting generalised linear models to real data
 
@@ -598,6 +599,7 @@ What we haven't covered, and where you can learn more:
 -   **Interactive effects** (i.e., the response of y to one predictor depends on another)
 
 -   **Random effects** (i.e., mixed effects models) - most models in ecology should probably be mixed effects models! Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation)
+TODO: mixed effects modelling packages, e.g., GLMMtmb, nlme, etc, Zurr books
 
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables)
 
