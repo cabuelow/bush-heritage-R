@@ -34,7 +34,7 @@ Find more [xkcd comics here](https://xkcd.com/1132/)
 
 Diving into the fundamental and nuanced differences between **frequentist** and **bayesian** statistics is beyond the scope of this short course. But you can find some nice, short overview of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
 
-From my point of view, both are useful. Often, I start by fitting Frequentist models to my data (like we did yesterday) and then move to more complex Bayesian models if needed.
+From my point of view, both are useful. Often, I start by fitting Frequentist models to my data and then move to more complex Bayesian models if needed.
 
 Why?
 
