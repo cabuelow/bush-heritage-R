@@ -9,166 +9,598 @@ toc-location: left
 toc-title: Content
 toc-depth: 4
 published-title: Date
-date: 2024-02-13
+date: 2024-03-18
 editor: visual
 embed-resources: true
 ---
 
-# Statistical modelling in R for ecologists
+**TODO** - need to add in examples with real data, and how to visualise and interpret model output - p-values, confidence intervals, etc.
+
+# Statistical modelling in R for ecologists (Part 1)
 
 Whenever you embark on a journey in statistical modelling, it's good to be reminded of the following quote from *George E.P. Box*,
 
-**All models are wrong, but some are useful**.
+**'All models are wrong, but some are useful.'**.
 
 ![Photograph of Geoge E.P. Box, "one of the great statistical minds of the 20th century"](Images/Box.jpeg)
 
-We build models to help us understand ecological relationships. But no model is perfect. Ecological data in particular is fraught with a lot of random, natural variation in observations that our models will be unable to explain. 
+We build models to help us understand ecological relationships. But no model is perfect. Ecological data in particular is fraught with a lot of random, natural variation in observations that our models will be unable to explain.
 
-Modelling goals can be three-fold: 
+Modelling goals can be three-fold:
 
-  1. **Exploration**, e.g. which environmental variables are associated with species richness?,
-  
-  2. **Inference**, e.g., do protected areas cause increased species richness?,
-  
-  3. **Prediction**, e.g., use correlations between environmental variables and species abundance to predict species habitat suitability across space.
+1.  **Exploration**, e.g. which environmental variables are associated with species richness?,
+2.  **Inference**, e.g., do protected areas cause increased species richness?,
+3.  **Prediction**, e.g., use correlations between environmental variables and species abundance to predict species habitat suitability across space.
 
-How we build and select models depends on our goals for the analysis. Check out this great guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
+How we build and select models depends on our goals, see this guide to [goal driven model selection in ecology](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336).
 
-Here, we will focus primarily on building exploratory and predictive models. Causal inference is beyond the scope, but see this great guide for ecologists [insert Arif paper]. We'll start with a basic linear model to explore how disturbance influences ecological characteristics across survey sites. We'll see how, depending on the type of data we are modelling, we might need use *generalised* linear models (as opposed to *general* linear models). We'll end with building complex spatial and multivariate models in **R**.
+Here, we will focus on learning the **basics** of fitting models to answer ecological questions. You will be able to use these modelling skills regardless of whether your goal is exploration, inference, or prediction.
+
+We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In the [second part of this course](insert link), we'll build more complex multivariate models in **R**.
 
 This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
 
-  - The fundamentals of fitting statistical models to data,
-  
-  - how to check your model fits the data well, and
-  
-  - how to understand and visualise model output in **R**.
+-   The fundamentals of fitting statistical models to data,
+-   how to check your model fits the data well, and
+-   how to understand and visualise model output in **R**.
 
 ## General linear models
 
-We can use linear models to estimate the strength and direction of ecological relationships. The word 'linear' is important - when we use linear models we assume a straight (or linear) relationship between our response variable (also referred to as dependent variables) and our explanatory variables (also referred to as covariates or predictor variables - don't let the terms confuse you).
+We can use linear models to estimate the strength and direction of ecological relationships. The word 'linear' is important - when we use linear models we assume a straight (or linear) relationship between our **response variable** (also referred to as dependent variables) and our **explanatory variables** (also referred to as covariates, predictor, or independent variables - don't let the different terms confuse you).
+
+In addition to linearity, there are three other assumptions: homoskedasticity (constant variance) and normality of the residuals, and independence of observations. Don't worry about those for now though, we'll discuss them a bit later.
+
+**Explanatory variables** can be either *continuous* (left plot below) or *categorical* (right plot below).
+
+```{r, fig.width=5.5,fig.height=2.5, fig.align='center'}
+#| echo: false
+#| warning: false
+library(ggplot2)
+library(patchwork)
+b0 <- 2
+b1 <- -3
+e_mu <- 0
+e_sd <- 1
+X <- rnorm(20)
+X2 <- rep(c(0,1), 10)
+e <- rnorm(length(X), e_mu, e_sd)
+y <- b0 + b1*X + e
+y2 <- b0 + b1*X2 + e
+df <- data.frame(X, X2, y, y2)
+
+a <- ggplot(df) +
+  aes(x = X, y = y) +
+  geom_point() +
+  ggtitle('A) Continuous') +
+  ylab('Response variable') +
+  xlab('Explanatory variable') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+
+b <- ggplot(df) +
+  aes(x = factor(X2), y = y2) +
+  geom_boxplot() +
+  geom_jitter() +
+  ggtitle('B) Categorical') +
+  ylab('Response variable') +
+  xlab('Explanatory variable') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+a+b
+```
+
+If you took a first year undergrad stats course, you might be thinking, let's use a t-test or ANOVA for the *categorical* example above! A general linear model with a categorical explanatory variable is essentially the same thing - it will estimate the the mean difference between levels of a categorical variable.
+
+*One other important thing to note*: although general linear models assumes a linear relationship between the response and explanatory variable, **they can accommodate non-linearity** via a non-linear transformation of the explanatory variable, e.g., this quadratic relationship between the explanatory and response.
+
+```{r, fig.width=2.5,fig.height=2.5, fig.align='center'}
+#| echo: false
+#| warning: false
+library(ggplot2)
+b0 <- 2
+b1 <- -3
+e_mu <- 0
+e_sd <- 1
+X <- rnorm(20)
+e <- rnorm(length(X), e_mu, e_sd)
+y <- b0 + b1*X^2 + e
+df <- data.frame(X, y)
+
+ggplot(df) +
+  aes(x = X, y = y) +
+  geom_point() +
+  ggtitle('C) Non-linear (quadratic)') +
+  ylab('Response variable') +
+  xlab('Explanatory variable') +
+  geom_smooth(method = 'loess') +
+  theme_classic()
+```
+
+### A little bit of maths
 
 To understand how they work, it helps to take a quick look at how we formulate linear models mathematically:
 
- $$y_i = b_0 + b_{1}X_{1i} + \epsilon_i$$
-`y_i` is our response variable of interest,
-`b_0` is the is the intercept for the linear relationship between y and our explanatory variables (X's), 
-`b_1` is the coefficient representing the strength and direction of the relationship between y and X_1
-`\epsilon` is the random, unexplained error in our observations around the fitted relationship between y and X(s).
+$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$ $y_i$ is our response variable of interest, $b_0$ is the is the intercept for the linear relationship between $y$ and our explanatory variables ($X$'s), $b_1$ is the coefficient representing the strength and direction of the relationship between $y$, and X_1 $\epsilon$ is the random, unexplained error in our observations around the fitted relationship between $y$ and $X$(s).
 
-In the above example we only have one explanatory variable (X), but we can have multiple. We would just add on another term, e.g. `b_{2}X_{2i}`. Explanatory variables can be categorical or continuous - we'll see the consequences of that later.
+In the above example we only have one explanatory variable ($X$), but we can have multiple (referred to as 'multiple linear regression'). We would just add on another term to our equation, e.g. $b_{2}X_{2i}$.
 
-When we're fitting **general** linear models, we assume that `\epsilon`, the error term, is drawn from a normal (i.e., gaussian) distribution. We would expect this if our response variable (y) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.
+When we're fitting **general** linear models, we assume that $\epsilon$, the error term, is drawn from a normal (i.e., gaussian) distribution. We can write that assumption mathematically as,
 
-### Fitting a linear model to data
+$$\epsilon \sim Normal(0, \sigma)$$ We would expect this if our response variable ($y$) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.
 
-Let's get started with a general linear model. We want to know, are trees in less disturbed sites on average older compared to disturbed sites.
+### Simulating data to enhance our understanding
 
-If you took a first year undergrad stats course, you might be thinking, let's use an ANOVA! ANOVA's are just linear models with a categorical predictor variable.
+When fitting models to data, one of the most important tools at our disposal is **data simulation**. It's a very important, but often under-utilised skill. We can use **R** to **simulate** data that corresponds to what we expect to observe in the real world, given what we know about the **data generating process**.
 
-Tree circumference, our response variable (y) of interest, is continuous and we would expect the error distribution to be normally distributed. So we will fit a general linear model.
+Simulated data has a **known truth**. We know exactly what the relationship between $x$ and $y$ is because we define it mathematically when we do the simulation (we'll do this in a sec).
 
-Before we fit a model to our data, we should always plot it.
+Knowing the truth is very powerful when developing statistical models. We can directly test whether our model can reliably recover the **known truth**. If they can, then we can be reasonably confident that they will perform well on data collected in the real world (given our assumption regarding the data generating process are correct).
+
+Simulation is also a great way to enhance our understanding of how models work. So let's try it.
+
+First we will simulate data to recreate figures A) and B) above. Then we will fit linear models to see if the can reliably estimate the **known truth**.
+
+#### Continuous explanatory variable
+
+As an example, we'll consider our response variable of interest as **tree circumference**, and our explanatory variable to be **fire severity**. In the real world, we've made twenty independent measurements of tree circumference, and also measured fire severity at those locations.
+
+So we will simulate a dataset of 100 tree circumference measurements and their corresponding fire severity, based on our understanding of the data generating process underlying tree circumference. (**DISCLAIMER: I am not an expert in forest ecology, and so all of the below assumptions are just for illustrative purposes, and could very much be wrong**).
+
+Let's say we know that:
+
+A)  fire causes tree death and succession, resulting in smaller average tree circumference in locations with higher fire severity, and
+B)  the relationship between fire severity and tree circumference is negative and linear (i.e., a one unit increase in fire severity will result in a decrease in tree circumference),
+C)  tree circumference is a continuous variable, and the natural variation (error) in our measurements will be normally distributed with a mean of 0 and a standard deviation of 1.
+
+Given the above, we think that we can use a general linear model to estimate the size of the effect (relationship) between tree circumference ($y$) and fire severity ($x$).
+
+So, we will the equation for a linear model to simulate 100 tree circumference measurements ($y$):
+
+$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i.$$ We'll assume that, on average, the magnitude of the negative effect of fire severity on tree circumference is `-1`, meaning a one unit increase in fire severity results in a 1 unit decrease in tree circumference. This is the $b_{1}$ coefficient in the above equation. When fitting models to real data, this is often the relationship that is **unknown** and we are trying to estimate.
+
+We'll also assume that, on average, in locations without fire (i.e., fire severity = 0), tree circumference is equal to `2`. This is the $b_0$ coefficient in the above equation and is usually **unknown**.
+
+Fire severity ($X$) will be measured on a continuous scale between 0 to 1, where 0 = no fire and 1 = highest level of fire severity.
+
+As mentioned above (C)), we expect natural variation in tree circumference measurements (i.e., variation not due to fire severity; $\epsilon$) to be normally distributed with a mean of 0 and standard deviation of 0.1.
+
+##### Simulating data
+
+First let's set up our **simulation parameters** - they are constants in the linear model.
+
 ```{r}
-dat <- data.frame(circum = c(rnorm(100, 10), rnorm(100, 20)),
-                  site = factor(c(rep('Disturbed', 100), c(rep('Undisturbed', 100)))))
-boxplot(dat$site, dat$circum)
+b0 <- 5 # average tree circumference when fire severity is = 0 (i.e, y-intercept)
+b1 <- -1 # beta coefficient representing association between tree circumference and fire severity
+e_mu <- 0 # mean error
+e_sd <- 0.1 # error standard deviation
 ```
 
-Now let's fit the linear model, `lm`.
+Great, now all we need to simulate tree circumference is fire severity measurements ($X$) and error ($\epsilon$). We need 100 of each (n = 100). We'll draw fire severity measurements randomly from a uniform distribution with a minimum value of 0 and a max of 1.
+
 ```{r}
-m <- lm(circum ~ site, data = dat)
+n <- 100 # number of tree circumference measurements
+X <- runif(n, min = 0, max = 1) # fire severity measurements
+e <- rnorm(n, e_mu, e_sd) # natural error
+```
+
+Now we can simulate tree circumference using our linear equation: $y_i = b_0 + b_{1}X_{1i} + \epsilon_i.$.
+
+```{r}
+y <- b0 + b1*X + e # simulate tree circumference observations for each fire severity measurement
+df <- data.frame(Fire_severity = X, Tree_circumference = y) # make a dataframe of observations
+head(df)
+```
+
+Looks good. Now let's plot it
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+library(ggplot2)
+ggplot(df) +
+  aes(x = Fire_severity, y = Tree_circumference ) +
+  geom_point() +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+```
+
+**Tip** Do your numbers look slightly different from mine? To make our results reproducible, when ever we use a random number generator in **R**, we should *set the seed*.
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+set.seed(123)
+X <- runif(n, min = 0, max = 1) # fire severity measurements
+e <- rnorm(n, e_mu, e_sd) # natural error
+y <- b0 + b1*X + e # simulate tree circumference observations for each fire severity measurement
+df <- data.frame(Fire_severity = X, Tree_circumference = y) # make a dataframe of observations
+# plot it
+ggplot(df) +
+  aes(x = Fire_severity, y = Tree_circumference ) +
+  geom_point() +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+```
+
+##### Fitting linear models to simulated data to recover **known truths**
+
+Great, we have successfully simulated tree circumference observations! The relationship looks as we expected, with tree circumference decreasing, on average, with increasing fire severity (plus/minus some natural, random variation).
+
+Now we want to know - can we accurately estimate the **known truths**, i.e., the y-intercept $b_0$ and the beta coefficient $b_{1}$, from our simulated data with a linear model?
+
+```{r}
+m <- lm(Tree_circumference ~ Fire_severity, data = df)
+m
+```
+
+Pretty close to our **known truths**. What if we have fewer observations though, or more?
+
+How are the coefficients of the model (the intercept $b_0$ and the beta coefficient $b_{1}$ estimated? For a simple, general linear model like this, we (meaning R) uses Ordinarly Least Squares (OLS) to estimate the model coefficients. If you're a visual learner like me, check out [this great tool to see how OLS works](https://seeing-theory.brown.edu/regression-analysis/index.html). In a nutshell, we're iteratively rotating the straight line between our y and x variables until we get the best fit (i.e. have minimised the sums of squared error).
+
+##### Checking the model fit
+
+```{r}
 summary(m)
 ```
 
-Let's unpack this model summary. [Talk through model output, if time write notes to explain..]
+Let's unpack this model summary. \[Talk through model output, if time write notes to explain..\]
 
-#### Checking the model fit
+Without doing anything else, we already have one metric for assessing model fit - the R2. It tells us our model has explained a whopping 89% of the variability in the data (note, use the adjusted R\^2 if you have more than one explanatory variable). That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R\^2 values due to the natural sources of variability that we can't explain.
 
-Without doing anything else, we already have one metric for assessing model fit - the R^2. It tells us our model has explained a whopping 96% of the variability in the data (note, use the adjusted R^2 if you have more than one explanatory variable). That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R^2 values due to the natural sources of variability that we can't explain.
+**Tip** Try increased the standard deviation of the natural variation we've simulated (e_sd) and see how that changes the R2.
 
-In addition to how much variability in the data our model is explaining, we also want to want to make sure the model isn't violating any structural assumptions, namely:
+In addition to how much variability in the data our model is explaining, we also want to want to make sure the model isn't violating any structural assumptions, namely that the model residuals are:
 
-1. Errors are normally distributed,
-2. Homogeneity of variance.
+1.  Normally distributed, and have
+2.  Homogeneity of variance.
+
+What are residuals? There are different types of residuals, but generally speaking, residuals are the difference between model predictions and observations - e.g., how far are each of the individual data points from line fitted (predicted) by our model? Residuals therefore represent variability in our data that isn't explained by the model. See [here for further explanation](https://www.datascienceblog.net/post/machine-learning/linear_models/).
 
 We can use model diagnostic plots to check these assumptions:
 
-```{r}
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
 plot(m)
 ```
 
-Talk through diagnostics [write notes if time...]
+These diagnostic plots show that our fitted model does not violate any structural model assumptions.
 
-#### Bonus: Adding error
+Let's look at what happens if we try to fit a model that doesn't fit the data well. Let's simulate data with a non-linear (cubic) relationship between fire severity and tree circumference and try to fit a linear model to it.
 
-What might real data with random, natural variation in sampling look like? Let's add some in and try the model again.
-
-```{r}
-dat$circum <- dat$circum + rnorm(nrow(dat), 0, 5)
-boxplot(dat$site, dat$circum)
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+y <- b0 + b1*X^3 + e # simulate tree circumference observations for each fire severity measurement
+df <- data.frame(Fire_severity = X, Tree_circumference = y) # make a dataframe of observations
+# plot it
+ggplot(df) +
+  aes(x = Fire_severity, y = Tree_circumference ) +
+  geom_point() +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm', col = 'red') +
+  geom_smooth(method = 'loess', col = 'blue') +
+  theme_classic()
 ```
 
+We can already see that assuming a linear relationship between fire severity and tree circumference (the red line) is unlikely to yield a model that fits the data well. But let's try fitting the linear model anyway and seeing what the model diagnostics say about the model fit.
+
 ```{r}
-m2 <- lm(circum ~ site, data = dat)
-summary(m2)
+m <- lm(Tree_circumference ~ Fire_severity, data = df)
+summary(m)
 ```
-```{r}
+
+Already we see the explanatory power of the model is lower than before (R2 of 78%). Note also that our estimates of the model coefficients are slightly biased compared to before.
+
+Now let's check the diagnostics.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
 plot(m)
 ```
-How are the coefficients of the model (the intercept and the beta coefficient (b_1) estimated? For a simple, general linear model like this, we (meaning R) uses Ordinarly Least Squares (OLS) to estimate the model coefficients. If you're a visual learner like me, check out [this great tool to see how OLS works](https://seeing-theory.brown.edu/regression-analysis/index.html). In a nutshell, we're iteratively rotating the straight line between our y and x variables until we get the best fit (i.e. have minimised the sums of squared error).
 
-### Generalised linear models
+The QQ plot looks ok, but what about the residuals vs. fitted? They residuals clearly to not exhibit homogeneity of variance. In fact, the u-shaped pattern in the residuals vs. fitted plot gives us a clue that the model is not fitting the data well because there is a non-linear relationship between the response and explanatory variable.
 
-What if, in addition to tree age, we also wanted to ask whether species abundance is higher in disturbed compared to undisturbed sites. Could we use the same model and just swap out circumference for abundance?
-
-Let's think about one of our model assumptions - `\epsilon`, the error term, is normally distributed. Continuous data, like circumference, conforms to this assumption. Observation of species' abundance, however, can only be whole numbers (i.e., is discrete instead of continuous) and is bounded from 0 to $∞$.
-
-So, we need to *generalise* our linear model a bit to accommodate this non-normal error structure. We can use a **link** function to transform our model predictions. [TODO explain this better]
-
-**R** makes this easy to do, we just need to tell is what error distribution (i.e., family) and link function to use.
-
-First let's simulate some abundance data at out survey sites.
-```{r}
-dat$abundance <- c(rpois(100, 10), rpois(100, 20))
-boxplot(dat$site, dat$abundance)
-```
-
-Now fit the model
+What can we do? We can try transforming the explanatory variable the same way we did when simulating the data to produce the non-linear relationship. If we transform the explanatory variable, the linear model still assumes a linear relationship between the response and the transformed explanatory variable.
 
 ```{r}
-mspp <- glm(abundance ~ site, data = dat, family = 'poisson')
-summary(mspp)
+m <- lm(Tree_circumference ~ I(Fire_severity^3), data = df)
+summary(m)
 ```
 
-Okay, so what's happened here? It has estimated mean species abundance at the Disturbed site as 2.27 and 0.67 at the Undisturbed site? It's provided the coefficients in the 'link scale' rather than on the 'natural scale'. Here, we've used a poisson distribution, for which the canonical link function is the 'log'. So these are estimates of logged species abundance, instead of raw species abundance. The inverse of the natural log is the exponent. Let's back transform and see what we get what we expect (mean spp abundance of 10 in disturbed and 20 in undistrubed. 
+Note the use of `I` in the model formula - this means 'as is'. It allows us to transform the explanatory variable within the model forumla. What do you notice about the coefficient estimates and R2?
+
+Now the diagnostics.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
+
+Much better, no strong patterns in the residuals.
+
+Sometimes, non-linear relationships cannot be adequately captured by a parametric, linear model. In this case, you might consider trying a **generalised additive model**. This is outside the scope of this coarse, but [{mgcv}](https://cran.r-project.org/web/packages/mgcv/index.html) in **R** is excellent for this.
+
+#### Categorical explanatory variable
+
+Instead of a continuous measurement of fire severity, perhaps we only know whether our locations have been **burned** or are **un-burned**. Can we still use a linear model to estimate the difference in tree circumference (on average) between burned and un-burned locations?
+
+Let's simulate data with a **categorical** explanatory variable for fire (Burned vs. Un-burned), instead of a continuous measure of fire severity.
+
+We will make all the same assumptions as before. Although our **known truth** for $b_{1}$ is slightly different now that we have a categorical predictor, i.e., a $b_{1}$ equal to -1 means that tree circumference, on average, is 1 unit lower at burned locations compared to un-burned locations.
+
+Let's simulate the data and plot it.
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+set.seed(123) # set random number generator for reproducibility
+
+# simulation parameters
+b0 <- 5 # average tree circumference when fire severity is = 0 (i.e, y-intercept)
+b1 <- -1 # beta coefficient representing association between tree circumference and fire severity
+e_mu <- 0 # mean error
+e_sd <- 0.1 # error standard deviation
+
+# simulation variables
+n <- 100 # number of tree circumference measurements
+X <- rep(c(0,1), n/2) # burned vs. un-burned
+e <- rnorm(n, e_mu, e_sd) # natural error
+
+# simulate y
+y <- b0 + b1*X + e # simulate tree circumference observations for each fire severity measurement
+df <- data.frame(Fire_severity = X, Tree_circumference = y) # make a dataframe of observations
+ 
+#plot
+ggplot(df) +
+  aes(x = factor(Fire_severity), y = Tree_circumference) +
+  geom_boxplot() +
+  geom_jitter() +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+```
+
+Note that the categories for fire severity are 0 and 1. The 0 corresponds to 'Un-burned' and the 1 corresponds to 'Burned' locations. We should (and easily can) label these as such for clarity, but I've purposefully left them as 0's and 1's here to illustrate something important about what linear models do when estimating coefficients for categorical variables.
+
+Linear models **dummy code** categorical explanatory variables so that the reference level (in this case 'Un-burned') is equal to 0, and the non-reference level(s) (in this case 'Burned') are equal to 1. Let's fit the model and look at the summary.
 
 ```{r}
-exp(2.27213) # intercept (i.e. mean species abundance in disturbed)
-exp(0.67965) # beta coefficient
+m <- lm(Tree_circumference ~ Fire_severity, data = df)
+summary(m)
 ```
 
-So the intercept makes sense, but what about that beta coefficient? Because we are in log space, the relationship is multiplicative rather than additive. 
+Great, so once again, we've been able to recover the **known truth** (an effect size of -1) with our linear model.
+
+Note that if you have categorical variables with \>2 levels, all of the 'non-reference' levels are dummy coded as 1's. So, you end up estimating the effect of each level on the response, in reference to the 'reference' level. So the $b_{1}$ coefficient of -1 means that, on average, tree circumference is one unit less at burned sites, in reference to un-burned sites.
+
+As before, we would want to check our model meets structural assumptions using diagnostic plots.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
+
+Looks great.
+
+### Fitting linear models to real data
+
+As we've just seen, data simulation is a powerful tool for developing models and enhancing our understanding of how they work. Let's try fitting some to real data. TODO
+
+## Generalised linear models
+
+What if, in addition to tree circumference, we also wanted to ask whether species abundance is lower in sites with high fire severity?. Could we just fit the same model as before, and swap out circumference for abundance?
+
+Remember that one of the assumptions of the linear models we've been using so far is that $\epsilon$, the error term, is normally distributed. Continuous data like circumference conforms to this assumption. Counts of individuals (i.e., species' abundance), however, can only be whole numbers - we can't count half a bird - and is bounded from 0 to $∞$. Residuals from models fitted to count data will therefore not be normally distributed.
+
+So, we need to *generalise* our linear model a bit to accommodate this non-normal error structure. **Generalised linear models** allow us to accommodate many different types of non-normal error structures, including errors from count data. Once again, simulation can help us to understand how generalised linear models work. So let's try it.
+
+### Simulating data with non-normal error structure
+
+For our previous **general** linear model of tree circumference, we drew errors $\epsilon$ from a normal distribution with a mean of 0. An alternative for count data is the **poisson** distribution.
+
+The poisson is a probability distribution for discrete, whole numbers like count data, is bounded from 0 to $∞$, and has one parameter $lambda$ for the mean and variance (which are assumed to be equal). (Note, however, ecological count data often violates the latter assumption, in which case there are alternatives like the negative binomial).
+
+```{r, fig.width=5.5,fig.height=2.5, fig.align='center'}
+n <- 1000
+df <- data.frame(norm = rnorm(n, 1, 1), poiss = rpois(n, 1))
+
+a <- ggplot(df) +
+  aes(x = norm) +
+  ylab('Frequency') +
+  xlab('Random number') +
+  ggtitle('A) Normal distribution') +
+  geom_histogram(fill = 'cyan') +
+  theme_classic()
+b <- ggplot(df) +
+  aes(x = poiss) +
+  ylab('Frequency') +
+  xlab('Random number') +
+  ggtitle('B) Poisson distribution') +
+  geom_histogram(fill = 'seagreen') +
+  theme_classic()
+a+b
+```
+
+So, we can use the poisson distribution to simulate data that mimics counts. But how can we ensure that the predictions of counts from our linear equation $y_i = b_0 + b_{1}X_{1i}$ will be constrained between 0 and $∞$ instead of $-∞$ and $∞$?
+
+This is where the **link** function comes in. **Generalised** linear models use **link** functions to transform model predictions from a linear equation so that they are bounded as necessary. For the poisson, the canonical link function is the `log`, meaning all predictions from a generalised linear model with a **poisson family** and **log link** will be between 0 and $∞$.
+
+Mathematically this looks like: $$log(\lambda_i) = b_0 + b_{1}X_{1i},$$ *Remember* $\lambda$ is the mean species abundance (and also the variance). And $\lambda$ is what we need to simulate counts of abundance from a pooisson distribution,
+
+where $$y_i \sim Poisson(\lambda_i).$$
+
+In practice, we end up using the inverse link function to make predictions of mean species abundance for each level of the explanatory variable. The inverse of the log is the exponent. So, to predict mean species abundance $\lambda$, we can take the exponent of the linear combination of the intercept and explanatory terms, like this: $$\lambda_i = exp(b_0 + b_{1}X_{1i}).$$ We can then use these predicted values of $\lambda$ to simulate counts of species abundance from a poisson distribution. Let's simulate counts this way below.
+
+Before we do though, one more thing to note. By taking the exponent of the linear combination of explanatory variable(s), we're imposing a non-additive, multiplicative relationship between $x$ and $y$. This changes how we interpret the $b_{1}$ coefficient. Instead of representing the additive change in $y$ for every one unit increase in $x$, $b_{1}$ now represents the multiplicative change.
+
+Here we go.
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+set.seed(123)
+# All counts predicted by a poisson GLM will be on the log scale. 
+# So here we log our 'known truths' for the intercept and beta coefficients (remembering that )
+b0 <- log(10) # average species abundance when fire severity is = 0 (i.e, intercept) is 5 10
+b1 <- -log(1/0.5) # species abundance decreases by a factor of 2 (aka 50% decrease in abundance) for a one unit increase in fire severity
+n <- 100 # number of observations
+X <- runif(n, min = 0, max = 1) # fire severity measurements
+lambda <- exp(b0 + b1*X) # estimate mean species abundance (lambda) on multiplicative scale using the exponent
+y <- rpois(n, lambda) # simulate species abundance observation from each lambda
+df <- data.frame(Fire_severity = X, Species_abundance = y) # make a dataframe of observations
+
+ggplot(df) +
+  aes(x = Fire_severity, y = Species_abundance) +
+  geom_point() +
+  ylab('Species abundance') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  #geom_smooth(method = 'loess') +
+  theme_classic()
+```
+
+Looks just as we would expect, only whole numbers for species abundance, and species abundance decreases by half for a one unit increase in fire severity (10\*0.5 = 5).
+
+Let's see what happens when we try to fit a regular linear model (which assumes a linear relationship between $x$ and $y$ and a normal error structure).
 
 ```{r}
-exp(2.27213)*exp(0.67965) # multiply the intercept by the X coefficient rather than sum
+m <- lm(Species_abundance ~ Fire_severity, data = df)
+summary(m)
 ```
 
-Voila. Just what we expected.
+Right away, we can see that the beta coefficient is biased from the **known truth**. Now check the diagnostics.
 
-What else is unusual about this model summary? Now we have null and residual deviance instead of R^2? How come? To estimate coefficients for **generalised linear models** we can no longer use OLS. Instead we use **maximum likelihood**. Explain deviance...deviance residuals, etc. Also discuss dispersion parameter - negative binomial models...
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
 
-- Explain OLS to max likelihoood
-- Plotting and reporting model output
+Not perfect, but actually not too bad given we know this is a mis-specified model. Let's try a **generalised linear model** with a poisson family (error distribution) and a log link function instead.
 
-## Day 1 (Afternoon): Complex multivariate models
+```{r}
+m <- glm(Species_abundance ~ Fire_severity, data = df, family = poisson(link = 'log'))
+summary(m)
+```
 
-- Bayesian glm (univariate) - start with same species richness example from previous day,
-- Bayesian parameter estimation
-- max likelihood to MCMC sampling
-- Why Bayesian? complex models (e.g., spatial random effects), low sample size and prior information
+Okay, so what's happened here? The coefficients look worse than before?
 
-- multivariate GLM (or wait till day 2 and make it a spatial example?)
+The model has estimated the coefficients on the 'link scale', which is in this case the log scale. The inverse of the natural log is the exponent. Let's back transform and see what we can recover our **known truths**.
 
+```{r}
+exp(coef(m))
+```
 
+Voila. Close to what we expected - a mean species abundance of 10 when fire severity is equal to 0 (the y intercept), and for this to be reduced by \~50% with a one unit increase in fire severity. (Tip: try upping the sample size (n) in the simulation and see if you get closer to the known truth.)
 
+What else is unusual about this model summary? Now we have null and residual deviance instead of R2? How come? To estimate coefficients for **generalised linear models** we can no longer use ordinary least squares (OLS) like we did with general linear models. Instead we use **maximum likelihood** for parameter estimation which, in a nutshell, means we choose coefficients that maximise the log-likelihood of our model to the observed data.
+
+A consequence of **maximum likelihood** parameter estimation is that we now measure model fit as **deviance** - which is the deviation of our fitted model from a perfect, 'saturated', model. So, the higher the residual deviance, the worse the model fit (a residual deviance of 0 implies a perfect model fit).
+
+Null deviance is the deviations of an 'intercept only' *worst* model from a perfect model. We can estimate R2 for our glm as the one minus the ratio of residual deviance to null deviance - if it is 1 then our model is 'perfect', if it is 0 then our model is the same as the 'worst'.
+
+```{r}
+1 - (m$deviance/m$null.deviance) # calculate R2 - ratio of goodness of fit of our model compared to worst model possible
+```
+
+Now check diagnostics. Similar to the mis-specified linear model. This highlights that it is important to rely on your knowledge of the data generating process when building models, not just verification tools.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
+
+### Count data and overdispersion
+
+Often, ecological count data is **over-dispersed**. This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology.)
+
+How can we check for over-dispersion? First, we can divide the residual deviance (the amount of left over variation we have in our data, after fitting the model) by the residual degrees of freedom (the amount of left over variation our model expects). It should be close to 1. If not, over-dispersion is likely a problem in our model fit.
+
+```{r}
+m$deviance/m$df.residual
+```
+
+So overdispersion is not a problem here (and also we didn't see anything indicative of overdispersion in the above diagnostic plots).
+
+**The rule of thumb** is, if the ratio is \>1.5, then overdispersion needs to be dealt with. We can try a **negative binomial** distribution instead of a poisson to deal with overdispersion. Alternatively, sometimes overdispersion is driven largely by an excess number of 0s in our count data (typical in ecology). In this case we might try a **zero-inflated poisson** or **zero-inflated negative binomial**.
+
+We can also check the diagnostic plots. If we see a **'fan-shape'** in the residuals vs. fitted plot, implying errors are greater when fitted (predicted) abundance is higher, we can suspect that our data is over-dispersed for the model we are trying to fit to it. Of coarse, we didn't see overdispersion
+
+Let's simulate over-dispersed species abundance and see for ourselves. To simulate this data, we'll use the negative binomial distribution instead of the poisson. In contrast to the poisson, the mean of a prediction is not expected to equal the variance. Instead, we can define the mean and variance separately, and use this to simulate overdispersed counts from the negative binomial distribution.
+
+We'll keep everything as before, but this time will use lambda at the mean counts to simulate from the negative binomial, setting variance (i.e., expected dispersion of counts) equal to 100.
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+set.seed(123)
+df2 <- data.frame(df, Species_abundance_overdisp = rnbinom(n, mu = lambda, size = 1))
+
+ggplot(df2) +
+  aes(x = Fire_severity, y = Species_abundance_overdisp) +
+  geom_point() +
+  ylab('Species abundance (over-dispersed)') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  #geom_smooth(method = 'loess') +
+  theme_classic()
+```
+
+Just as we expected, there is greater variability in species abundance than before. Now lets fit a glm assuming a poisson family (even though we know we should be using negative binomial) and check for overdispersion.
+
+```{r}
+m <- glm(Species_abundance_overdisp ~ Fire_severity, data = df2, family = poisson(link = 'log'))
+summary(m)
+```
+
+What do you notice right away about the model fit? The deviance is a lot higher than before.
+
+```{r}
+m$deviance/m$df.residual
+```
+
+The ratio is much greater than 1.5! The data is certainly over-dispersed for the poisson GLM (of course we expected this since we simulated the data from a negative binomial). Let's just confirm with diagnostic plots too.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
+
+Not good. **But**, when dealing with high dispersion data (such as count data), we often wouldn't expect residuals to be normally distributed anyway.
+
+[{DHARMa}](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html) offers a nice solution, simulating quantile residuals, which we would expect to be normally distributed if the glm is a good fit to the data.
+
+```{r,fig.width=6,fig.height=4, fig.align='center'}
+library(DHARMa)
+resid <- simulateResiduals(fittedModel = m, plot = F)
+plot(resid)
+```
+
+The randomised quantile residuals confirm that overdispersion is a major problem in this model. So let's try fitting a negative binomial glm.
+
+```{r}
+library(MASS)
+m <- glm.nb(Species_abundance_overdisp ~ Fire_severity, data = df2, link = 'log')
+summary(m)
+```
+
+Summary indicates over-dispersion is no longer a problem. Let's check our randomised quantile residuals to confirm this model is a good fit.
+
+```{r,fig.width=6,fig.height=4, fig.align='center'}
+resid <- simulateResiduals(fittedModel = m, plot = F)
+plot(resid)
+```
+
+Much better.
+
+But, notice that the coefficient estimates of both the poisson and negative-binomial glms fitted to over-dispersed data were not biased. So why do we care? Well, the standard error of the coefficients is much lower than in the mis-specified model compared to the correct one. So, if we don't deal with over dispersion, we could wind up incorrectly inferring there is a significant effect, when there isn't.
+
+### Fitting generalised linear models to real data
+
+Hopefully find is over-dispersed, suggest trying negative-binomial or zero inflated poisson
+
+## Resources
+
+What we haven't covered, and where you can learn more:
+
+-   **Interactive effects** (i.e., the response of y to one predictor depends on another)
+
+-   **Random effects** (i.e., mixed effects models) - most models in ecology should probably be mixed effects models! Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation)
+TODO: mixed effects modelling packages, e.g., GLMMtmb, nlme, etc, Zurr books
+
+-   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables)
+
+Here we have learned how to fit models in a frequentist paradigm, using either ordinary least squares or maximum likelihood. As a follow-up [here](insert%20link%20to%20day%202), we will learn how to fit models in a Bayesian paradigm to allow us to fit more complex multivariate models.
