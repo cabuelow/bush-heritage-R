@@ -1107,6 +1107,39 @@ We could look at outliers again, but it seems to be a low chance that there has 
 
 If these sorts of questions and modelling tools are of interest to you - make sure to check out the Advanced course where we will dive into more detail and nuances!
 
+## A brief foray into for loops
+
+For some analyses in R you may find yourself repeating the same code over and over again. This might be a good sign for using a for loop. A for loop is a way to automate your scripts and reduce repetition. Let's look at a quick example. Christina will dive more into this tomorrow in the Advanced course.
+
+Let's have a look at our simple model above. We separated out the year 2023, but maybe we want to plot or run models each year. A for loop would be a good way to do this.
+
+To run a for loop, one of the main components you need is the variable to loop through. In our case, we will loop through the `Year` column of the `tree_bird` data frame. First, let's separate out our years into a vector so we can loop through it.
+
+```{r}
+yrs<-unique(tree_bird$Year)
+length(yrs)
+```
+
+You can see we have 3 years in the `tree_bird` dataset, so the loop will run three times. Let's make box plots of each year to explore our data using a for loop. We can set it up like this:
+
+```{r}
+for(i in 1:length(yrs)){
+  print(i)
+  sub<-tree_bird %>% 
+    filter(Year == yrs[[i]])
+  png(here(paste0("figures/tree_boxplot_", yrs[[i]],".png")), width = 350, height = 350)
+  boxplot(sub$count_tree_species)
+  dev.off()
+  png(here(paste0("figures/bird_boxplot_", yrs[[i]],".png")), width = 350, height = 350)
+  boxplot(sub$count_bird_species)
+  dev.off()
+}
+```
+
+In a for loop, you can run models, summarise and manipulate data, or do anything really! It's really helpful when you want to perform the same analyses across years, sites, countries, etc.
+
+Writing functions is another way to automate your code - but we will save that for another time.
+
 ## Data visualisation with ggplot2
 
 We've done all of the hard data wrangling and manipulation - now let's make some pretty figures using the `ggplot2` package in R.
@@ -1135,9 +1168,7 @@ ggplot graphics are built layer by layer by adding new elements. Adding layers i
 
 To build a ggplot, we will use the following basic template that can be used for different types of plots:
 
-```         
-ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
-```
+    ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
 
 -   use the `ggplot()` function and bind the plot to a specific data frame using the `data` argument
 
