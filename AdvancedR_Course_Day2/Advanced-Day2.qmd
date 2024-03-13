@@ -9,7 +9,7 @@ toc-location: left
 toc-title: Content
 toc-depth: 4
 published-title: Date
-date: 2024-03-28
+date: 2024-03-27
 editor: visual
 embed-resources: true
 ---
@@ -28,9 +28,9 @@ Finally, we'll show how these techniques can be used to model species distributi
 
 ## Frequentist vs. Bayesian
 
-![](Images/frequentists_vs_bayesians.png)
+![](Images/poorly-drawn-lines.png)
 
-Find more [xkcd comics here](https://xkcd.com/1132/)
+Find more [poorly drawn lines comics here](https://poorlydrawnlines.com/)
 
 Diving into the fundamental and nuanced differences between **frequentist** and **bayesian** statistics is beyond the scope of this short course. But you can find some nice, short overview of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
 
@@ -209,13 +209,24 @@ Unfortunately our handy `plot` function we used in Part 1 won't work for {Hmsc} 
 ```{r,fig.width=6,fig.height=3.5, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
 Fitted.mean <- apply(preds, FUN = mean, MARGIN = 1) # get the mean predicted value species abundance (n = 4000)
-Residuals <- scale(df$Species_abundance - Fitted.mean) # calculate standarised residuals
+Residuals <- scale(m_fit$Y - Fitted.mean) # calculate standarised residuals
 par(mfrow = c(1,2)) # set graphical parameters
 plot(Fitted.mean, Residuals); abline(a = 0, b = 0) # plot the fitted vs. residuals
 qqnorm(Residuals); qqline(Residuals) # qq plot
 ```
 
-Looks very similar to the diagnostic plots we made in Part 1, where we fitted a frequentist GLM to the same data.
+Since we are considering count data where high dispersion can mean the errors are not normally distributed, we can also try **randomised quantile residuals**, which we would expect to be normally distributed even if the data is highly dispersed (but not overdispersed).
+
+```{r,fig.width=6,fig.height=3.5, fig.align='center'}
+a <- ppois(m_fit$Y-1, Fitted.mean)
+b <- ppois(m_fit$Y, Fitted.mean)
+qresids <- qnorm(runif(n = length(Fitted.mean), min = a, max = b))
+par(mfrow = c(1,2)) # set graphical parameters
+plot(Fitted.mean, qresids); abline(a = 0, b = 0) # plot the fitted vs. residuals
+qqnorm(qresids); qqline(qresids) # qq plot
+```
+
+Both look about the same (so high dispersion in the count data isn't an issue for interpreting the residuals). And looks very similar to the diagnostic plots we made in Part 1, where we fitted a frequentist GLM to the same data.
 
 Now let's check the coefficient estimates are close to our **known truths**.
 
@@ -244,6 +255,7 @@ Let's start by simulating a new dataset of species abundance data for multiple s
 
 ```{r}
 library(MASS)
+set.seed(123) # set seed for random number generator to ensure results are reproducible
 n <- 100
 ns <- 5
 b0 <- log(rep(10,ns))
@@ -362,18 +374,21 @@ effectiveSize(mpost$Beta)
 gelman.diag(mpost$Beta,multivariate=FALSE)$psrf
 ```
 
-Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions.
+Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions. We'll use randomised quantile residuals. 
 
 ```{r,fig.width=6,fig.height=12, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
 Fitted.mean <- apply(preds, FUN = mean, MARGIN = c(1,2)) # get the mean predicted value species abundance (n = 4000)
-Residuals <- scale(df[,3:7] - Fitted.mean) # calculate standarised residuals
 par(mfrow = c(5,2)) # set graphical parameters
-for(i in 1:ncol(Residuals)){
-Fitted.mean.spp <- Fitted.mean[,i]
-Residuals.spp <- Residuals[,i]
-plot(Fitted.mean.spp, Residuals.spp, main = i); abline(a = 0, b = 0) # plot the fitted vs. residuals
-qqnorm(Residuals.spp, main = i); qqline(Residuals.spp) # qq plot
+qresids.df <- data.frame(Fitted.mean)  # dataframe for storing quantile residuals for each species
+for(i in 1:ncol(Fitted.mean)){
+  Fitted.mean.spp <- Fitted.mean[,i]
+  y_spp <- m_fit$Y[,i]
+  a <- ppois(y_spp-1, Fitted.mean.spp)
+  b <- ppois(y_spp, Fitted.mean.spp)
+  qresids.df[,i] <- qnorm(runif(n = length(y_spp), min = a, max = b))
+  plot(Fitted.mean.spp,  qresids.df[,i], main = colnames(Fitted.mean)[i]); abline(a = 0, b = 0) # plot the fitted vs. residuals
+  qqnorm( qresids.df[,i], main = colnames(Fitted.mean)[i]); qqline(qresids.df[,i]) # qq plot
 }
 ```
 
@@ -382,8 +397,8 @@ Species 1 looks okay, but there are some strong patterns in the residuals vs. fi
 Whenever you're fitting a model to spatial data, you should check whether the residuals are spatially auto-correlated. We'll do that visually by mapping the residuals.
 
 ```{r}
-resid.sf <- cbind(select(df.sf, -c(spp1:spp5)), Residuals)
-qtm(pivot_longer(resid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
+qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df)
+qtm(pivot_longer(qresid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
 ```
 
 We can see that 'green' positive residuals tend to clustered in some places, and likewise for 'red' negative residuals, indicating that there is spatial autocorrelation in where our model tends to be over- or under-predicting.
@@ -439,27 +454,30 @@ Now let's see if our residual diagnostic plots look better.
 ```{r,fig.width=6,fig.height=12, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
 Fitted.mean <- apply(preds, FUN = mean, MARGIN = c(1,2)) # get the mean predicted value species abundance (n = 4000)
-Residuals <- scale(df[,3:7] - Fitted.mean) # calculate standarised residuals
 par(mfrow = c(5,2)) # set graphical parameters
-for(i in 1:ncol(Residuals)){
-Fitted.mean.spp <- Fitted.mean[,i]
-Residuals.spp <- Residuals[,i]
-plot(Fitted.mean.spp, Residuals.spp, main = i); abline(a = 0, b = 0) # plot the fitted vs. residuals
-qqnorm(Residuals.spp, main = i); qqline(Residuals.spp) # qq plot
+qresids.df <- data.frame(Fitted.mean)  # dataframe for storing quantile residuals for each species
+for(i in 1:ncol(Fitted.mean)){
+  Fitted.mean.spp <- Fitted.mean[,i]
+  y_spp <- m_fit$Y[,i]
+  a <- ppois(y_spp-1, Fitted.mean.spp)
+  b <- ppois(y_spp, Fitted.mean.spp)
+  qresids.df[,i] <- qnorm(runif(n = length(y_spp), min = a, max = b))
+  plot(Fitted.mean.spp,  qresids.df[,i], main = colnames(Fitted.mean)[i]); abline(a = 0, b = 0) # plot the fitted vs. residuals
+  qqnorm( qresids.df[,i], main = colnames(Fitted.mean)[i]); qqline(qresids.df[,i]) # qq plot
 }
 ```
 
 Much better! Now check spatial autocorrelation in the residuals.
 
 ```{r}
-resid.sf <- cbind(select(df.sf, -c(spp1:spp5)), Residuals)
-qtm(pivot_longer(resid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
+qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df)
+qtm(pivot_longer(qresid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
 ```
 
 Now, let's see if our coefficient estimates are closer to **known truths**
 
 ```{r}
-print(data.frame(beta, spp = colnames(y)))
+print(data.frame(beta, spp = colnames(m_fit$Y)))
 ```
 
 ```{r}
@@ -475,8 +493,8 @@ So, what's the advantage over algorithmic ordination approaches? With model-base
 beta.coefs <- lapply(mpost$Beta, function(x){
   df <- cbind(data.frame(summary(x)$statistics), 
               data.frame(summary(x)$quantiles),
-              predictor = rep(as.character(colnames(m$X)), length(colnames(m$Y))),
-              response = rep(as.character(colnames(m$Y)), each = length(colnames(m$X)))) %>% 
+              predictor = rep(as.character(colnames(m_fit$X)), length(colnames(m_fit$Y))),
+              response = rep(as.character(colnames(m_fit$Y)), each = length(colnames(m_fit$X)))) %>% 
     filter(predictor != '(Intercept)') %>%
     pivot_longer(Mean:X97.5., names_to = 'stat', values_to = 'val') %>% 
     mutate(stat = recode(stat, X2.5. = 'CI.2.5',
@@ -552,7 +570,7 @@ OmegaCor[[1]]$support
 We now extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the latent factors, to plot on ordination of sites that are similar in species composition and abundance after accounting for fire severity. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
 
 ```{r}
-spp <- c('spp1', 'spp2', 'spp3', 'spp4', 'spp5')
+spp <- colnames(m_fit$Y)
 LVs <- c('Latent.variable.1', 'Latent.variable.2', 'Latent.variable.3', 'Latent.variable.4')
 site_scores <- data.frame(getPostEstimate(m_fit, "Eta")$mean)
 colnames(site_scores) <- LVs

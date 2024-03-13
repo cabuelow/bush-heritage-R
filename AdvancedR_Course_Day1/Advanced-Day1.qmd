@@ -9,7 +9,7 @@ toc-location: left
 toc-title: Content
 toc-depth: 4
 published-title: Date
-date: 2024-03-18
+date: 2024-03-26
 editor: visual
 embed-resources: true
 ---
@@ -36,7 +36,7 @@ How we build and select models depends on our goals, see this guide to [goal dri
 
 Here, we will focus on learning the **basics** of fitting models to answer ecological questions. You will be able to use these modelling skills regardless of whether your goal is exploration, inference, or prediction.
 
-We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In the [second part of this course](insert link), we'll build more complex multivariate models in **R**.
+We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In the [second part of this course](insert%20link), we'll build more complex multivariate models in **R**.
 
 This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
 
@@ -120,7 +120,7 @@ ggplot(df) +
 
 To understand how they work, it helps to take a quick look at how we formulate linear models mathematically:
 
-$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$ $y_i$ is our response variable of interest, $b_0$ is the is the intercept for the linear relationship between $y$ and our explanatory variables ($X$'s), $b_1$ is the coefficient representing the strength and direction of the relationship between $y$, and X_1 $\epsilon$ is the random, unexplained error in our observations around the fitted relationship between $y$ and $X$(s).
+$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$ $y_i$ is our response variable of interest, $b_0$ is the is the **y-intercept** for the linear relationship between $y$ and our explanatory variables ($X$'s), $b_1$ is the coefficient representing the strength and direction of the relationship between $y$ (the **slope**), and X_1 $\epsilon$ is the random, unexplained error in our observations around the fitted relationship between $y$ and $X$(s).
 
 In the above example we only have one explanatory variable ($X$), but we can have multiple (referred to as 'multiple linear regression'). We would just add on another term to our equation, e.g. $b_{2}X_{2i}$.
 
@@ -170,7 +170,7 @@ First let's set up our **simulation parameters** - they are constants in the lin
 
 ```{r}
 b0 <- 5 # average tree circumference when fire severity is = 0 (i.e, y-intercept)
-b1 <- -1 # beta coefficient representing association between tree circumference and fire severity
+b1 <- -1 # beta coefficient representing association (slope) between tree circumference and fire severity
 e_mu <- 0 # mean error
 e_sd <- 0.1 # error standard deviation
 ```
@@ -226,7 +226,7 @@ ggplot(df) +
 
 Great, we have successfully simulated tree circumference observations! The relationship looks as we expected, with tree circumference decreasing, on average, with increasing fire severity (plus/minus some natural, random variation).
 
-Now we want to know - can we accurately estimate the **known truths**, i.e., the y-intercept $b_0$ and the beta coefficient $b_{1}$, from our simulated data with a linear model?
+Now we want to know - can we accurately estimate the **known truths**, i.e., the y-intercept $b_0$ and the slope $b_{1}$, from our simulated data with a linear model?
 
 ```{r}
 m <- lm(Tree_circumference ~ Fire_severity, data = df)
@@ -235,7 +235,7 @@ m
 
 Pretty close to our **known truths**. What if we have fewer observations though, or more?
 
-How are the coefficients of the model (the intercept $b_0$ and the beta coefficient $b_{1}$ estimated? For a simple, general linear model like this, we (meaning R) uses Ordinarly Least Squares (OLS) to estimate the model coefficients. If you're a visual learner like me, check out [this great tool to see how OLS works](https://seeing-theory.brown.edu/regression-analysis/index.html). In a nutshell, we're iteratively rotating the straight line between our y and x variables until we get the best fit (i.e. have minimised the sums of squared error).
+How are the coefficients of the model (the intercept $b_0$ and the slope $b_{1}$ estimated? For a simple, general linear model like this, we (meaning R) uses Ordinarly Least Squares (OLS) to estimate the model coefficients. If you're a visual learner like me, check out [this great tool to see how OLS works](https://seeing-theory.brown.edu/regression-analysis/index.html). In a nutshell, we're iteratively rotating the straight line between our y and x variables until we get the best fit (i.e. have minimised the sums of squared error).
 
 ##### Checking the model fit
 
@@ -245,9 +245,9 @@ summary(m)
 
 Let's unpack this model summary. \[Talk through model output, if time write notes to explain..\]
 
-Without doing anything else, we already have one metric for assessing model fit - the R2. It tells us our model has explained a whopping 89% of the variability in the data (note, use the adjusted R\^2 if you have more than one explanatory variable). That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R\^2 values due to the natural sources of variability that we can't explain.
+Without doing anything else, we already have one metric for assessing model fit - the R^2^. It tells us our model has explained a whopping 89% of the variability in the data (note, use the adjusted R\^2 if you have more than one explanatory variable). That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R\^2 values due to the natural sources of variability that we can't explain.
 
-**Tip** Try increased the standard deviation of the natural variation we've simulated (e_sd) and see how that changes the R2.
+**Tip** Try increased the standard deviation of the natural variation we've simulated (e_sd) and see how that changes the R^2^.
 
 In addition to how much variability in the data our model is explaining, we also want to want to make sure the model isn't violating any structural assumptions, namely that the model residuals are:
 
@@ -288,7 +288,7 @@ m <- lm(Tree_circumference ~ Fire_severity, data = df)
 summary(m)
 ```
 
-Already we see the explanatory power of the model is lower than before (R2 of 78%). Note also that our estimates of the model coefficients are slightly biased compared to before.
+Already we see the explanatory power of the model is lower than before (R^2^ of 78%). Note also that our estimates of the model coefficients are slightly biased compared to before.
 
 Now let's check the diagnostics.
 
@@ -306,7 +306,7 @@ m <- lm(Tree_circumference ~ I(Fire_severity^3), data = df)
 summary(m)
 ```
 
-Note the use of `I` in the model formula - this means 'as is'. It allows us to transform the explanatory variable within the model forumla. What do you notice about the coefficient estimates and R2?
+Note the use of `I` in the model formula - this means 'as is'. It allows us to transform the explanatory variable within the model forumla. What do you notice about the coefficient estimates and R^2^?
 
 Now the diagnostics.
 
@@ -334,7 +334,7 @@ set.seed(123) # set random number generator for reproducibility
 
 # simulation parameters
 b0 <- 5 # average tree circumference when fire severity is = 0 (i.e, y-intercept)
-b1 <- -1 # beta coefficient representing association between tree circumference and fire severity
+b1 <- -1 # beta coefficient representing association (slope) between tree circumference and fire severity
 e_mu <- 0 # mean error
 e_sd <- 0.1 # error standard deviation
 
@@ -436,7 +436,7 @@ Here we go.
 ```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
 set.seed(123)
 # All counts predicted by a poisson GLM will be on the log scale. 
-# So here we log our 'known truths' for the intercept and beta coefficients (remembering that )
+# So here we log our 'known truths' for the intercept and beta coefficients
 b0 <- log(10) # average species abundance when fire severity is = 0 (i.e, intercept) is 5 10
 b1 <- -log(1/0.5) # species abundance decreases by a factor of 2 (aka 50% decrease in abundance) for a one unit increase in fire severity
 n <- 100 # number of observations
@@ -464,7 +464,7 @@ m <- lm(Species_abundance ~ Fire_severity, data = df)
 summary(m)
 ```
 
-Right away, we can see that the beta coefficient is biased from the **known truth**. Now check the diagnostics.
+Right away, we can see that the slope ($b_{1}$) is biased from the **known truth**. Now check the diagnostics.
 
 ```{r,fig.width=6,fig.height=6, fig.align='center'}
 par(mfrow = c(2,2))
@@ -488,14 +488,14 @@ exp(coef(m))
 
 Voila. Close to what we expected - a mean species abundance of 10 when fire severity is equal to 0 (the y intercept), and for this to be reduced by \~50% with a one unit increase in fire severity. (Tip: try upping the sample size (n) in the simulation and see if you get closer to the known truth.)
 
-What else is unusual about this model summary? Now we have null and residual deviance instead of R2? How come? To estimate coefficients for **generalised linear models** we can no longer use ordinary least squares (OLS) like we did with general linear models. Instead we use **maximum likelihood** for parameter estimation which, in a nutshell, means we choose coefficients that maximise the log-likelihood of our model to the observed data.
+What else is unusual about this model summary? Now we have null and residual deviance instead of R^2^? How come? To estimate coefficients for **generalised linear models** we can no longer use ordinary least squares (OLS) like we did with general linear models. Instead we use **maximum likelihood** for parameter estimation which, in a nutshell, means we choose coefficients that maximise the log-likelihood of our model to the observed data.
 
 A consequence of **maximum likelihood** parameter estimation is that we now measure model fit as **deviance** - which is the deviation of our fitted model from a perfect, 'saturated', model. So, the higher the residual deviance, the worse the model fit (a residual deviance of 0 implies a perfect model fit).
 
-Null deviance is the deviations of an 'intercept only' *worst* model from a perfect model. We can estimate R2 for our glm as the one minus the ratio of residual deviance to null deviance - if it is 1 then our model is 'perfect', if it is 0 then our model is the same as the 'worst'.
+Null deviance is the deviations of an 'intercept only' *worst* model from a perfect model. We can estimate R^2^ for our glm as the one minus the ratio of residual deviance to null deviance - if it is 1 then our model is 'perfect', if it is 0 then our model is the same as the 'worst'.
 
 ```{r}
-1 - (m$deviance/m$null.deviance) # calculate R2 - ratio of goodness of fit of our model compared to worst model possible
+1 - (m$deviance/m$null.deviance) # calculate R^2^ - ratio of goodness of fit of our model compared to worst model possible
 ```
 
 Now check diagnostics. Similar to the mis-specified linear model. This highlights that it is important to rely on your knowledge of the data generating process when building models, not just verification tools.
@@ -598,8 +598,7 @@ What we haven't covered, and where you can learn more:
 
 -   **Interactive effects** (i.e., the response of y to one predictor depends on another)
 
--   **Random effects** (i.e., mixed effects models) - most models in ecology should probably be mixed effects models! Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation)
-TODO: mixed effects modelling packages, e.g., GLMMtmb, nlme, etc, Zurr books
+-   **Random effects** (i.e., mixed effects models) - most models in ecology should probably be mixed effects models! Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation) TODO: mixed effects modelling packages, e.g., GLMMtmb, nlme, etc, Zurr books
 
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables)
 
