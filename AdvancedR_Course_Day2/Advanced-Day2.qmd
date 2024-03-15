@@ -18,7 +18,7 @@ embed-resources: true
 
 Here we build upon modelling skills developed in **Part 1** of this course. In **Part 1**, we learned how to fit models to data in a *Frequentist* paradigm.
 
-Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models, to demonstrate when they might be preferred over over frequentist approaches.
+Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models to demonstrate when they might be preferred over over frequentist approaches.
 
 We'll compare multivariate generalised linear models (i.e., model-based ordination) to other **algorithmic** approaches typically used for analysing ecological community data (e.g., nmds).
 
@@ -693,24 +693,24 @@ There we have it, we've mapped out predictions of abundance from our joint speci
 
 ## Resources
 
-Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to: 
+Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to:
 
-1) fit a linear model, 
+1)  fit a linear model,
 
-2) fit a generalised linear model, 
+2)  fit a generalised linear model,
 
-3) fit a multivariate generalised linear model (which is also model-based ordination), and 
+3)  fit a multivariate generalised linear model (which is also model-based ordination), and
 
-4) fit a spatial, multivariate generalised linear model (which is also a joint species distribution model).
+4)  fit a spatial, multivariate generalised linear model (which is also a joint species distribution model).
 
 Phew, that is a lot!
 
 Find out more about fitting Bayesian models and using R as a GIS here:
 
-- My absolute favourite intro to Bayesian thinking, a really great read: [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)
+-   My absolute favourite intro to Bayesian thinking, a really great read: [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)
 
 -   Spatial R resources - [Geocomputation with R](https://r.geocompx.org/)
 
-- [Bayesian spatial models in R](https://www.paulamoraga.com/book-spatial/bayesian-spatial-models.html)
+-   [Bayesian spatial models in R](https://www.paulamoraga.com/book-spatial/bayesian-spatial-models.html)
 
 Any questions, get in touch with Christina [here](cabuelow.github.io/personal-website/)
