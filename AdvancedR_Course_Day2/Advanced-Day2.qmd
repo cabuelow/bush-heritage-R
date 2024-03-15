@@ -26,7 +26,7 @@ Finally, we'll show how these techniques can be used to model joint species dist
 
 ## Frequentist vs. Bayesian
 
-![](Images/poorly-drawn-lines.png)
+![](Images/poorly-drawn-lines.png){fig-align="center" width=50%}
 
 Find more [poorly drawn lines comics here](https://poorlydrawnlines.com/)
 
@@ -712,5 +712,3 @@ Find out more about fitting Bayesian models and using R as a GIS here:
 -   Spatial R resources - [Geocomputation with R](https://r.geocompx.org/)
 
 -   [Bayesian spatial models in R](https://www.paulamoraga.com/book-spatial/bayesian-spatial-models.html)
-
-Any questions, get in touch with Christina [here](cabuelow.github.io/personal-website/)

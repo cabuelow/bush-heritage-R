@@ -630,5 +630,3 @@ What we haven't covered, and where you can learn more:
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables). As mentioned in the introduction, you can learn more about approaches to goal-driven model selection [here](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
 
 Here we have learned how to fit models in a **frequentist** paradigm, using either ordinary least squares or maximum likelihood. As a follow-up, we will learn how to fit models in a **Bayesian** paradigm to allow us to fit more complex multivariate models in **Part 2**.
-
-Any questions, get in touch with Christina [here](cabuelow.github.io/personal-website/)
