@@ -1,5 +1,5 @@
 ---
-title: "Advanced Modelling in R"
+title: "Statistical modelling in R for ecologists (Part 2)"
 format: html
 theme: sandstone
 author-title: Made for
@@ -13,8 +13,6 @@ date: 2024-03-28
 editor: visual
 embed-resources: true
 ---
-
-# Statistical modelling in R for ecologists (Part 2)
 
 Here we build upon modelling skills developed in **Part 1** of this course. In **Part 1**, we learned how to fit models to data in a *Frequentist* paradigm.
 
@@ -525,9 +523,9 @@ tmap_mode('plot')
 qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
 ```
 
-We still see some spatial clustering of residuals - not very different from before. But atleast now we know that the patterns aren't due to spatial autocorrelation, and our other diagnostic plots look much better.
+We still see some spatial clustering of residuals - not very different from before. But atleast now we know that the patterns aren't because of lack of independence of our observations driven by spatial autocorrelation. And our other diagnostic plots look much better.
 
-Now, let's see if our coefficient estimates are closer to **known truths**
+Now, let's see if our coefficient estimates are closer to **known truths**.
 
 ```{r}
 print(data.frame(beta, spp = colnames(m_fit$Y)))
@@ -612,7 +610,7 @@ ggcorrplot(OmegaCor[[1]]$mean, tl.cex = 7)
 
 So, after accounting for variability in species abundance due to fire severity, we infer that abundances of species 1 are positively correlated with abundances of species 2, and negatively correlated with species 3 and 4. This is exactly what we expected, given how we simulated spatial autocorrelation in the data.
 
-Now we can extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the latent factors, to plot on ordination of sites that are similar in species composition and abundance after accounting for fire severity. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
+Now we can extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the spatial latent factors, to plot on ordination of sites that are similar in species composition and abundance after accounting for fire severity. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
 
 ```{r}
 spp <- colnames(m_fit$Y)

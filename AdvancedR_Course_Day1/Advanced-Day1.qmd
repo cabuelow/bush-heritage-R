@@ -1,5 +1,5 @@
 ---
-title: "Modelling in R"
+title: "Statistical modelling in R for ecologists (Part 1)"
 format: html
 theme: sandstone
 author-title: Made for
@@ -13,8 +13,6 @@ date: 2024-03-27
 editor: visual
 embed-resources: true
 ---
-
-# Statistical modelling in R for ecologists (Part 1)
 
 Whenever you embark on a journey in statistical modelling, it's good to be reminded of the following quote from *George E.P. Box*,
 
