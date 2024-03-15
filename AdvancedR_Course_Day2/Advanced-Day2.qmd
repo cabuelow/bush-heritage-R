@@ -9,22 +9,20 @@ toc-location: left
 toc-title: Content
 toc-depth: 4
 published-title: Date
-date: 2024-03-27
+date: 2024-03-28
 editor: visual
 embed-resources: true
 ---
 
-TODO: Lot's to tidy up and explain better, and last section on mapping predictions. Also real world example
-
 # Statistical modelling in R for ecologists (Part 2)
 
-Here we build upon modelling skills developed in [Part 1](insert%20link) of this course. In **Part 1** we learned how to fit models to data in a *frequentist* paradigm.
+Here we build upon modelling skills developed in **Part 1** of this course. In **Part 1**, we learned how to fit models to data in a *Frequentist* paradigm.
 
-Here we will fit the same models in a *bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models, to demonstrate when they might be preferred over over frequentist approaches.
+Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models, to demonstrate when they might be preferred over over frequentist approaches.
 
 We'll compare multivariate generalised linear models (i.e., model-based ordination) to other **algorithmic** approaches typically used for analysing ecological community data (e.g., nmds).
 
-Finally, we'll show how these techniques can be used to model species distributions, and how **R** can handle spatial data.
+Finally, we'll show how these techniques can be used to model joint species distributions, and how **R** can handle spatial data.
 
 ## Frequentist vs. Bayesian
 
@@ -32,7 +30,7 @@ Finally, we'll show how these techniques can be used to model species distributi
 
 Find more [poorly drawn lines comics here](https://poorlydrawnlines.com/)
 
-Diving into the fundamental and nuanced differences between **frequentist** and **bayesian** statistics is beyond the scope of this short course. But you can find some nice, short overview of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
+Diving into the fundamental and nuanced differences between **Frequentist** and **Bayesian** statistics is beyond the scope of this short course. But you can find some nice, short overview of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
 
 From my point of view, both are useful. Often, I start by fitting Frequentist models to my data and then move to more complex Bayesian models if needed.
 
@@ -82,15 +80,15 @@ In Part 1, we fitted general and generalised linear models in a frequentist fram
 
 Let's try fitting the same models in a Bayesian framework using MCMC sampling for parameter (coefficient) estimation. We'll use weak, uninformative priors (the default), meaning our coefficient estimates from the Bayesian model should be the same as the Frequentist.
 
-In the interest of time, we'll just repeat the generalised linear model of species abundance in relation to fire severity. But if you're keen, feel free to try the general linear model of tree circumference (you'll just need to specify a normal (gaussian) distribution instead of a poisson).
+In the interest of time, we'll just repeat the generalised linear model of species abundance in relation to fire severity that we did in **Part 1**. But if you're keen, feel free to try the general linear model of tree circumference (you'll just need to specify a normal (gaussian) distribution instead of a poisson).
 
-First, let's simulate the data we need for species abundance and fire severity (repeating exactly as we did in Part 1).
+First, let's simulate the data we need for species abundance and fire severity (repeating exactly as we did in **Part 1**).
 
 ```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
 library(ggplot2)
 set.seed(123) # set seed for random number generator to ensure results are reproducible
 
-b0 <- log(10) # average species abundance when fire severity is = 0 (i.e, intercept) is 5 10
+b0 <- log(10) # average species abundance when fire severity is = 0 (i.e, intercept) is 10
 b1 <- -log(1/0.5) # species abundance decreases by a factor of 2 (aka 50% decrease in abundance) for a one unit increase in fire severity
 n <- 100 # number of observations
 X <- runif(n, min = 0, max = 1) # fire severity measurements
@@ -110,9 +108,9 @@ ggplot(df) +
 
 ### Fitting a Bayesian GLM and checking MCMC convergence
 
-Now we can fit the model. We'll use [{Hmsc}](https://www.helsinki.fi/en/researchgroups/statistical-ecology/software/hmsc) to do this - flexible Bayesian modelling framework for fitting complex spatial models with random effects. 'Hmsc' is an acronym for 'Hierarchical modelling of species communities'. We can use it to fit univariate models (as we are right now) and multivariate models (as we'll do later).
+Now we can fit the model. We'll use [{Hmsc}](https://www.helsinki.fi/en/researchgroups/statistical-ecology/software/hmsc) to do this - flexible Bayesian modelling framework for fitting complex hierarchical models with spatial random effects. 'Hmsc' is an acronym for 'Hierarchical modelling of species communities'. We can use it to fit univariate models (as we are right now) and multivariate models (as we'll do later).
 
-Let's load the package and fit a Bayesian generalised linear model where our response $y$ is species abundance and our explanatory variable $x$ is fire severity.
+Let's load the package and fit a Bayesian generalised linear model where our response $y$ is species abundance and our explanatory variable $X$ is fire severity.
 
 ```{r}
 library(Hmsc)
@@ -160,7 +158,7 @@ Higher than 1. This confirms what we saw above in the trace plots - the chains d
 
 Let's try increasing the thinning rate to improve convergence of the MCMC sampling. This will mean the model will take a lot longer to fit - it's doing a a lot more sampling because it can only keep every 100th sample to get a total of 1000 samples for each chain.
 
-So I'm going to ask it to run the MCMC chains in 'parallel' to speed it up using the argument `nParallel`.
+So I'm going to ask it to run the MCMC chains in 'parallel' to speed it up using the argument `nParallel`. **(Note, in the remainder of the notes the code for fitting models is commented out with a `#` because it takes a while to fit them (try running them on your own time). So instead we provide the fitted models as RDS files that can be read in with the `readRDS` function - see below).**
 
 ```{r}
 # fit the model with MCMC sampling
@@ -198,13 +196,13 @@ effectiveSize(mpost$Beta)
 gelman.diag(mpost$Beta,multivariate=FALSE)$psrf
 ```
 
-Much better. We're happy now that our MCMC sampling is converged, meaning that, as long as our structural model assumptions are met, we can make inference from this model. Note, however, that sometimes you might notice that earlier samples in your trace plots look different from later samples. In this case you can try increasing the transient (i.e. the initial samples that are discarded.)
+Much better. We're happy now that our MCMC sampling is converged, meaning that, as long as our structural model assumptions are met, we can make inference from this model. Note, however, that sometimes you might notice that earlier samples in your trace plots look different from later samples. In this case you can try increasing the transient (i.e. the initial samples that are discarded).
 
 ### Checking structural model assumptions
 
 Now we want to check the same model assumptions we have when fitting frequentist GLMs: the model residuals are normally distributed and have homogeneity of variance.
 
-Unfortunately our handy `plot` function we used in Part 1 won't work for {Hmsc} model objects. So we have to calculate the model residuals ourselves and plot them.
+Unfortunately our handy `plot` function we used in **Part 1** won't work for {Hmsc} model objects. So we have to calculate the model residuals ourselves and plot them.
 
 ```{r,fig.width=6,fig.height=3.5, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
@@ -226,7 +224,7 @@ plot(Fitted.mean, qresids); abline(a = 0, b = 0) # plot the fitted vs. residuals
 qqnorm(qresids); qqline(qresids) # qq plot
 ```
 
-Both look about the same (so high dispersion in the count data isn't an issue for interpreting the residuals). And looks very similar to the diagnostic plots we made in Part 1, where we fitted a frequentist GLM to the same data.
+Both look about the same (so high dispersion in the count data isn't an issue for interpreting the residuals). And looks very similar to the diagnostic plots we made in **Part 1**, where we fitted a frequentist GLM to the same data.
 
 Now let's check the coefficient estimates are close to our **known truths**.
 
@@ -234,11 +232,11 @@ Now let's check the coefficient estimates are close to our **known truths**.
 summary(mpost$Beta)
 ```
 
-Remember, these predictions are in log-space, so we need to back-transform them to the natural scale. But, as you can see, they are almost exactly the same as our frequentist model!
+Remember, these predictions are in log-space, so we need to back-transform them to the natural scale (the inverse of the natural log is the exponent). But, as you can see, they are almost exactly the same as our frequentist model!
 
 ```{r}
 exp(summary(mpost$Beta)$statistics[1]) # back transform the y-intercept (mean species abundance when fire severity = 0)
-exp(summary(mpost$Beta)$statistics[2]) # back transform the beta cofficient (mean species abundance when fire severity = 0)
+exp(summary(mpost$Beta)$statistics[2]) # back transform the beta coefficient (mean species abundance when fire severity = 0)
 ```
 
 ## Multivariate Generalised linear model
@@ -290,13 +288,18 @@ head(df.sf)
 What's different about the spatial dataframe compared to a normal one? Now let's map it.
 
 ```{r}
+#| output: false
 library(tmap)
 library(tidyr)
 tmap_mode('view')
-
-qtm(df.sf, dots.col = 'Fire_severity', dots.palette = 'Reds') +
-qtm(pivot_longer(df.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
 ```
+
+```{r}
+qtm(df.sf, dots.col = 'Fire_severity', dots.palette = 'Reds', dots.size = 0.5) +
+qtm(pivot_longer(df.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', dots.size = 0.5) + tm_facets(by = 'spp', ncol = 2, free.scales = T)
+```
+
+**Tip** Use the layered diamonds in the top left of each map to turn the abundance layer off and see fire severity below.
 
 ### An exploratory, algorithmic ordination
 
@@ -317,7 +320,11 @@ The stress is an estimate of the goodness of fit of the nmds. It is less than 0.
 Let's plot the ordination and see which survey locations are similar based on the abundance and composition species. First we need to extract the site scores and species scores for the two nMDS dimensions.
 
 ```{r}
+#| output: false
 library(dplyr)
+```
+
+```{r}
 nmds_scores <- data.frame(df, scores(nmds)$sites) %>% mutate(Fire_class = factor(ifelse(Fire_severity > 0.5, 'Severe', 'Less severe')))
 spp_scores <- data.frame(scores(nmds)$species)
 spp_scores$spp <- rownames(spp_scores)
@@ -347,6 +354,8 @@ So let's try model-based ordination with a multivariate GLM instead and see if w
 
 *Note that there are many other approaches to algorithmic ordination than we've covered here. nMDS is a type of 'unconstrained' ordination, but there are other approaches for 'constrained' ordination which are a closer analogue to the model-based ordination we'll try next.*
 
+Find out more about different types of ordination and how to perform them in **R** [here](https://ourcodingclub.github.io/tutorials/ordination/).
+
 ### Model-based ordination
 
 As before, we'll set up our model and fit it with MCMC sampling. The main difference is this time we include a site-level random effect that models the residual correlations across species as latent (unobserved) variables.
@@ -374,7 +383,7 @@ effectiveSize(mpost$Beta)
 gelman.diag(mpost$Beta,multivariate=FALSE)$psrf
 ```
 
-Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions. We'll use randomised quantile residuals. 
+Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions. We'll use randomised quantile residuals, and this time we'll set up a for loop that will 'loop' through each of our 5 species and plot them separately.
 
 ```{r,fig.width=6,fig.height=12, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
@@ -392,13 +401,15 @@ for(i in 1:ncol(Fitted.mean)){
 }
 ```
 
-Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here? The patterns might be due to another process influencing species abundance in our data that we haven't accounted for yet - spatial autocorrelation.
+Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here? The patterns might be due to another process influencing species abundance in our data that we haven't accounted for yet - **spatial autocorrelation**.
 
 Whenever you're fitting a model to spatial data, you should check whether the residuals are spatially auto-correlated. We'll do that visually by mapping the residuals.
 
 ```{r}
-qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df)
-qtm(pivot_longer(qresid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
+#| warning: false
+qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df) %>% pivot_longer(cols = spp1:spp5, names_to = 'spp', values_to = 'residuals') %>% mutate(residuals_size = abs(residuals))
+tmap_mode('plot')
+qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
 ```
 
 We can see that 'green' positive residuals tend to clustered in some places, and likewise for 'red' negative residuals, indicating that there is spatial autocorrelation in where our model tends to be over- or under-predicting.
@@ -470,9 +481,13 @@ for(i in 1:ncol(Fitted.mean)){
 Much better! Now check spatial autocorrelation in the residuals.
 
 ```{r}
-qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df)
-qtm(pivot_longer(qresid.sf, cols = spp1:spp5, names_to = 'spp', values_to = 'abundance'), dots.col = 'abundance', by = 'spp')
+#| warning: false
+qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df) %>% pivot_longer(cols = spp1:spp5, names_to = 'spp', values_to = 'residuals') %>% mutate(residuals_size = abs(residuals))
+tmap_mode('plot')
+qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
 ```
+
+We still see some spatial clustering of residuals - not very different from before. But atleast now we know that the patterns aren't due to spatial autocorrelation, and our other diagnostic plots look much better.
 
 Now, let's see if our coefficient estimates are closer to **known truths**
 
@@ -484,9 +499,9 @@ print(data.frame(beta, spp = colnames(m_fit$Y)))
 summary(mpost$Beta)$statistics
 ```
 
-TODO: we should also compare explanatory power - will be much higher with spatial random effect
+Not perfect, but better than our model without spatial autocorrelation. In particular, the coefficient **discrimination** is much better, see here for a more detailed [explanation](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecm.1370).
 
-So, what's the advantage over algorithmic ordination approaches? With model-based ordination we can account for spatial autocorrelation and get accurate and precise estimates of the effect of fire severity on the abundance of each species.
+So, what's the advantage over algorithmic ordination approaches? With model-based ordination we can account for spatial autocorrelation and obtain more accurate and precise estimates of the effect of fire severity on the abundance of each species.
 
 ```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
 # extract beta coefficients
@@ -549,7 +564,7 @@ ggplot(vardf.long) +
         legend.key.size = unit(0.4, 'cm'))
 ```
 
-And plot the residual correlations between species. These could be because species interact with one another (e.g., predator-prey interactions), we're missing some important explanatory variables in our model and Tobler's first law (i.e., spatial autocorrelation).
+And plot the residual correlations between species. These could be because species interact with one another (e.g., predator-prey interactions), we're missing some important explanatory variables in our model, and/or Tobler's first law (i.e., spatial autocorrelation).
 
 ```{r,fig.width=3,fig.height=3, fig.align='center'}
 library(ggcorrplot)
@@ -559,15 +574,7 @@ ggcorrplot(OmegaCor[[1]]$mean, tl.cex = 7)
 
 So, after accounting for variability in species abundance due to fire severity, we infer that abundances of species 1 are positively correlated with abundances of species 2, and negatively correlated with species 3 and 4. This is exactly what we expected, given how we simulated spatial autocorrelation in the data.
 
-Unexpectedly, there is a positive residual correlation between species 1 and 5, but if we look at the support for that correlation, is is less than 95%.
-
-TODO: need to expalin this beter
-
-```{r}
-OmegaCor[[1]]$support
-```
-
-We now extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the latent factors, to plot on ordination of sites that are similar in species composition and abundance after accounting for fire severity. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
+Now we can extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the latent factors, to plot on ordination of sites that are similar in species composition and abundance after accounting for fire severity. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
 
 ```{r}
 spp <- colnames(m_fit$Y)
@@ -596,18 +603,23 @@ Now that we've removed variability in species abundances due to fire severity, w
 
 ### Predicting and mapping species abundance everywhere
 
-Now that we are happy with our spatial, multivariate model of species abundance we might like to use it to make predictions of expected species abundance with fire severity everywhere in our survey area.
+Now that we are happy with our spatial, multivariate model of species abundance we might like to use it to make predictions of expected species abundance with fire severity everywhere in our survey area. In this sense you can think of our model as a **joint species distribution model**.
 
 First we will generate a raster of expected fire density by interpolating between our observations of fire severity. As a reminder, we had simulated fire severity at our survey locations and it looks like this.
 
 ```{r}
-qtm(df.sf, dots.col = 'Fire_severity')
+tmap_mode('view')
+qtm(df.sf, dots.col = 'Fire_severity', dots.size = 0.5)
 ```
 
 Let's start by making a grid covering our survey area, which we can then use for interpolation. A spatial grid is what we often refer to as 'raster' data (the points above are referred to as 'vector' data). {terra} is good R package for working with spatial raster data.
 
 ```{r}
+#| output: false
 library(terra)
+```
+
+```{r}
 extent <- st_bbox(df.sf)
 grid <- rast(nrows = 20, ncols = 20, xmin = extent$xmin, xmax = extent$xmax, ymin = extent$ymin, ymax = extent$ymax, crs = "epsg:4326")
 grid_fire <- rasterize(df.sf, grid, 'Fire_severity', fun = mean, touches = T)
@@ -616,18 +628,89 @@ qtm(grid_fire) + qtm(df.sf)
 
 Now do the interpolation using thin plate splines to predict fire severity everywhere.
 
-TODO: need to improve this, probs just simulate fire severity everywhere rather than interpolate
+```{r}
+#| output: false
+library(fields)
+```
 
 ```{r}
-library(fields)
-xy <- data.frame(xyFromCell(grid_fire, 1:ncell(grid_fire)))
-tps <- Tps(xy, values(grid_fire))
-grid_fire_i <- interpolate(rast(grid_fire), tps)
+xy <- data.frame(xyFromCell(grid_fire, 1:ncell(grid_fire))) # make a datafame of longitude and latitude coordinates for each grid cell
+tps <- Tps(xy, values(grid_fire)) # fit a thin plate spline regression
+grid_fire_i <- interpolate(rast(grid_fire), tps) # make a raster with interpolated values from the fitted tps regression
 qtm(grid_fire_i)
 ```
 
-Now make predictions of species abundance using the grid of interpolated fire severity.
+Now we can make predictions of species abundance using the grid of interpolated fire severity. First, we need to set up our new data for making predictions by extracting x and y coordinates and fire severity values from our interpolated raster.
+
+```{r}
+xy_new <- xyFromCell(grid_fire_i, 1:ncell(grid_fire_i))
+XData_new <- data.frame(Fire_severity = values(grid_fire_i))
+```
+
+Now we can prepare a gradient for making predictions that combines our new $X$ data and values for a new spatial random effect.
+
+```{r}
+gradient <- prepareGradient(m_fit, XDataNew = XData_new, sDataNew = list(sample = xy_new))
+```
+
+Finally, we're ready to make predictions. We'll generate an entire posterior predictive distribution (i.e., predictions for our sample of our posterior distribution of parameters), from which we'll summarise as the both the mean predicted abundance value (`preds_abund`) and mean predicted probability of occurrence (`preds_occur`).
+
+```{r}
+#preds_new <- predict(m_fit, Gradient = gradient, nParallel = 4)
+#saveRDS(preds_new, 'model_100thinning_mult_spatial_prediction.rds')
+preds_new <- readRDS('model_100thinning_mult_spatial_prediction.rds')
+preds_abund <- apply(abind::abind(preds_new, along = 3), c(1,2), mean)
+preds_occur <- apply(abind::abind(preds_new, along = 3), c(1,2), function(a) {mean(a > 0)})
+```
+
+Now we can map the predictions everywhere. Let's just try the first species first.
+
+```{r}
+grid_pred1_occur <- rast(grid, vals = preds_occur[,1])
+grid_pred1_abund <- rast(grid, vals = preds_abund[,1])
+qtm(grid_pred1_occur) + qtm(grid_pred1_abund)
+```
+
+Use the layered diamonds in the top left corner to turn the predicted abundance for species 1 off and see predicted occurrence instead. Now let's try layering up and comparing predicted abundance and distributions for all species. We'll use a for loop to create a raster stack of predicted abundance for each species.
+
+```{r}
+stack <- list() # empty list for storing grids for each species' predictions
+for(i in seq_along(1:ncol(preds_abund))){
+stack[[i]] <- rast(grid, vals = preds_abund[,i])
+}
+stack <- do.call(c, stack) # turn list into a raster stack
+names(stack) <- colnames(preds_abund)
+stack
+```
+
+Excellent. Now let's map it.
+
+```{r}
+qtm(stack) + tm_facets(as.layers = T, free.scales = T)
+```
+
+There we have it, we've mapped out predictions of abundance from our joint species distribution model! (Again, make sure you use the **layered diamonds** in the top left to turn layers on and off.)
 
 ## Resources
 
--   Spatial R resources - Gecomputation with R
+Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to: 
+
+1) fit a linear model, 
+
+2) fit a generalised linear model, 
+
+3) fit a multivariate generalised linear model (which is also model-based ordination), and 
+
+4) fit a spatial, multivariate generalised linear model (which is also a joint species distribution model).
+
+Phew, that is a lot!
+
+Find out more about fitting Bayesian models and using R as a GIS here:
+
+- My absolute favourite intro to Bayesian thinking, a really great read: [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)
+
+-   Spatial R resources - [Geocomputation with R](https://r.geocompx.org/)
+
+- [Bayesian spatial models in R](https://www.paulamoraga.com/book-spatial/bayesian-spatial-models.html)
+
+Any questions, get in touch with Christina [here](cabuelow.github.io/personal-website/)

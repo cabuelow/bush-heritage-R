@@ -117,15 +117,15 @@ ggplot(df) +
 
 To understand how they work, it helps to take a quick look at how we formulate linear models mathematically:
 
-$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$ 
+$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$
 
-- $y_i$ is our response variable of interest, 
+-   $y_i$ is our response variable of interest,
 
-- $b_0$ is the is the **y-intercept** for the linear relationship between $y$ and our explanatory variables ($X$'s), 
+-   $b_0$ is the is the **y-intercept** for the linear relationship between $y$ and our explanatory variables ($X$'s),
 
-- $b_1$ is the coefficient representing the strength and direction of the relationship between $y$ (the **slope**), and
+-   $b_1$ is the coefficient representing the strength and direction of the relationship between $y$ (the **slope**), and
 
-- $\epsilon$ is the random, unexplained error in our observations around the fitted relationship(s) between $y$ and $X$(s).
+-   $\epsilon$ is the random, unexplained error in our observations around the fitted relationship(s) between $y$ and $X$(s).
 
 We'll often refer to $\epsilon$ as the **residual error**.
 
@@ -155,7 +155,7 @@ We will simulate a dataset of 100 tree circumference measurements and fire sever
 
 We'll assume that:
 
-A)  fire causes tree death and succession, resulting in smaller average tree circumference in locations with higher fire severity, 
+A)  fire causes tree death and succession, resulting in smaller average tree circumference in locations with higher fire severity,
 B)  the relationship between fire severity and tree circumference is negative and linear, and
 C)  and the natural, unexplained variation (error) in our measurements will be normally distributed with a mean of 0 and a standard deviation of 0.1.
 
@@ -165,7 +165,7 @@ Given the above, we think that we can use a general linear model to estimate the
 
 So, we will the equation for a linear model to simulate 100 tree circumference measurements ($y$):
 
-$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i.$$ 
+$$y_i = b_0 + b_{1}X_{1i} + \epsilon_i.$$
 
 We'll assume that, on average, the magnitude of the negative effect of fire severity on tree circumference is `-1`, meaning a one unit increase in fire severity results in a 1 unit decrease in tree circumference. This is the $b_{1}$ coefficient (the slope) in the above equation. When fitting models to real data, this is often the relationship that is **unknown** and we are trying to estimate.
 
@@ -254,7 +254,7 @@ How are the beta coefficients of the model (the intercept $b_0$ and the slope $b
 summary(m)
 ```
 
-Let's unpack this model summary. 
+Let's unpack this model summary.
 
 First up, summary statistics for the **residuals**. Residuals are the difference between predictions of tree circumference made by our model, and the actual observations of tree circumference. So a residual value of 0 means the model perfectly predicted tree circumference for a particular level of fire severity. Negative or positive residuals means the model is under- or over- predicting tree circumference for some levels of fire severity.
 
@@ -269,7 +269,7 @@ b1
 
 **Residual standard error** is how variable the residuals are, and **degrees of freedom** is the number of observations (in our case 100) and the number of parameters the model is estimating (in our case 2, because we are estimated 2 beta coefficients (coefficients are parameters)).
 
-The R^2^ is a measure of **model fit** (use the adjusted if you have multiple explanatory variables). It tells us our model has explained a whopping 89% of the variability in the data (note, use the adjusted R^2^ if you have more than one explanatory variable). 
+The R^2^ is a measure of **model fit** (use the adjusted if you have multiple explanatory variables). It tells us our model has explained a whopping 89% of the variability in the data (note, use the adjusted R^2^ if you have more than one explanatory variable).
 
 That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R^2^ values due to the natural sources of variability that we can't explain.
 
@@ -395,7 +395,7 @@ summary(m)
 
 Great, so once again, we've been able to recover the **known truth** (an effect size of -1) with our linear model.
 
-Note that if you have categorical variables with >2 levels, all of the 'non-reference' levels are dummy coded as 1's. So, you end up estimating the effect of each level on the response, in reference to the 'reference' level. So the $b_{1}$ coefficient of -1 means that, on average, tree circumference is one unit less at burned sites, in reference to un-burned sites.
+Note that if you have categorical variables with \>2 levels, all of the 'non-reference' levels are dummy coded as 1's. So, you end up estimating the effect of each level on the response, in reference to the 'reference' level. So the $b_{1}$ coefficient of -1 means that, on average, tree circumference is one unit less at burned sites, in reference to un-burned sites.
 
 As before, we would want to check our model meets structural assumptions using diagnostic plots.
 
@@ -527,7 +527,7 @@ plot(m)
 
 Often, ecological count data is **over-dispersed**. This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology.)
 
-How can we check for over-dispersion? First, we can divide the residual deviance (the amount of unexplained variation we have in our data, after fitting the model) by the residual degrees of freedom (the amount of left over variation our model expects). It should not be > 1.5. If it is, over-dispersion is likely a problem in our model fit.
+How can we check for over-dispersion? First, we can divide the residual deviance (the amount of unexplained variation we have in our data, after fitting the model) by the residual degrees of freedom (the amount of left over variation our model expects). It should not be \> 1.5. If it is, over-dispersion is likely a problem in our model fit.
 
 ```{r}
 m$deviance/m$df.residual
@@ -595,7 +595,7 @@ m <- glm.nb(Species_abundance_overdisp ~ Fire_severity, data = df2, link = 'log'
 summary(m)
 ```
 
-Summary indicates over-dispersion is no longer a problem (ratio < 1.5). 
+Summary indicates over-dispersion is no longer a problem (ratio \< 1.5).
 
 ```{r}
 m$deviance/m$df.residual
@@ -610,7 +610,7 @@ plot(resid)
 
 Much better.
 
-But, notice that the coefficient estimates of both the poisson and negative-binomial glms fitted to over-dispersed data were not overly biased from our **known truths**. 
+But, notice that the coefficient estimates of both the poisson and negative-binomial glms fitted to over-dispersed data were not overly biased from our **known truths**.
 
 ```{r}
 b0
@@ -630,3 +630,5 @@ What we haven't covered, and where you can learn more:
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables). As mentioned in the introduction, you can learn more about approaches to goal-driven model selection [here](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
 
 Here we have learned how to fit models in a **frequentist** paradigm, using either ordinary least squares or maximum likelihood. As a follow-up, we will learn how to fit models in a **Bayesian** paradigm to allow us to fit more complex multivariate models in **Part 2**.
+
+Any questions, get in touch with Christina [here](cabuelow.github.io/personal-website/)
