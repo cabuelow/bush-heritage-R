@@ -138,7 +138,7 @@ Now we can look at trace plots of the MCMC sampling for each of the posterior di
 plot(mpost$Beta)
 ```
 
-Not ideal. The chains are not mixing very well, and the posterior distributions are not bell-shaped.
+Not ideal. The chains are not mixing very well, and the posterior distributions are not bell-shaped (are a bit too pointy, more like a witch's hat).
 
 We can also get some quantitative convergence diagnostics, such as the effective sample size of the MCMC chains, to help us diagnose the issue. We would expect the effective samples size to be close to 4000 (1000 samples/chain \* 4 chains). If it is less, that indicates there is auto-correlation in the MCMC sampling
 
@@ -254,26 +254,65 @@ Let's start by simulating a new dataset of species abundance data for multiple s
 ```{r}
 library(MASS)
 set.seed(123) # set seed for random number generator to ensure results are reproducible
-n <- 100
-ns <- 5
-b0 <- log(rep(10,ns))
-b1 <- log(c(2,1.1,1,1.1,2))*c(-1,-1,0,1,1)
-beta <- cbind(b0,b1)
-X <- cbind(rep(1,n),runif(n, min = 0, max = 1)) # fire severity measurements
-xycoords <- data.frame(x = runif(n, 152.1,152.5), y = runif(n, 28.1, 28.5)*-1)
-sigma.spatial <- c(2)
-alpha.spatial <- c(0.35)
-Sigma <- sigma.spatial^2*exp(-as.matrix(dist(xycoords))/alpha.spatial)
-eta1 <- mvrnorm(mu=rep(0,n), Sigma=Sigma)
-lambda1 <- c(1,2,-2,-1,0)
-spatial_res <- eta1%*%t(lambda1)
-lambda <- exp((X%*%t(beta))) + spatial_res
+n <- 100 # number of observations
+ns <- 5 # number of species
 
-y <- data.frame(apply(data.frame(lambda), 2, function(x) rpois(n, x)))
-colnames(y) <- c('spp1', 'spp2', 'spp3', 'spp4', 'spp5')
-df <- data.frame(xycoords, y, Fire_severity = X[,2])
+# simulate relationships between species abundance and fire severity
+b0 <- log(rep(10,ns)) # y-intercept for each species is 10
+b1 <- log(c(2,1.1,1,1.1,2))*c(-1,-1,0,1,1) # slopes for each species (spp 1&2 decrease by factor of 2 & 1.1, spp3 no change, spp 4&5 increase by factor of 1.1 &2)
+beta <- cbind(b0,b1) # bind beta coefficients together
+X <- cbind(rep(1,n),runif(n, min = 0, max = 1)) # fire severity measurements
+
+# simulate spatial autocorrelation in the abundances
+xycoords <- data.frame(x = runif(n, 152.1,152.5), y = runif(n, 28.1, 28.5)*-1) # make spatial coordinates for survey locations
+sigma.spatial <- c(2) # standard deviation of spatial covariance
+alpha.spatial <- c(0.35) # spatial scale parameter 'alpha' for spatial covariance
+sigma <- sigma.spatial^2*exp(-as.matrix(dist(xycoords))/alpha.spatial) # exponentially decreasing spatial covariance matrix
+eta <- mvrnorm(mu=rep(0,n), Sigma=sigma) # draw spatially structured residuals from a multivariate normal distribution (spatially structured latent predictor)
+beta.spatial <- c(1,2,-2,-1,0) # define how species are spatially auto-correlated (i.e., respond to spatially structured latent predictor (eta))
+spatial_res <- eta%*%t(beta.spatial) # calculate spatially structured residuals for each species
+lambda <- exp((X%*%t(beta))) + spatial_res # add spatial residuals to mean expected abundance of each species due to fire severity
+
+# make final data frame of simulated species abundances with spatial autocorrelation
+y <- data.frame(apply(data.frame(lambda), 2, function(x) rpois(n, x))) # simulate species abundance observations from the poisson distribution
+colnames(y) <- c('spp1', 'spp2', 'spp3', 'spp4', 'spp5') # add column names to data frame
+df <- data.frame(xycoords, y, Fire_severity = X[,2]) # add fire severity
 head(df)
 ```
+
+What do the simulated relationship's look like? Let's do some plots. First, it will be easiest to plot if we make this data [**tidy**](https://r4ds.had.co.nz/tidy-data.html#fig:tidy-structure). This means that, instead of having a separate column for each species' abundance observations (**wide** format data) we pivot to **long** format, whereby we have only one column for abundance observations (so every unique observation of abundance has its own row). 
+
+Let's try it.
+
+```{r}
+library(tidyr)
+df_long <- pivot_longer(df, cols = spp1:spp5, 
+               names_to = 'spp', 
+               values_to = 'abundance')
+head(df_long)
+```
+
+Great, now we can more easily plot a trend line for each species' abundance in response to fire severity.
+
+```{r,fig.width=3.5,fig.height=2.5, fig.align='center'}
+ggplot(df_long) +
+  aes(x = Fire_severity, y = abundance, col = spp) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = 'lm') +
+  ylab('Species abundance') +
+  xlab('Fire Severity') +
+  theme_classic()
+```
+
+What trends did we expect to see? We can take the exponent of the slope ($b{_1}$ coefficients) to get the expected multiplicative change in species abundance for every one unit increase in fire severity. If we multiply this by the y-intercept (mean abundance at fire severity = 0), that will give us the abundance we expect when fire severity = 1.
+
+```{r}
+data.frame(Species = colnames(y),
+           Multiplicative_change = exp(b1),
+           Abundance_FS_1 = exp(b0)*exp(b1))
+```
+
+Pretty close for most species, although some deviations from expected (especially for species 3 - we would have expected a flat line around 10). The deviations will stem from the spatial autocorrelation that we simulated in the data. But don't worry about it for now, we'll discuss that in more detail later. 
 
 ### Spatial data in R
 
@@ -290,7 +329,6 @@ What's different about the spatial dataframe compared to a normal one? Now let's
 ```{r}
 #| output: false
 library(tmap)
-library(tidyr)
 tmap_mode('view')
 ```
 
@@ -424,7 +462,7 @@ print(data.frame(beta, spp = colnames(y)))
 summary(mpost$Beta)$statistics
 ```
 
-So definitely some bias, although generally the sign of the effects are correct (i.e. negative vs. positive) and the discrimination is good, e.g., fire severity has a larger negative effect on abundance of species 1 than species 2, and a larger positive effect for species 5 than species 4.
+So definitely some bias, although generally the sign of the effects are correct (i.e. negative vs. positive).
 
 Let's see if we can improve our model by including a spatial random effect to account for spatial autocorrelation.
 
