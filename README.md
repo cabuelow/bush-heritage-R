@@ -15,8 +15,8 @@ Google planning doc link
 
 -   [x] Decide on course structure/topics
 -   [x] Write draft notes
--   [ ] Finish notes - TODOs at top of qmd
--   [ ] Make a list of R packages participants will need to have
+-   [x] Finish notes - TODOs at top of qmd
+-   [x] Make a list of R packages participants will need to have
     installed prior
 -   [ ] Provide links to course notes and download zip files of data
 
