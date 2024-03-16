@@ -32,7 +32,7 @@ How we build and select models depends on our goals, see this guide to [goal dri
 
 Here, we will focus on learning the **basics** of fitting models to answer ecological questions. You will be able to use these modelling skills regardless of whether your goal is exploration, inference, or prediction (model development and selection for different goals is beyond the scope of this coarse).
 
-We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In the **part 2** of this course, we'll build more complex multivariate models in **R**.
+We'll start with a basic linear model to explore how fire severity influences ecological characteristics at survey locations. We'll see how, depending on the type of data we are modelling, we might need to use *generalised* linear models (as opposed to *general* linear models). In [**Part 2**](Advanced-Day2.html) of this course, we'll build more complex multivariate models in **R**.
 
 This course assumes an understanding of how to wrangle, summarise, and visualise data in **R**. We hope you will learn:
 
@@ -627,4 +627,4 @@ What we haven't covered, and where you can learn more:
 
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables). As mentioned in the introduction, you can learn more about approaches to goal-driven model selection [here](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
 
-Here we have learned how to fit models in a **frequentist** paradigm, using either ordinary least squares or maximum likelihood. As a follow-up, we will learn how to fit models in a **Bayesian** paradigm to allow us to fit more complex multivariate models in **Part 2**.
+Here we have learned how to fit models in a **frequentist** paradigm, using either ordinary least squares or maximum likelihood. As a follow-up, we will learn how to fit models in a **Bayesian** paradigm to allow us to fit more complex multivariate models in [**Part 2**](Advanced-Day2.html).
