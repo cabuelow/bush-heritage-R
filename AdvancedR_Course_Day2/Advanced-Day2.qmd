@@ -53,7 +53,7 @@ In [**Part 1**](Advanced-Day1.html) of this course we touched on how model param
 
 The Bayesian models we'll use today use Markov Chain Monte Carlo (MCMC) sampling to estimate the **posterior distribution** for each parameter (coefficient).
 
-Here is a great overview of the key differences between [maximum likelihood and Bayesian parameter estimation](https://towardsdatascience.com/maximum-likelihood-vs-bayesian-estimation-dd2eb4dfda8a).
+Here is a great overview of the key differences between [Frequentist and Bayesian parameter estimation](https://towardsdatascience.com/maximum-likelihood-vs-bayesian-estimation-dd2eb4dfda8a).
 
 We don't have time to discuss the details today, but the key things you need to know when fitting a Bayesian model with MCMC sampling are:
 
