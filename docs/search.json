@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Bush Heritage R workshops",
     "section": "",
-    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\", \"ggthemes\", \"patchwork\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
+    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
   },
   {
     "objectID": "day1.html",
