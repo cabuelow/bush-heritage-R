@@ -1,0 +1,11 @@
+---
+title: "About Us"
+---
+
+## Dr Christina Buelow
+
+[Dr Christina Buelow](https://cabuelow.github.io/personal-website/){target="_blank"} is a quantitative ecologist who loves data and models. She got her start as a field ecologist, but these days she spends most of her time behind a computer developing models and tools to solve challenging problems related to conservation and sustainable use of Earth's ecosystems. Currently, she is working closely with international NGOs to inform climate-smart conservation of coastal ecosystems. Although the website is still under construction, you can find out more about her work [here](https://cabuelow.github.io/personal-website/){target="_blank"}.
+
+## Dr Caite Kuempel
+
+## Dr Jackson Stockbridge

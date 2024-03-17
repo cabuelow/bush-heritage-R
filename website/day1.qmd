@@ -1,0 +1,29 @@
+---
+title: "Day 1 - Data wrangling and visualisation in R"
+---
+
+### Timetable
+
+|             |                                  |               |
+|-------------|----------------------------------|---------------|
+| **Time**    | **Activity**                     | **Presenter** |
+| 9-9:15      | Welcome and introductions        | Caitie/All    |
+| 9:15-10     | R, RStudio, RProjects, Rmarkdown | Caitie        |
+| 10-10:30    | R syntax and data types          | Caitie        |
+| 10:30-10:40 | Tea break                        |               |
+| 10:40-12    | Introduction to the tidyverse    | Caitie        |
+| 12-12:30    | Lunch break                      |               |
+| 12:30-1:30  | For loops and simple models      | Caitie        |
+| 1:30-3      | Data visualisation               | Caitie        |
+
+: {.striped .hover}
+
+### Workshop Notes
+
+The notes are available [here](.html){target="_blank"}.
+
+CAUTION: The notes may be updated between now and the workshop.
+
+### Workshop Data
+
+The data are available [here](.zip){target="_blank"}.

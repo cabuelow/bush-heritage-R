@@ -1,0 +1,23 @@
+---
+title: "Bush Heritage R workshops"
+---
+
+Hi all, we're very much looking forward to our 3 days of **R**'ing with you. 
+
+In preparation, please install [R](https://rstudio-education.github.io/hopr/starting.html), [RStudio](https://posit.co/download/rstudio-desktop/), and the following **R packages**. You can just copy and paste the code below into the console of RStudio and hit enter.
+
+#### **Day 1 - Data wrangling and visualisation in R**
+
+```{r eval=FALSE}
+install.packages(c("tidyverse", "ggthemes", "patchwork"))
+```
+
+#### **Day 2 & 3 - Statistical Modelling in R**
+
+```{r eval=FALSE}
+install.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')
+```
+
+Cheers,
+
+Christina, Caitie and Jackson

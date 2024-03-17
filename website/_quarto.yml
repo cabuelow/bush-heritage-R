@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Bush Heritage R Workshops"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: day1.qmd
+        text: Day 1
+      - href: day2.qmd
+        text: Day 2
+      - href: day3.qmd
+        text: Day 3
+        
+resources: 
+    - "data/*"
+
+format:
+  html:
+    theme: lux
+    css: styles.css
+    toc: true
+
+editor: visual
+

@@ -1,0 +1,100 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bush Heritage R workshops",
+    "section": "",
+    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\", \"ggthemes\", \"patchwork\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
+  },
+  {
+    "objectID": "day1.html",
+    "href": "day1.html",
+    "title": "Day 1 - Data wrangling and visualisation in R",
+    "section": "",
+    "text": "Timetable\n\n\n\n\nTime\nActivity\nPresenter\n\n\n9-9:15\nWelcome and introductions\nCaitie/All\n\n\n9:15-10\nR, RStudio, RProjects, Rmarkdown\nCaitie\n\n\n10-10:30\nR syntax and data types\nCaitie\n\n\n10:30-10:40\nTea break\n\n\n\n10:40-12\nIntroduction to the tidyverse\nCaitie\n\n\n12-12:30\nLunch break\n\n\n\n12:30-1:30\nFor loops and simple models\nCaitie\n\n\n1:30-3\nData visualisation\nCaitie\n\n\n\n\n\nWorkshop Notes\nThe notes are available here.\nCAUTION: The notes may be updated between now and the workshop.\n\n\nWorkshop Data\nThe data are available here."
+  },
+  {
+    "objectID": "day3.html",
+    "href": "day3.html",
+    "title": "Day 3 - Advanced Statistical Modelling in R",
+    "section": "",
+    "text": "Timetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nFrequentist vs. Bayesian?\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nFitting Bayesian models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nMultivariate GLM & Spatial autocorrelation\n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nMaking and mapping predictions everywhere\n\n\n3:15-3:30\nWrap-up/Q&A\n\n\n\n\n\nWorkshop Notes\nThe notes are available here.\nCAUTION: The notes may be updated between now and the workshop.\n\n\nWorkshop Models\nThe models are available to download here."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Us",
+    "section": "",
+    "text": "Dr Christina Buelow is a quantitative ecologist who loves data and models. She got her start as a field ecologist, but these days she spends most of her time behind a computer developing models and tools to solve challenging problems related to conservation and sustainable use of Earth’s ecosystems. Currently, she is working closely with international NGOs to inform climate-smart conservation of coastal ecosystems. Although the website is still under construction, you can find out more about her work here."
+  },
+  {
+    "objectID": "about.html#dr-christina-buelow",
+    "href": "about.html#dr-christina-buelow",
+    "title": "About Us",
+    "section": "",
+    "text": "Dr Christina Buelow is a quantitative ecologist who loves data and models. She got her start as a field ecologist, but these days she spends most of her time behind a computer developing models and tools to solve challenging problems related to conservation and sustainable use of Earth’s ecosystems. Currently, she is working closely with international NGOs to inform climate-smart conservation of coastal ecosystems. Although the website is still under construction, you can find out more about her work here."
+  },
+  {
+    "objectID": "about.html#dr-caite-kuempel",
+    "href": "about.html#dr-caite-kuempel",
+    "title": "About Us",
+    "section": "Dr Caite Kuempel",
+    "text": "Dr Caite Kuempel"
+  },
+  {
+    "objectID": "about.html#dr-jackson-stockbridge",
+    "href": "about.html#dr-jackson-stockbridge",
+    "title": "About Us",
+    "section": "Dr Jackson Stockbridge",
+    "text": "Dr Jackson Stockbridge"
+  },
+  {
+    "objectID": "day2.html",
+    "href": "day2.html",
+    "title": "Day 2 - Statistical Modelling in R",
+    "section": "",
+    "text": "Timetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nSimulating data to enhance our understanding\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nGeneral linear models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nGeneralised linear models \n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nOverdispersion\n\n\n3:15-3:30\nWrap-up/Q&A\n\n\n\n\n\nWorkshop Notes\nThe notes are available here.\nCAUTION: The notes may be updated between now and the workshop."
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Further Resources",
+    "section": "",
+    "text": "Writing code is 80% googling the answer (unattributed)\n\nIf you are going to be a successful R user, then you need to get good at finding help to deal with bugs. The above aphorism is widely subscribed to by professional programmers. R is no exception. If you web search an issue, like ‘ggplot remove legend’ you will commonly get a pretty decent answer on Stack Overflow or a similar site. We probably used google hundreds of times to write the course notes.\nIf the answer doesn’t already exist there then sign up to Stack Overflow and ask it yourself (but spend a bit of time looking, no one wants to get tagged for duplicating an existing question!).\nAnother good idea is to find a local support group. R coding is an emotional experience, frustration is a common one, but the elation of finding a solution can help us persist. Having other people to help, or even just listen to your frustrations is a huge help for your motivation to keep learning R.\nRemember to always put together a reprex before you ask for help!\nThere are plenty of good books out there (too many to choose from in fact). Some good resources are:\n\n\n\nR for Data Science, for data wrangling mainly\nAdvanced R as a follow on for R for Data Science\n\n\n\n\n\nR Graphics Cookbook, for ggplot and free on the web\n\n\n\n\n\nChris often refers to Mixed Effects Models and Extensions in Ecology with R\nThe classic text for GAMs is Generalized Additive Models: An Introduction with R. This has a very technical treatment of GAMs, but also an extensive section with practical examples, including spatial ones.\n\n\n\n\n\nGeocomputation in R\nSpatial Data Science with Applications in R\nSpatial Data Science, for sf, tmap, stars, and more\nSpatial Data Science, for terra\nSpatial Statistics for Data Science, for spatial statistics\nIf you are interested in interactive web-based mapping Christina has put together a great tutorial which is based on Leaflet for R.\n\n\n\n\n\nIf you want to learn new tricks, or stay up-to-date with the latest packages, the blog aggregator R-Bloggers has a non-step feed of R blogs from all over the world and all disciplines, including our colleague Chris Brown, one of the former instructors in this course.\n\nIf you prefer to have a printed guide, another tactic is to web search your favourite package and ‘cheatsheet’."
+  },
+  {
+    "objectID": "resources.html#data-science",
+    "href": "resources.html#data-science",
+    "title": "Further Resources",
+    "section": "",
+    "text": "R for Data Science, for data wrangling mainly\nAdvanced R as a follow on for R for Data Science"
+  },
+  {
+    "objectID": "resources.html#graphics",
+    "href": "resources.html#graphics",
+    "title": "Further Resources",
+    "section": "",
+    "text": "R Graphics Cookbook, for ggplot and free on the web"
+  },
+  {
+    "objectID": "resources.html#modelling",
+    "href": "resources.html#modelling",
+    "title": "Further Resources",
+    "section": "",
+    "text": "Chris often refers to Mixed Effects Models and Extensions in Ecology with R\nThe classic text for GAMs is Generalized Additive Models: An Introduction with R. This has a very technical treatment of GAMs, but also an extensive section with practical examples, including spatial ones."
+  },
+  {
+    "objectID": "resources.html#spatial-analysis-and-visualisation",
+    "href": "resources.html#spatial-analysis-and-visualisation",
+    "title": "Further Resources",
+    "section": "",
+    "text": "Geocomputation in R\nSpatial Data Science with Applications in R\nSpatial Data Science, for sf, tmap, stars, and more\nSpatial Data Science, for terra\nSpatial Statistics for Data Science, for spatial statistics\nIf you are interested in interactive web-based mapping Christina has put together a great tutorial which is based on Leaflet for R."
+  },
+  {
+    "objectID": "resources.html#general",
+    "href": "resources.html#general",
+    "title": "Further Resources",
+    "section": "",
+    "text": "If you want to learn new tricks, or stay up-to-date with the latest packages, the blog aggregator R-Bloggers has a non-step feed of R blogs from all over the world and all disciplines, including our colleague Chris Brown, one of the former instructors in this course.\n\nIf you prefer to have a printed guide, another tactic is to web search your favourite package and ‘cheatsheet’."
+  }
+]

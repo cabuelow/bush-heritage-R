@@ -1,0 +1,26 @@
+---
+title: "Day 2 - Statistical Modelling in R"
+---
+
+### Timetable
+
+|             |                                              |
+|-------------|----------------------------------------------|
+| **Time**    | **Activity**                                 |
+| 9-9:15      | Welcome and introductions                    |
+| 9:15-10:30  | Simulating data to enhance our understanding |
+| 10:30-10:40 | Tea break                                    |
+| 10:40-12    | General linear models                        |
+| 12-12:30    | Lunch break                                  |
+| 12:30-2     | Generalised linear models                    |
+| 2:00-2:10   | Tea break                                    |
+| 2:10-3:15   | Overdispersion                               |
+| 3:15-3:30   | Wrap-up/Q&A                                  |
+
+: {.striped .hover}
+
+### Workshop Notes
+
+The notes are available [here](Statistical-modelling-Part_1.html){target="_blank"}.
+
+CAUTION: The notes may be updated between now and the workshop.

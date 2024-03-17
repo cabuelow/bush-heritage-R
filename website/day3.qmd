@@ -1,0 +1,30 @@
+---
+title: "Day 3 - Advanced Statistical Modelling in R"
+---
+
+### Timetable
+
+|             |                                            |
+|-------------|--------------------------------------------|
+| **Time**    | **Activity**                               |
+| 9-9:15      | Welcome and introductions                  |
+| 9:15-10:30  | Frequentist vs. Bayesian?                  |
+| 10:30-10:40 | Tea break                                  |
+| 10:40-12    | Fitting Bayesian models                    |
+| 12-12:30    | Lunch break                                |
+| 12:30-2     | Multivariate GLM & Spatial autocorrelation |
+| 2:00-2:10   | Tea break                                  |
+| 2:10-3:15   | Making and mapping predictions everywhere  |
+| 3:15-3:30   | Wrap-up/Q&A                                |
+
+: {.striped .hover}
+
+### Workshop Notes
+
+The notes are available [here](Statistical-modelling-Part_2.html){target="_blank"}.
+
+CAUTION: The notes may be updated between now and the workshop.
+
+### Workshop Models
+
+The models are available to download [here](models.zip){target="_blank"}.
