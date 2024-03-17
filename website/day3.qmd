@@ -2,6 +2,16 @@
 title: "Day 3 - Advanced Statistical Modelling in R"
 ---
 
+### Workshop Notes
+
+The notes are available [here](Statistical-modelling-Part_2.html){target="_blank"}.
+
+CAUTION: The notes may be updated between now and the workshop.
+
+### Workshop Models
+
+The models are available to download [here](models.zip){target="_blank"}.
+
 ### Timetable
 
 |             |                                            |
@@ -18,13 +28,3 @@ title: "Day 3 - Advanced Statistical Modelling in R"
 | 3:15-3:30   | Wrap-up/Q&A                                |
 
 : {.striped .hover}
-
-### Workshop Notes
-
-The notes are available [here](Statistical-modelling-Part_2.html){target="_blank"}.
-
-CAUTION: The notes may be updated between now and the workshop.
-
-### Workshop Models
-
-The models are available to download [here](models.zip){target="_blank"}.
