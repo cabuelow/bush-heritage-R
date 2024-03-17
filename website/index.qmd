@@ -9,7 +9,7 @@ In preparation, please install [R](https://rstudio-education.github.io/hopr/star
 #### **Day 1 - Data wrangling and visualisation in R**
 
 ```{r eval=FALSE}
-install.packages(c("tidyverse", "ggthemes", "patchwork"))
+install.packages(c("tidyverse"))
 ```
 
 #### **Day 2 & 3 - Statistical Modelling in R**

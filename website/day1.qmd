@@ -2,6 +2,10 @@
 title: "Day 1 - Data wrangling and visualisation in R"
 ---
 
+### Workshop Notes and Data
+
+The notes are available [here](.html){target="_blank"} and data are available [here](.zip){target="_blank"}.
+
 ### Timetable
 
 |             |                                  |               |
@@ -18,12 +22,3 @@ title: "Day 1 - Data wrangling and visualisation in R"
 
 : {.striped .hover}
 
-### Workshop Notes
-
-The notes are available [here](.html){target="_blank"}.
-
-CAUTION: The notes may be updated between now and the workshop.
-
-### Workshop Data
-
-The data are available [here](.zip){target="_blank"}.

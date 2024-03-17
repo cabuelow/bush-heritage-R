@@ -4,10 +4,9 @@ title: "Day 2 - Statistical Modelling in R"
 
 ### Workshop Notes
 
-The notes are available [here](Statistical-modelling-Part_1.html){target="_blank"}.
+Access the course [notes](Statistical-modelling-Part_1.html){target="_blank"}.
 
-CAUTION: The notes may be updated between now and the workshop.
-
+**Note these may change before the day of the course**
 
 ### Timetable
 

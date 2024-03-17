@@ -4,6 +4,55 @@
     "href": "index.html",
     "title": "Bush Heritage R workshops",
     "section": "",
-    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\", \"ggthemes\", \"patchwork\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
+    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
+  },
+  {
+    "objectID": "day1.html",
+    "href": "day1.html",
+    "title": "Day 1 - Data wrangling and visualisation in R",
+    "section": "",
+    "text": "Workshop Notes and Data\nThe notes are available here and data are available here.\n\n\nTimetable\n\n\n\n\nTime\nActivity\nPresenter\n\n\n9-9:15\nWelcome and introductions\nCaitie/All\n\n\n9:15-10\nR, RStudio, RProjects, Rmarkdown\nCaitie\n\n\n10-10:30\nR syntax and data types\nCaitie\n\n\n10:30-10:40\nTea break\n\n\n\n10:40-12\nIntroduction to the tidyverse\nCaitie\n\n\n12-12:30\nLunch break\n\n\n\n12:30-1:30\nFor loops and simple models\nCaitie\n\n\n1:30-3\nData visualisation\nCaitie"
+  },
+  {
+    "objectID": "day2.html",
+    "href": "day2.html",
+    "title": "Day 2 - Statistical Modelling in R",
+    "section": "",
+    "text": "Workshop Notes\nAccess the course notes.\nNote these may change before the day of the course\n\n\nTimetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nSimulating data to enhance our understanding\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nGeneral linear models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nGeneralised linear models \n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nOverdispersion\n\n\n3:15-3:30\nWrap-up/Q&A"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About Us",
+    "section": "",
+    "text": "Dr Christina Buelow is a quantitative ecologist who loves data and models. She got her start as a field ecologist, but these days she spends most of her time behind a computer developing models and tools to solve challenging problems related to conservation and sustainable use of Earth’s ecosystems. Currently, she is working closely with international NGOs to inform climate-smart conservation of coastal ecosystems. Although the website is still under construction, you can find out more about her work here."
+  },
+  {
+    "objectID": "about.html#dr-christina-buelow",
+    "href": "about.html#dr-christina-buelow",
+    "title": "About Us",
+    "section": "",
+    "text": "Dr Christina Buelow is a quantitative ecologist who loves data and models. She got her start as a field ecologist, but these days she spends most of her time behind a computer developing models and tools to solve challenging problems related to conservation and sustainable use of Earth’s ecosystems. Currently, she is working closely with international NGOs to inform climate-smart conservation of coastal ecosystems. Although the website is still under construction, you can find out more about her work here."
+  },
+  {
+    "objectID": "about.html#dr-caite-kuempel",
+    "href": "about.html#dr-caite-kuempel",
+    "title": "About Us",
+    "section": "Dr Caite Kuempel",
+    "text": "Dr Caite Kuempel"
+  },
+  {
+    "objectID": "about.html#dr-jackson-stockbridge",
+    "href": "about.html#dr-jackson-stockbridge",
+    "title": "About Us",
+    "section": "Dr Jackson Stockbridge",
+    "text": "Dr Jackson Stockbridge"
+  },
+  {
+    "objectID": "day3.html",
+    "href": "day3.html",
+    "title": "Day 3 - Advanced Statistical Modelling in R",
+    "section": "",
+    "text": "Workshop Notes and models\nAccess the course notes and download the models we will use here.\nNote these files may change before the day of the course\n\n\nTimetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nFrequentist vs. Bayesian?\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nFitting Bayesian models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nMultivariate GLM & Spatial autocorrelation\n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nMaking and mapping predictions everywhere\n\n\n3:15-3:30\nWrap-up/Q&A"
   }
 ]
