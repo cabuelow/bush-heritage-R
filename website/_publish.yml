@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 8a43a709-f0d0-4a69-860b-057d5b078336
+      url: 'https://cabuelow.quarto.pub/bush-heritage-r-workshops'
