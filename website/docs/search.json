@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Bush Heritage R workshops",
-    "section": "",
-    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
-  },
-  {
     "objectID": "day1.html",
     "href": "day1.html",
     "title": "Day 1 - Data wrangling and visualisation in R",
@@ -19,6 +12,13 @@
     "title": "Day 2 - Statistical Modelling in R",
     "section": "",
     "text": "Workshop Notes\nAccess the course notes.\nNote these may change before the day of the course\n\n\nTimetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nSimulating data to enhance our understanding\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nGeneral linear models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nGeneralised linear models \n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nOverdispersion\n\n\n3:15-3:30\nWrap-up/Q&A"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Bush Heritage R workshops",
+    "section": "",
+    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields')\n\nCheers,\nChristina, Caitie and Jackson"
   },
   {
     "objectID": "about.html",
