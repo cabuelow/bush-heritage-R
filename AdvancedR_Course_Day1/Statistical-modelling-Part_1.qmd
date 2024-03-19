@@ -623,8 +623,10 @@ What we haven't covered, and where you can learn more:
 
 -   **Interactive effects** (i.e., the response of $y$ to one explanatory variable depends on another); to find out more see this [guide for ecologists](https://onlinelibrary.wiley.com/doi/full/10.1111/brv.12939)
 
--   **Random effects** (i.e., mixed effects models) - most models in ecology should probably be mixed effects models! Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation) I recommend checking out this [book](https://link.springer.com/book/10.1007/978-0-387-87458-6)
+-   **Random effects** (i.e., mixed effects models). Random effects offer many benefits, including allowing you to account for lack of independence in your observations (e.g., site level effects, spatial and/or temporal autocorrelation) I recommend checking out this [book](https://link.springer.com/book/10.1007/978-0-387-87458-6)
 
 -   **Model selection** - how to choose among competing, plausible models (e.g., models that include different combinations of explanatory variables). As mentioned in the introduction, you can learn more about approaches to goal-driven model selection [here](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3336)
+
+- **Data simulation** - here is a nice package [{simstudy}]( https://kgoldfeld.github.io/simstudy/) to help simulate data to develop and test your models
 
 Here we have learned how to fit models in a **frequentist** paradigm, using either ordinary least squares or maximum likelihood. As a follow-up, we will learn how to fit models in a **Bayesian** paradigm to allow us to fit more complex multivariate models in [**Part 2**](Statistical-modelling-Part_2.html).
