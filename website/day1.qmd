@@ -1,5 +1,5 @@
 ---
-title: "Day 1 - Data wrangling and visualisation in R"
+title: "Data wrangling and visualisation in R"
 ---
 
 ### Workshop Notes and Data
@@ -23,4 +23,3 @@ The notes are available [here](Intro-R-and-Tidyverse.html){target="_blank"} and 
 | 1:30-3      | Data visualisation               | Caitie        |
 
 : {.striped .hover}
-

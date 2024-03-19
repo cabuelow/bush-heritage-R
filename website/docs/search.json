@@ -2,14 +2,14 @@
   {
     "objectID": "day1.html",
     "href": "day1.html",
-    "title": "Day 1 - Data wrangling and visualisation in R",
+    "title": "Data wrangling and visualisation in R",
     "section": "",
     "text": "Workshop Notes and Data\n\nNote these may change before the day of the course\nThe notes are available here and data are available here.\n\n\n\nTimetable\n\n\n\n\nTime\nActivity\nPresenter\n\n\n9-9:15\nWelcome and introductions\nCaitie/All\n\n\n9:15-10\nR, RStudio, RProjects, Rmarkdown\nCaitie\n\n\n10-10:30\nR syntax and data types\nCaitie\n\n\n10:30-10:40\nTea break\n\n\n\n10:40-12\nIntroduction to the tidyverse\nCaitie\n\n\n12-12:30\nLunch break\n\n\n\n12:30-1:30\nFor loops and simple models\nCaitie\n\n\n1:30-3\nData visualisation\nCaitie"
   },
   {
     "objectID": "day2.html",
     "href": "day2.html",
-    "title": "Day 2 - Statistical Modelling in R",
+    "title": "Statistical Modelling in R (Part 1)",
     "section": "",
     "text": "Workshop Notes\n\nNote these may change before the day of the course\nAccess the course notes.\n\n\n\nTimetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nSimulating data to enhance our understanding\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nGeneral linear models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nGeneralised linear models \n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nOverdispersion\n\n\n3:15-3:30\nWrap-up/Q&A"
   },
@@ -30,7 +30,7 @@
   {
     "objectID": "day3.html",
     "href": "day3.html",
-    "title": "Day 3 - Advanced Statistical Modelling in R",
+    "title": "Statistical Modelling in R (Part 2)",
     "section": "",
     "text": "Workshop Notes and models\n\nThese files may change before the day of the course\nAccess the course notes and download the models we will use here.\n\n\n\nTimetable\n\n\n\n\nTime\nActivity\n\n\n9-9:15\nWelcome and introductions\n\n\n9:15-10:30\nFrequentist vs. Bayesian?\n\n\n10:30-10:40\nTea break\n\n\n10:40-12\nFitting Bayesian models\n\n\n12-12:30\nLunch break\n\n\n12:30-2\nMultivariate GLM & Spatial autocorrelation\n\n\n2:00-2:10\nTea break\n\n\n2:10-3:15\nMaking and mapping predictions everywhere\n\n\n3:15-3:30\nWrap-up/Q&A"
   }

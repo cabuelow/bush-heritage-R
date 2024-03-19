@@ -9,11 +9,11 @@ website:
       - href: index.qmd
         text: Home
       - href: day1.qmd
-        text: Day 1
+        text: March 26th - Intro to R
       - href: day2.qmd
-        text: Day 2
+        text: March 27th - Intro to Modelling
       - href: day3.qmd
-        text: Day 3
+        text: March 28th - Advanced Modelling
       - href: about.qmd
         text: Meet your instructors
         

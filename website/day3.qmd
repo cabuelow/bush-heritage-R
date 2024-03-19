@@ -1,5 +1,5 @@
 ---
-title: "Day 3 - Advanced Statistical Modelling in R"
+title: "Statistical Modelling in R (Part 2)"
 ---
 
 ### Workshop Notes and models
