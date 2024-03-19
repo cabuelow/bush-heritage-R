@@ -1,8 +1,8 @@
 ### Hello!
 
-We're very much looking forward to our 3 days of **R**'ing with you (March 26th - 28th). 
+We're very much looking forward to our 3 days of **R**'ing with you (March 26th - 28th).
 
-In preparation, please install [R](https://rstudio-education.github.io/hopr/starting.html), [RStudio](https://posit.co/download/rstudio-desktop/). See @sec-install-r for instructions. 
+In preparation, please install [R](https://rstudio-education.github.io/hopr/starting.html) and [RStudio](https://posit.co/download/rstudio-desktop/). See @sec-install-r for instructions.
 
 Once you have RStudio up and running, please install the following **R packages**. You can just copy and paste the code below into the console of RStudio and hit enter to install.
 
@@ -81,4 +81,3 @@ If you already have R and RStudio installed, first check if your R version is up
 -   After installing a new version of R, you will have to reinstall all your packages with the new version. For Windows, there is a package called `installr` that can help you with upgrading your R version and migrate your package library.
 
 To update RStudio to the latest version, open RStudio and click on `Help > Check for Updates`. If a new version is available follow the instruction on screen. By default, RStudio will also automatically notify you of new versions every once in a while.
-
