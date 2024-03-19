@@ -8,4 +8,11 @@ title: "About Us"
 
 ## Dr Caite Kuempel
 
+[Dr Caitie Kuempel](https://cdkuempel.github.io/website/){target="_blank"} is a marine ecologist turned quantitative modeler. She leads the Conservation Action Team at Griffith University. Her research synthesises new and existing data to quantify the what and where of human impacts on biodiversity from local to global scales and the actions that can be taken to reduce these threats. Her work largely falls within four main themes: 1) cumulative impacts of human activities, 2) spatial conservation planning, 3) land-sea interactions and 4) achieving conservation targets. This work can be used to quantify patterns between different locations, assess trade-offs between management actions, and inform conservation and sustainable development decisions.
+
+
 ## Dr Jackson Stockbridge
+
+[Dr Jackson Stockbridge](https://experts.griffith.edu.au/40748-jackson-stockbridge){target="_blank"} is a quantitative marine ecologist working on a marine spatial planning framework to inform ocean management. This involves using spatial data to map ocean uses, and the cumulative impact of multiple stressors on marine ecosystems. Having grown up in the UK, he moved to Adelaide South Australia to undertake a bachelor’s degree in marine biology. He then went on to complete his PhD, where he evaluated common assumptions of methods to calculate the impact of multiple stressors on marine environments. Her is currently a post-doctoral fellow as part of the Blue Economy Cooperative Research Centre Marine Spatial Planning project where he is constructing frameworks and analysis to better integrate cumulative impacts in offshore Blue Economy planning and development.
+
+
