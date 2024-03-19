@@ -4,9 +4,9 @@ title: "Day 3 - Advanced Statistical Modelling in R"
 
 ### Workshop Notes and models
 
-Access the course [notes](Statistical-modelling-Part_2.html){target="_blank"} and download the [models we will use here](models.zip){target="_blank"}.
+###### **These files may change before the day of the course**
 
-**Note these files may change before the day of the course**
+Access the course [notes](Statistical-modelling-Part_2.html){target="_blank"} and download the [models we will use here](models.zip){target="_blank"}.
 
 ### Timetable
 

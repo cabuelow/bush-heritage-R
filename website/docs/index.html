@@ -137,6 +137,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./day3.html"> 
 <span class="menu-text">Day 3</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">Meet your instructors</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
@@ -149,7 +153,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#hello" id="toc-hello" class="nav-link active" data-scroll-target="#hello">Hello!</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -157,8 +167,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Hi all, we’re very much looking forward to our 3 days of <strong>R</strong>’ing with you.</p>
-<p>In preparation, please install <a href="https://rstudio-education.github.io/hopr/starting.html">R</a>, <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>, and the following <strong>R packages</strong>. You can just copy and paste the code below into the console of RStudio and hit enter.</p>
+<section id="hello" class="level3">
+<h3 class="anchored" data-anchor-id="hello">Hello!</h3>
+<p>We’re very much looking forward to our 3 days of <strong>R</strong>’ing with you (March 26th - 28th).</p>
+<p>In preparation, please install <a href="https://rstudio-education.github.io/hopr/starting.html">R</a>, <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>. See <a href="#sec-install-r" class="quarto-xref">Section&nbsp;0.1.3</a> for instructions.</p>
+<p>Once you have RStudio up and running, please install the following <strong>R packages</strong>. You can just copy and paste the code below into the console of RStudio and hit enter to install.</p>
 <section id="day-1---data-wrangling-and-visualisation-in-r" class="level4">
 <h4 class="anchored" data-anchor-id="day-1---data-wrangling-and-visualisation-in-r"><strong>Day 1 - Data wrangling and visualisation in R</strong></h4>
 <div class="cell">
@@ -173,8 +186,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You’re also welcome to peruse the course notes linked to in the tabs above, but note that these are subject to change up until day of the course.</p>
 <p>Cheers,</p>
 <p>Christina, Caitie and Jackson</p>
+</section>
+<section id="sec-install-r" class="level4">
+<h4 class="anchored" data-anchor-id="sec-install-r">Installing R and RStudio</h4>
+<section id="windows" class="level5">
+<h5 class="anchored" data-anchor-id="windows">Windows</h5>
+<ul>
+<li><p>Download R from the <a href="https://cran.r-project.org/bin/windows/base/release.htm">CRAN website</a>.</p></li>
+<li><p>Run the <code>.exe</code> file that was just downloaded</p></li>
+<li><p>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a></p></li>
+<li><p>Under <em>All Installers</em>, download the RStudio Installer for Windows.</p></li>
+<li><p>Double click the file to install it</p></li>
+<li><p>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</p></li>
+</ul>
+</section>
+<section id="macos" class="level5">
+<h5 class="anchored" data-anchor-id="macos">MacOS</h5>
+<ul>
+<li><p>Download R from the <a href="https://cran.r-project.org/bin/macosx/">CRAN website</a>.</p></li>
+<li><p>Select the <code>.pkg</code> file for the latest R version</p></li>
+<li><p>Double click on the downloaded file to install R</p></li>
+<li><p>It is also a good idea to install <a href="https://www.xquartz.org/">XQuartz</a> (needed by some packages)</p></li>
+<li><p>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a></p></li>
+<li><p>Under <em>All Installers</em>, download the RStudio Installer for MacOS.</p></li>
+<li><p>Double click the file to install RStudio</p></li>
+<li><p>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</p></li>
+</ul>
+</section>
+<section id="linux" class="level5">
+<h5 class="anchored" data-anchor-id="linux">Linux</h5>
+<ul>
+<li><p>Follow the instructions for your distribution from <a href="https://cloud.r-project.org/bin/linux">CRAN</a>, they provide information to get the most recent version of R for common distributions. For most distributions, you could use your package manager (e.g., for Debian/Ubuntu run <code>sudo apt-get install r-base</code>, and for Fedora <code>sudo yum install R</code>), but we don’t recommend this approach as the versions provided by this are usually out of date. In any case, make sure you have at least R 3.3.1.</p></li>
+<li><p>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download page</a></p></li>
+<li><p>Under <em>All Installers</em>, select the version that matches your distribution and install it with your preferred method (e.g., with Debian/Ubuntu <code>sudo dpkg -i rstudio-YYYY.MM.X-ZZZ-amd64.deb</code> at the terminal).</p></li>
+<li><p>Once it’s installed, open RStudio to make sure it works and you don’t get any error messages.</p></li>
+</ul>
+</section>
+</section>
+<section id="updating-r-and-rstudio" class="level4">
+<h4 class="anchored" data-anchor-id="updating-r-and-rstudio">Updating R and RStudio</h4>
+<p>If you already have R and RStudio installed, first check if your R version is up to date:</p>
+<ul>
+<li><p>When you open RStudio your R version will be printed in the console on the bottom left. Alternatively, you can type <code>sessionInfo()</code> into the console. If your R version is 4.0.0 or later, you don’t need to update R for this lesson. If your version of R is older than that, download and install the latest version of R from the R project website <a href="https://cran.r-project.org/bin/windows/base/">for Windows</a>, <a href="https://cran.r-project.org/bin/macosx/">for MacOS</a>, or <a href="https://cran.r-project.org/bin/linux/">for Linux</a></p></li>
+<li><p>It is not necessary to remove old versions of R from your system, but if you wish to do so you can check <a href="https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f">How do I uninstall R?</a></p></li>
+<li><p>Note: The changes introduced by new R versions are usually backwards-compatible. That is, your old code should still work after updating your R version. However, if breaking changes happen, it is useful to know that you can have multiple versions of R installed in parallel and that you can switch between them in RStudio by going to <code>Tools &gt; Global Options &gt; General &gt; Basic</code>.</p></li>
+<li><p>After installing a new version of R, you will have to reinstall all your packages with the new version. For Windows, there is a package called <code>installr</code> that can help you with upgrading your R version and migrate your package library.</p></li>
+</ul>
+<p>To update RStudio to the latest version, open RStudio and click on <code>Help &gt; Check for Updates</code>. If a new version is available follow the instruction on screen. By default, RStudio will also automatically notify you of new versions every once in a while.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
