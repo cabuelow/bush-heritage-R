@@ -14,6 +14,8 @@ install.packages(c("tidyverse", "here", "lubridate", "lme4", "ggplot2", "patchwo
 install.packages(c('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields'))
 ```
 
+You're also welcome to peruse the course notes linked to in the tabs above, but note that these are subject to change up until day of the course.
+
 Cheers,
 
 Christina, Caitie and Jackson

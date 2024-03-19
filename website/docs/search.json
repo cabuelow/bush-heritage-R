@@ -4,7 +4,7 @@
     "href": "day1.html",
     "title": "Day 1 - Data wrangling and visualisation in R",
     "section": "",
-    "text": "Workshop Notes and Data\nThe notes are available here and data are available here.\n\n\nTimetable\n\n\n\n\nTime\nActivity\nPresenter\n\n\n9-9:15\nWelcome and introductions\nCaitie/All\n\n\n9:15-10\nR, RStudio, RProjects, Rmarkdown\nCaitie\n\n\n10-10:30\nR syntax and data types\nCaitie\n\n\n10:30-10:40\nTea break\n\n\n\n10:40-12\nIntroduction to the tidyverse\nCaitie\n\n\n12-12:30\nLunch break\n\n\n\n12:30-1:30\nFor loops and simple models\nCaitie\n\n\n1:30-3\nData visualisation\nCaitie"
+    "text": "Workshop Notes and Data\nThe notes are available here and data are available here.\nNote these may change before the day of the course\n\n\nTimetable\n\n\n\n\nTime\nActivity\nPresenter\n\n\n9-9:15\nWelcome and introductions\nCaitie/All\n\n\n9:15-10\nR, RStudio, RProjects, Rmarkdown\nCaitie\n\n\n10-10:30\nR syntax and data types\nCaitie\n\n\n10:30-10:40\nTea break\n\n\n\n10:40-12\nIntroduction to the tidyverse\nCaitie\n\n\n12-12:30\nLunch break\n\n\n\n12:30-1:30\nFor loops and simple models\nCaitie\n\n\n1:30-3\nData visualisation\nCaitie"
   },
   {
     "objectID": "day2.html",
@@ -18,7 +18,7 @@
     "href": "index.html",
     "title": "Bush Heritage R Workshops",
     "section": "",
-    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages(c('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields'))\n\nCheers,\nChristina, Caitie and Jackson"
+    "text": "Hi all, we’re very much looking forward to our 3 days of R’ing with you.\nIn preparation, please install R, RStudio, and the following R packages. You can just copy and paste the code below into the console of RStudio and hit enter.\n\nDay 1 - Data wrangling and visualisation in R\n\ninstall.packages(c(\"tidyverse\", \"here\", \"lubridate\", \"lme4\", \"ggplot2\", \"patchwork\"))\n\n\n\nDay 2 & 3 - Statistical Modelling in R\n\ninstall.packages(c('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields'))\n\nYou’re also welcome to peruse the course notes linked to in the tabs above, but note that these are subject to change up until day of the course.\nCheers,\nChristina, Caitie and Jackson"
   },
   {
     "objectID": "about.html",
@@ -39,14 +39,14 @@
     "href": "about.html#dr-caite-kuempel",
     "title": "About Us",
     "section": "Dr Caite Kuempel",
-    "text": "Dr Caite Kuempel"
+    "text": "Dr Caite Kuempel\nDr Caitie Kuempel is a marine ecologist turned quantitative modeler. She leads the Conservation Action Team at Griffith University. Her research synthesises new and existing data to quantify the what and where of human impacts on biodiversity from local to global scales and the actions that can be taken to reduce these threats. Her work largely falls within four main themes: 1) cumulative impacts of human activities, 2) spatial conservation planning, 3) land-sea interactions and 4) achieving conservation targets. This work can be used to quantify patterns between different locations, assess trade-offs between management actions, and inform conservation and sustainable development decisions."
   },
   {
     "objectID": "about.html#dr-jackson-stockbridge",
     "href": "about.html#dr-jackson-stockbridge",
     "title": "About Us",
     "section": "Dr Jackson Stockbridge",
-    "text": "Dr Jackson Stockbridge"
+    "text": "Dr Jackson Stockbridge\nDr Jackson Stockbridge is a quantitative marine ecologist working on a marine spatial planning framework to inform ocean management. This involves using spatial data to map ocean uses, and the cumulative impact of multiple stressors on marine ecosystems. Having grown up in the UK, he moved to Adelaide South Australia to undertake a bachelor’s degree in marine biology. He then went on to complete his PhD, where he evaluated common assumptions of methods to calculate the impact of multiple stressors on marine environments. Her is currently a post-doctoral fellow as part of the Blue Economy Cooperative Research Centre Marine Spatial Planning project where he is constructing frameworks and analysis to better integrate cumulative impacts in offshore Blue Economy planning and development."
   },
   {
     "objectID": "day3.html",
