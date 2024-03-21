@@ -15,7 +15,11 @@ install.packages(c("tidyverse", "here", "lubridate", "lme4", "ggplot2", "patchwo
 #### **Day 2 & 3 - Statistical Modelling in R**
 
 ```{r eval=FALSE}
-install.packages(c('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'tmap', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields'))
+install.packages(c('ggplot2', 'patchwork', 'DHARMa', 'MASS', 'Hmsc', 'sf', 'terra', 'tidyr', 'vegan', 'dplyr', 'ggcorrplot', 'fields'))
+```
+
+```{r eval=FALSE}
+remotes::install_version("tmap", "3.3-4")
 ```
 
 You're also welcome to peruse the course notes linked to in the tabs above, but note that these are subject to change up until day of the course.

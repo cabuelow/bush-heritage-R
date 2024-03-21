@@ -731,13 +731,13 @@ qtm(stack) + tm_facets(as.layers = T, free.scales = T)
 
 There we have it, we've mapped out predictions of abundance from our joint species distribution model! (Again, make sure you use the **layered diamonds** in the top left to turn layers on and off.)
 
-## Tmap
+## Saving static maps
 
 Here's a quick example of how we can turn our interactive maps into something that is publication ready.
 
-```{r}
+```{r,fig.width=8,fig.height=5, fig.align='center'}
 tmap_mode('plot')
-tm_shape(stack) + # Specify the shapefile or raster to map
+map <- tm_shape(stack) + # Specify the shapefile or raster to map
   tm_raster(title = 'Species abundance') + # What is being displayed? Here, it's a raster
   tm_shape(df.sf) + # Add another shapefile to our map
   tm_dots( # Now we are displaying points (dots)
@@ -748,25 +748,28 @@ tm_shape(stack) + # Specify the shapefile or raster to map
     scale = 2) +
   tm_facets(as.layers = T) + 
   tm_layout(panel.labels = c('Sp.1', 'Sp.2', 'Sp.3', 'Sp.4', 'Sp.5'), # Define labels
-            legend.position = c(-0.5, 0), # Customise legend
+            legend.position = c(-0.5, -0.09), # Customise legend
             legend.title.fontface = 'bold') +
   tm_compass(position = c(0.01, 0.85)) + # Add a north arrow
   tm_scale_bar(position = c(0.65, 0.015), # Add a scale bar
                breaks = c(0,5,10),
                text.size = 0.4)
+map
 ```
 
+To save it:
+
+```{r}
+#tmap_save(map, 'map.png')
+```
 
 ## Resources
 
 Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to:
 
 1)  fit a linear model,
-
 2)  fit a generalised linear model,
-
 3)  fit a multivariate generalised linear model (which is also model-based ordination), and
-
 4)  fit a spatial, multivariate generalised linear model (which is also a joint species distribution model).
 
 Phew, that is a lot!
@@ -774,7 +777,5 @@ Phew, that is a lot!
 Find out more about fitting Bayesian models and using R as a GIS here:
 
 -   My absolute favourite intro to Bayesian thinking, a really great read: [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)
-
 -   Spatial R resources - [Geocomputation with R](https://r.geocompx.org/)
-
 -   [Bayesian spatial models in R](https://www.paulamoraga.com/book-spatial/bayesian-spatial-models.html)
