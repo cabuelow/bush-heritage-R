@@ -733,6 +733,30 @@ There we have it, we've mapped out predictions of abundance from our joint speci
 
 ## Tmap
 
+Here's a quick example of how we can turn our interactive maps into something that is publication ready.
+
+```{r}
+tmap_mode('plot')
+tm_shape(stack) + # Specify the shapefile or raster to map
+  tm_raster(title = 'Species abundance') + # What is being displayed? Here, it's a raster
+  tm_shape(df.sf) + # Add another shapefile to our map
+  tm_dots( # Now we are displaying points (dots)
+    title = '\nFire severity', # Title as it appears in the legend
+    col = 'Fire_severity', # Colour the points by variable
+    pal = 'BuGn', # Define the colour palette
+    size = 0.1, 
+    scale = 2) +
+  tm_facets(as.layers = T) + 
+  tm_layout(panel.labels = c('Sp.1', 'Sp.2', 'Sp.3', 'Sp.4', 'Sp.5'), # Define labels
+            legend.position = c(-0.5, 0), # Customise legend
+            legend.title.fontface = 'bold') +
+  tm_compass(position = c(0.01, 0.85)) + # Add a north arrow
+  tm_scale_bar(position = c(0.65, 0.015), # Add a scale bar
+               breaks = c(0,5,10),
+               text.size = 0.4)
+```
+
+
 ## Resources
 
 Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to:
