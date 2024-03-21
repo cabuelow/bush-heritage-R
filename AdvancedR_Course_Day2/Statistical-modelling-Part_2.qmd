@@ -731,6 +731,8 @@ qtm(stack) + tm_facets(as.layers = T, free.scales = T)
 
 There we have it, we've mapped out predictions of abundance from our joint species distribution model! (Again, make sure you use the **layered diamonds** in the top left to turn layers on and off.)
 
+## Tmap
+
 ## Resources
 
 Hopefully this short course gave you a sense of how flexible Bayesian statistical approaches can be. For example, we used the same Bayesian modelling framework to:
