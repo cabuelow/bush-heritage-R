@@ -741,16 +741,16 @@ map <- tm_shape(stack) + # Specify the shapefile or raster to map
   tm_raster(title = 'Species abundance') + # What is being displayed? Here, it's a raster
   tm_shape(df.sf) + # Add another shapefile to our map
   tm_dots( # Now we are displaying points (dots)
-    title = '\nFire severity', # Title as it appears in the legend
+    title = 'Fire severity', # Title as it appears in the legend
     col = 'Fire_severity', # Colour the points by variable
     pal = 'BuGn', # Define the colour palette
-    size = 0.1, 
+    size = 0.05, 
     scale = 2) +
   tm_facets(as.layers = T) + 
   tm_layout(panel.labels = c('Sp.1', 'Sp.2', 'Sp.3', 'Sp.4', 'Sp.5'), # Define labels
-            legend.position = c(-0.5, -0.09), # Customise legend
+            legend.position = c(-0.5, -0.05), # Customise legend
             legend.title.fontface = 'bold') +
-  tm_compass(position = c(0.01, 0.85)) + # Add a north arrow
+  tm_compass(position = c(0.001, 0.82)) + # Add a north arrow
   tm_scale_bar(position = c(0.65, 0.015), # Add a scale bar
                breaks = c(0,5,10),
                text.size = 0.4)
