@@ -439,20 +439,9 @@ for(i in 1:ncol(Fitted.mean)){
 }
 ```
 
-Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here? The patterns might be due to another process influencing species abundance in our data that we haven't accounted for yet - **spatial autocorrelation**.
+Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here?
 
-Whenever you're fitting a model to spatial data, you should check whether the residuals are spatially auto-correlated. We'll do that visually by mapping the residuals.
-
-```{r}
-#| warning: false
-qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df) %>% pivot_longer(cols = spp1:spp5, names_to = 'spp', values_to = 'residuals') %>% mutate(residuals_size = abs(residuals))
-tmap_mode('plot')
-qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
-```
-
-We can see that 'green' positive residuals are clustered in some places, and likewise for 'red' negative residuals. But nothing too alarming, the clustering is not very strong.
-
-Now let's just check whether out coefficient estimates are biased from the **known truths**. Let's remind ourselves what those were for each species.
+Let's also check whether out coefficient estimates are biased from the **known truths**. Let's remind ourselves what those were for each species.
 
 ```{r}
 print(data.frame(beta, spp = colnames(y)))
@@ -516,7 +505,9 @@ for(i in 1:ncol(Fitted.mean)){
 }
 ```
 
-Much better! Now check spatial autocorrelation in the residuals.
+Much better! 
+
+We should also check for spatial autocorrelation in the residuals. We'll do that visually by mapping the residuals.
 
 ```{r}
 #| warning: false
@@ -525,7 +516,7 @@ tmap_mode('plot')
 qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
 ```
 
-We still see some spatial clustering of residuals - not very different from before. But atleast now we know that the patterns aren't because of lack of independence of our observations driven by spatial autocorrelation. And our other diagnostic plots look much better.
+There isn't any strong spatial clustering of residuals, that's good.
 
 Now, let's see if our coefficient estimates are closer to **known truths**.
 
@@ -731,7 +722,7 @@ qtm(stack) + tm_facets(as.layers = T, free.scales = T)
 
 There we have it, we've mapped out predictions of abundance from our joint species distribution model! (Again, make sure you use the **layered diamonds** in the top left to turn layers on and off.)
 
-## Saving static maps
+### Saving static maps
 
 Here's a quick example of how we can turn our interactive maps into something that is publication ready.
 
