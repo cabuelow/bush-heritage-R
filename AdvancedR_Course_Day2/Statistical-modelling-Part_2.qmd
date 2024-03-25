@@ -14,11 +14,11 @@ editor: visual
 embed-resources: true
 ---
 
-Here we build upon modelling skills developed in [**Part 1**](Statistical-modelling-Part_1.html) of this course. In **Part 1**, we learned how to fit models to data in a *Frequentist* paradigm.
+Here we build upon modelling skills developed in [**Part 1**](Statistical-modelling-Part_1.html) of this course. In **Part 1**, we learned how to fit models to data using *Frequentist* statistics.
 
-Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models to demonstrate when they might be preferred over frequentist approaches.
+Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models to demonstrate when they might be preferred over Frequentist approaches.
 
-We'll compare multivariate generalised linear models (i.e., model-based ordination) to other **algorithmic** approaches typically used for analysing ecological community data (e.g., nmds).
+We'll also compare multivariate generalised linear models (i.e., model-based ordination) to other **algorithmic** approaches typically used for analysing ecological community data (e.g., nMDS).
 
 Finally, we'll show how these techniques can be used to model joint species distributions, and how **R** can handle spatial data.
 
@@ -30,14 +30,14 @@ Finally, we'll show how these techniques can be used to model joint species dist
 
 Find more [poorly drawn lines comics here](https://poorlydrawnlines.com/)
 
-Diving into the fundamental and nuanced differences between **Frequentist** and **Bayesian** statistics is beyond the scope of this short course. But you can find some nice, short overview of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
+Diving into the fundamental and nuanced differences between **Frequentist** and **Bayesian** statistics is beyond the scope of this short course. But you can find some nice explanations of the key differences [here](https://towardsdatascience.com/statistics-are-you-bayesian-or-frequentist-4943f953f21b) and [here](https://medium.com/@roshmitadey/frequentist-v-s-bayesian-statistics-24b959c96880).
 
 From my point of view, both are useful. Often, I start by fitting Frequentist models to my data and then move to more complex Bayesian models if needed.
 
 Why?
 
--   Bayesian models require more 'number crunching' to estimate parameters (coefficients), and therefore can take a long time to fit compared to their frequentist analogues.
--   Bayesian models require us to define 'priors' for our model parameters. If we don't have much prior information on model parameters (i.e., our priors are 'uninformative', which is usually the default), the coefficients estimated by Bayesian models should be the same as their frequentist analogues.
+-   Bayesian models require more 'number crunching' to estimate parameters (coefficients), and therefore can take a long time to fit compared to their Frequentist analogues.
+-   Bayesian models require us to define 'priors' for our model parameters. If we don't have much prior information on model parameters (i.e., our priors are 'uninformative', which is usually the default), the coefficients estimated by Bayesian models should be the same as their Frequentist analogues.
 
 Sometimes though, we need to go Bayesian. For example, if we want to model spatio-temporal autocorrelation in our data, we might like to use Bayesian models in the [R-INLA package](https://www.r-inla.org/).
 
@@ -47,13 +47,13 @@ Here, we'll go Bayesian because our ultimate goal is to fit a complex **multivar
 
 Before we do though, we need to learn a little bit more about how Bayesian models estimate parameters.
 
-### Bayesian vs. frequentist parameter estimation
+### Bayesian vs. Frequentist parameter estimation
 
 In [**Part 1**](Statistical-modelling-Part_1.html) of this course we touched on how model parameters (coefficients) are estimated with either ordinary least squares (general linear models) or maximum likelihood (generalised linear models).
 
 The Bayesian models we'll use today use Markov Chain Monte Carlo (MCMC) sampling to estimate the **posterior distribution** for each parameter (coefficient).
 
-Here is a great overview of the key differences between [Frequentist and Bayesian parameter estimation](https://towardsdatascience.com/maximum-likelihood-vs-bayesian-estimation-dd2eb4dfda8a).
+Here is a brief overview of the key differences between [Frequentist and Bayesian parameter estimation](https://towardsdatascience.com/maximum-likelihood-vs-bayesian-estimation-dd2eb4dfda8a).
 
 We don't have time to discuss the details today, but the key things you need to know when fitting a Bayesian model with MCMC sampling are:
 
@@ -76,7 +76,7 @@ Okay, now we're ready to try fitting a Bayesian model.
 
 ## General(ised) linear models in a Bayesian framework
 
-In [**Part 1**](Advanced-Day1.html), we fitted general and generalised linear models in a frequentist framework. (Remember general linear models assume a normal error structure (think tree circumference as our response variable ($y$)), whereas generalised linear models can accommodate non-normal error structures (think species counts or presence-absence as the response $y$)).
+In [**Part 1**](Statistical-modelling-Part_1.html), we fitted general and generalised linear models in a Frequentist framework. (Remember general linear models assume a normal error structure (think tree circumference as our response variable ($y$)), whereas generalised linear models can accommodate non-normal error structures (think species counts or presence-absence as the response $y$)).
 
 Let's try fitting the same models in a Bayesian framework using MCMC sampling for parameter (coefficient) estimation. We'll use weak, uninformative priors (the default), meaning our coefficient estimates from the Bayesian model should be the same as the Frequentist.
 
@@ -108,7 +108,7 @@ ggplot(df) +
 
 ### Fitting a Bayesian GLM and checking MCMC convergence
 
-Now we can fit the model. We'll use [{Hmsc}](https://www.helsinki.fi/en/researchgroups/statistical-ecology/software/hmsc) to do this - flexible Bayesian modelling framework for fitting complex hierarchical models with spatial random effects. 'Hmsc' is an acronym for 'Hierarchical modelling of species communities'. We can use it to fit univariate models (as we are right now) and multivariate models (as we'll do later).
+Now we can fit the model. We'll use [{Hmsc}](https://www.helsinki.fi/en/researchgroups/statistical-ecology/software/hmsc) to do this - a flexible Bayesian modelling framework for fitting complex hierarchical models with spatial or non-spatial random effects. 'Hmsc' is an acronym for 'Hierarchical modelling of species communities'. We can use it to fit univariate models (as we are right now) and multivariate models (as we'll do later).
 
 Let's load the package and fit a Bayesian generalised linear model where our response $y$ is species abundance and our explanatory variable $X$ is fire severity.
 
@@ -148,7 +148,7 @@ effectiveSize(mpost$Beta)
 
 Whoa, much less - we have an issue with autocorrelation in the sampling.
 
-We can also check the gelman potential scale reduction factors (which should be close to 1, indicating the individual chains give similar results).
+We can also check the Gelman-Rubin potential scale reduction factors (which should be close to 1, indicating the individual chains give similar results).
 
 ```{r}
 gelman.diag(mpost$Beta,multivariate=FALSE)$psrf
@@ -200,7 +200,7 @@ Much better. We're happy now that our MCMC sampling is converged, meaning that, 
 
 ### Checking structural model assumptions
 
-Now we want to check the same model assumptions we have when fitting frequentist GLMs: the model residuals are normally distributed and have homogeneity of variance.
+Now we want to check the same model assumptions we have when fitting Frequentist GLMs: the model residuals are normally distributed and have homogeneity of variance.
 
 Unfortunately our handy `plot` function we used in [**Part 1**](Statistical-modelling-Part_1.html) won't work for {Hmsc} model objects. So we have to calculate the model residuals ourselves and plot them.
 
@@ -224,7 +224,7 @@ plot(Fitted.mean, qresids); abline(a = 0, b = 0) # plot the fitted vs. residuals
 qqnorm(qresids); qqline(qresids) # qq plot
 ```
 
-Both look about the same (so high dispersion in the count data isn't an issue for interpreting the residuals). And looks very similar to the diagnostic plots we made in [**Part 1**](Statistical-modelling-Part_1.html), where we fitted a frequentist GLM to the same data.
+Both look about the same (so high dispersion in the count data isn't an issue for interpreting the residuals). And looks very similar to the diagnostic plots we made in [**Part 1**](Statistical-modelling-Part_1.html), where we fitted a Frequentist GLM to the same data.
 
 Now let's check the coefficient estimates are close to our **known truths**.
 
@@ -232,7 +232,7 @@ Now let's check the coefficient estimates are close to our **known truths**.
 summary(mpost$Beta)
 ```
 
-Remember, these predictions are in log-space, so we need to back-transform them to the natural scale (the inverse of the natural log is the exponent). But, as you can see, they are almost exactly the same as our frequentist model from [**Part 1**](Advanced-Day1.html)!
+Remember, these predictions are in log-space, so we need to back-transform them to the natural scale (the inverse of the natural log is the exponent). But, as you can see, they are almost exactly the same as our Frequentist model from [**Part 1**](Statistical-modelling-Part_1.html)!
 
 ```{r}
 exp(summary(mpost$Beta)$statistics[1]) # back transform the y-intercept (mean species abundance when fire severity = 0)
@@ -241,13 +241,13 @@ exp(summary(mpost$Beta)$statistics[2]) # back transform the slope
 
 ## Multivariate Generalised linear model
 
-Okay, so now we know how to fit a Bayesian GLM, and we can see that with default, uninformative priors it produces the same coefficient estimates as it's frequentist analogue. It took longer to fit though, and there were more diagnostics to check (MCMC convergence in addition to standard structural model assumptions). So why go Bayesian?
+Okay, so now we know how to fit a Bayesian GLM, and we can see that with default, uninformative priors it produces the same coefficient estimates as it's Frequentist analogue. It took longer to fit though, and there were more diagnostics to check (MCMC convergence in addition to standard structural model assumptions). So why go Bayesian?
 
 Well, in the previous example, we might opt to stick with a Frequentist GLM in the interest of saving time. But, what if we had observations of multiple species' abundances that we wanted to model together? We can build upon our Bayesian model to do so, and include a site-level random effect to estimate residual correlations in species' abundances (i.e., the correlations in species' abundances left unexplained, after accounting variability explained by explanatory variables (e.g., Fire severity)).
 
-You might be thinking, this sounds like a constrained ordination. You would be right! Fitting multivariate glms is analagous to fitting a constrained ordination. The difference is, the former is a model-based approach to ordination (which means we can do things like account for lack of independence in our samples due to spatial autocorrelation (we'll do that later)), and the latter is an algorithmic approach to ordination.
+You might be thinking, this sounds like a constrained ordination. You would be right! Fitting multivariate GLMs is analagous to fitting a constrained ordination. The difference is, the former is a model-based approach to ordination (which means we can do things like account for lack of independence in our samples due to spatial autocorrelation (we'll do that later)), and the latter is an algorithmic approach to ordination.
 
-For interest, we'll fit a algorithmic unconstrained ordination (nMDS) to a multivariate dataset of species' abundance and compare this to a multivariate glm.
+For interest, we'll fit a algorithmic unconstrained ordination (nMDS) to a multivariate dataset of species' abundance and compare this to a multivariate GLM.
 
 Let's start by simulating a new dataset of species abundance data for multiple species. We'll also make this a spatial example with longitude (x) and latitude (y) coordinates for each location where species are surveyed.
 
@@ -258,7 +258,7 @@ n <- 100 # number of observations
 ns <- 5 # number of species
 
 # simulate relationships between species abundance and fire severity
-b0 <- log(rep(10,ns)) # y-intercept for each species is 10
+b0 <- log(rep(10, ns)) # y-intercept for each species is 10
 b1 <- log(c(2,1.1,1,1.1,2))*c(-1,-1,0,1,1) # slopes for each species (spp 1&2 decrease by factor of 2 & 1.1, spp3 no change, spp 4&5 increase by factor of 1.1 &2)
 beta <- cbind(b0,b1) # bind beta coefficients together
 X <- cbind(rep(1,n),runif(n, min = 0, max = 1)) # fire severity measurements
@@ -353,7 +353,7 @@ nmds <- metaMDS(df[,3:7], distance = 'bray', k = 2)
 nmds
 ```
 
-The stress is an estimate of the goodness of fit of the nmds. It is less than 0.2, indicating a decent fit.
+The stress is an estimate of the goodness of fit of the nMDS. It is less than 0.2, indicating a decent fit.
 
 Let's plot the ordination and see which survey locations are similar based on the abundance and composition species. First we need to extract the site scores and species scores for the two nMDS dimensions.
 
@@ -505,7 +505,7 @@ for(i in 1:ncol(Fitted.mean)){
 }
 ```
 
-Much better! 
+Much better!
 
 We should also check for spatial autocorrelation in the residuals. We'll do that visually by mapping the residuals.
 
@@ -724,7 +724,7 @@ There we have it, we've mapped out predictions of abundance from our joint speci
 
 ### Saving static maps
 
-Here's a quick example of how we can turn our interactive maps into something that is publication ready.
+Here's a quick example of how we can turn our interactive maps into something that is publication ready by having more control over the aesthetics than is possible with the `qtm` function we've been using previously.
 
 ```{r,fig.width=8,fig.height=5, fig.align='center'}
 tmap_mode('plot')
