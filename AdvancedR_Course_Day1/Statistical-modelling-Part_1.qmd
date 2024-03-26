@@ -416,6 +416,79 @@ Looks great.
 ?factor
 ```
 
+Let's try coding Fire as character string instead of zeros and ones and see what happens and why we need to change `characters` to `factors when modelling. We'll use three categories instead of 2 because its more interesting
+
+```{r}
+set.seed(123)
+# simulation parameters
+b0 <- 5 # average tree circumference at Un-burned locations (i.e, y-intercept)
+b1 <- -0.5 # beta coefficient representing the average difference in tree circumference at 'sort of' Burned locations compared to Un-burned
+b2 <- -1 # beta coefficient representing the average difference in tree circumference at Burned locations compared to Un-burned
+e_mu <- 0 # mean error
+e_sd <- 0.1 # error standard deviation
+n <- 100 # number of tree circumference measurements
+
+# simulation variables
+X <- c(rep(c('Unburned', 'SortOfBurned', 'Burned'), n/3), 'Burned') # un-burned (0) vs. burned (1) locations
+e <- rnorm(n, e_mu, e_sd) # natural error
+
+# dummy code
+
+X1 <- ifelse(X == 'SortOfBurned', 1, 0)
+X2 <- ifelse(X == 'Burned', 1, 0)
+
+# simulate y
+y <- b0 + b1*X1 + b2*X2 + e # simulate tree circumference observations at unburned vs. burned locations
+df <- data.frame(Fire_severity = X, Tree_circumference = y) # make a dataframe of observations
+str(df)
+```
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+#plot
+ggplot(df) +
+  aes(x = factor(Fire_severity), y = Tree_circumference) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.5) +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+```
+
+Why did `ggplot` switch the order around. It uses alphabetical order for character strings. So let's turn Fire into an factor and set the reference level to be 'Unburned'.
+
+```{r}
+library(dplyr)
+df <- df %>% 
+  mutate(Fire_severity = factor(Fire_severity, levels = c('Unburned', 'SortOfBurned', 'Burned')))
+str(df)
+```
+
+```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
+#plot
+ggplot(df) +
+  aes(x = factor(Fire_severity), y = Tree_circumference) +
+  geom_boxplot() +
+  geom_jitter(alpha = 0.5) +
+  ylab('Tree circumference') +
+  xlab('Fire severity') +
+  geom_smooth(method = 'lm') +
+  theme_classic()
+```
+
+Much better. Let's try a model on this data.
+
+```{r}
+m <- lm(Tree_circumference ~ Fire_severity, data = df)
+summary(m)
+```
+Perfect! Now diagnostic check.
+
+```{r,fig.width=6,fig.height=6, fig.align='center'}
+par(mfrow = c(2,2))
+plot(m)
+```
+
 ## Generalised linear models
 
 What if, in addition to tree circumference, we also wanted to ask whether species abundance is lower in sites with high fire severity?. Could we just fit the same model as before and swap out circumference for abundance?
@@ -451,15 +524,13 @@ b <- ggplot(df) +
 a+b
 ```
 
-We can use the poisson distribution to simulate data that mimics counts (e.g. species abundance). Mathematically, this looks like: $$y_i \sim Poisson(\lambda_i).$$
-*Remember* that $\lambda$ represents the expected mean species abundance (and also the variance in species' abundance).
+We can use the poisson distribution to simulate data that mimics counts (e.g. species abundance). Mathematically, this looks like: $$y_i \sim Poisson(\lambda_i).$$ *Remember* that $\lambda$ represents the expected mean species abundance (and also the variance in species' abundance).
 
 So how can we use our linear model $y_i = b_0 + b_{1}X_{1i}$ to estimate expected mean species abundance ($\lambda$) for each value of our explanatory variable ($X$) so that we can simulate observed species abundance $y$ from a poisson distribution? Before, in our *general* linear model that assumed normally-distributed errors, we just added on a normally distributed error term $\epsilon$ to our linear equation. That won't work for us anymore because counts are discrete values greater than 0.
 
-So we can *generalize* our linear equation so that it provides values that are constrained between 0 and $∞$ (instead of $-∞$ and $∞$). We use something called the **link function** to do this. 
+So we can *generalize* our linear equation so that it provides values that are constrained between 0 and $∞$ (instead of $-∞$ and $∞$). We use something called the **link function** to do this.
 
-All *generalised* linear models have a link function that *links* the mean of $y$ - which in this case is $\lambda$ because we are using a poisson distribution to model counts - to our linear equation of explanatory variables. The canonical link function for the poisson distribution is the `log link`. We can write this mathematically as: $$log(\lambda_i) = b_0 + b_{1}X_{1i}$$ 
-The `log link` will ensure that all of the predictions from our linear equation are greater than 0. In practice, to estimate $\lambda$, we apply the inverse of the link function to both sides of the equation. The inverse of the natural log is the exponent. Doing this looks like: $$\lambda_i = exp(b_0 + b_{1}X_{1i}).$$
+All *generalised* linear models have a link function that *links* the mean of $y$ - which in this case is $\lambda$ because we are using a poisson distribution to model counts - to our linear equation of explanatory variables. The canonical link function for the poisson distribution is the `log link`. We can write this mathematically as: $$log(\lambda_i) = b_0 + b_{1}X_{1i}$$ The `log link` will ensure that all of the predictions from our linear equation are greater than 0. In practice, to estimate $\lambda$, we apply the inverse of the link function to both sides of the equation. The inverse of the natural log is the exponent. Doing this looks like: $$\lambda_i = exp(b_0 + b_{1}X_{1i}).$$
 
 Once we have calculated expected species abundance for all values of the explanatory variable ($\lambda$), we can use this to simulate observed species abundance drawn randomly from a poisson distribution, which is what we wanted to do initially: $$y_i \sim Poisson(\lambda_i).$$
 
