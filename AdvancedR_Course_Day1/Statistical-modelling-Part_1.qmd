@@ -121,17 +121,17 @@ To understand how they work, it helps to take a quick look at how we formulate l
 
 $$y_i = b_0 + b_{1}X_{1i} + \epsilon_i,$$
 
--   $y_i$ is our response variable of interest,
+-   $y$ is our response variable of interest,
 
--   $b_0$ is the is the **y-intercept** for the linear relationship between $y$ and our explanatory variables ($X$'s),
+-   $b_0$ is the is the **y-intercept** for the linear relationship between $y$ and our explanatory variables ($X$'s) - which is the average value of $y$ when $X$ is equal to 0,
 
--   $b_1$ is the coefficient representing the strength and direction of the relationship between $y$ and $X_{1}$ (the **slope**), and
+-   $b_1$ is the coefficient representing the strength and direction of the relationship between $y$ and $X_{1}$ (the **slope**) - which can be interpreted as the average change in $y$ in response to a one unit shift in $X$, and
 
 -   $\epsilon$ is the random, unexplained error in our observations around the fitted relationship(s) between $y$ and $X$(s).
 
 We'll often refer to $\epsilon$ as the **residual error**.
 
-In the above example we only have one explanatory variable ($X_{1}$), but we can have multiple (referred to as 'multiple linear regression'). We would just add on a new term to our equation for every additional explanatory variable, e.g. $b_{2}X_{2i}$.
+In the above example we only have one explanatory variable ($X_{1}$), but we can have multiple (referred to as 'multiple linear regression'). We would just add on a new term to our equation for every additional explanatory variable, e.g. $b_{2}X_{2i}$. If we add other explanatory variables, then the interpretation of their beta coefficients (slopes) becomes 'the average change in $y$ in response to a one unit shift in $X$, *holding all other variables constant*'. This is the beauty and power of multiple linear regression, we can evaluate the effect of each explantory variable in isolation from others.
 
 When we're fitting **general** linear models, we assume that $\epsilon$, the error term, is drawn from a normal (i.e., gaussian) distribution. We can write that assumption mathematically as,
 
@@ -277,7 +277,7 @@ The R^2^ is a measure of **model fit** (use the adjusted if you have multiple ex
 
 That's alot - the model is doing well! But remember this is not real data (we simulated it) - in ecology we usually see much lower R^2^ values due to the natural sources of variability that we can't explain.
 
-**Tip** Try increased the standard deviation of the natural variation we've simulated (e_sd) and see how that changes the R^2^.
+**Tip** Try increasing the standard deviation of the natural variation we've simulated (e_sd) and see how that changes the R^2^.
 
 The F-statistic and corresponding p-value tell us whether our model is any better than an 'intercept-only' model (the lower the p-value the more likely our model is to be explaining the data well).
 
@@ -428,7 +428,7 @@ So, we need to *generalise* our linear model a bit to accommodate this non-norma
 
 For our previous **general** linear model of tree circumference, we drew errors $\epsilon$ from a normal distribution with a mean of 0. An alternative for count data is the **poisson** distribution.
 
-The poisson is a probability distribution for discrete, whole numbers like count data, is bounded from 0 to $∞$, and has one parameter $lambda$ for the mean and variance (which are assumed to be equal). (Note, however, ecological count data often violates the latter assumption, in which case there are alternatives like the negative binomial - we'll look at this later).
+The poisson is a probability distribution for discrete, whole numbers like count data, is bounded from 0 to $∞$, and has one parameter $\lambda$ for the mean and variance (which are assumed to be equal). (Note, however, ecological count data often violates the latter assumption, in which case there are alternatives like the negative binomial - we'll look at this later).
 
 ```{r, fig.width=5.5,fig.height=2.5, fig.align='center'}
 n <- 1000
@@ -451,17 +451,19 @@ b <- ggplot(df) +
 a+b
 ```
 
-We can use the poisson distribution to simulate data that mimics counts. But how can we ensure that the predictions of counts from our linear equation $y_i = b_0 + b_{1}X_{1i}$ will be constrained between 0 and $∞$ instead of $-∞$ and $∞$?
+We can use the poisson distribution to simulate data that mimics counts (e.g. species abundance). Mathematically, this looks like: $$y_i \sim Poisson(\lambda_i).$$
+*Remember* that $\lambda$ represents the expected mean species abundance (and also the variance in species' abundance).
 
-This is where the **link** function comes in. **Generalised** linear models use **link** functions to transform model predictions from a linear equation so that they are bounded as necessary. For the poisson, the canonical link function is the `log`, meaning all predictions from a generalised linear model with a **poisson family** and **log link** will be between 0 and $∞$.
+So how can we use our linear model $y_i = b_0 + b_{1}X_{1i}$ to estimate expected mean species abundance ($\lambda$) for each value of our explanatory variable ($X$) so that we can simulate observed species abundance $y$ from a poisson distribution? Before, in our *general* linear model that assumed normally-distributed errors, we just added on a normally distributed error term $\epsilon$ to our linear equation. That won't work for us anymore because counts are discrete values greater than 0.
 
-Mathematically this looks like: $$log(\lambda_i) = b_0 + b_{1}X_{1i},$$ *Remember* $\lambda$ is the mean species abundance (and also the variance). And $\lambda$ is what we need to simulate counts of abundance from a poisson distribution,
+So we can *generalize* our linear equation so that it provides values that are constrained between 0 and $∞$ (instead of $-∞$ and $∞$). We use something called the **link function** to do this. 
 
-where $$y_i \sim Poisson(\lambda_i).$$
+All *generalised* linear models have a link function that *links* the mean of $y$ - which in this case is $\lambda$ because we are using a poisson distribution to model counts - to our linear equation of explanatory variables. The canonical link function for the poisson distribution is the `log link`. We can write this mathematically as: $$log(\lambda_i) = b_0 + b_{1}X_{1i}$$ 
+The `log link` will ensure that all of the predictions from our linear equation are greater than 0. In practice, to estimate $\lambda$, we apply the inverse of the link function to both sides of the equation. The inverse of the natural log is the exponent. Doing this looks like: $$\lambda_i = exp(b_0 + b_{1}X_{1i}).$$
 
-The inverse of the natural log is the exponent. So, to predict mean species abundance $\lambda$, we can take the exponent of the linear combination of the intercept and explanatory terms, like this: $$\lambda_i = exp(b_0 + b_{1}X_{1i}).$$ We can then use these predicted values of $\lambda$ to simulate counts of species abundance from a poisson distribution. Let's simulate counts this way below.
+Once we have calculated expected species abundance for all values of the explanatory variable ($\lambda$), we can use this to simulate observed species abundance drawn randomly from a poisson distribution, which is what we wanted to do initially: $$y_i \sim Poisson(\lambda_i).$$
 
-Before we do though, one more thing to note. By taking the exponent of the linear combination of explanatory variable(s), we're imposing a non-additive, multiplicative relationship between $X$ and $y$. This changes how we interpret the $b_{1}$ coefficient. Instead of representing the additive change in $y$ for every one unit increase in $X$, $b_{1}$ now represents the multiplicative change.
+Let's give it a try. Before we do though, one more thing to note. By taking the exponent of the linear combination of explanatory variable(s), we're imposing a non-additive, multiplicative relationship between $X$ and $y$. This changes how we interpret the $b_{1}$ coefficient. Instead of representing the additive change in $y$ for every one unit increase in $X$, $b_{1}$ now represents the multiplicative change.
 
 Here we go.
 
@@ -542,7 +544,7 @@ plot(m)
 
 ### Count data and overdispersion
 
-Often, ecological count data is **over-dispersed**. This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology.)
+Often, ecological count data is **over-dispersed**. This means there is more unexplained variation in the data than the model we've fitted expects. Remember, the poisson distribution assumes that the mean (average species abundance) equals the variance. But often in ecological data we see greater variance in abundance estimates for larger values. Furthermore, we often have a larger number of 0 counts than the poisson dictates, which can also lead to overdispersion. (Note that under-dispersion can also occur, but is less common in ecology, and generally leads to more conservative inference so we tend not to worry about it as much.)
 
 How can we check for over-dispersion? First, we can divide the residual deviance (the amount of unexplained variation we have in our data, after fitting the model) by the residual degrees of freedom (the amount of left over variation our model expects). It should not be \> 1.5. If it is, over-dispersion is likely a problem in our model fit.
 
@@ -554,11 +556,9 @@ So overdispersion is not a problem here (and also we didn't see anything indicat
 
 **The rule of thumb** is, if the ratio is \>1.5, then overdispersion needs to be dealt with. We can try a **negative binomial** distribution instead of a poisson to deal with overdispersion. Alternatively, sometimes overdispersion is driven largely by an excess number of 0s in our count data (typical in ecology). In this case we might try a **zero-inflated poisson** or **zero-inflated negative binomial**.
 
-We can also check the diagnostic plots. If we see a **'fan-shape'** in the residuals vs. fitted plot, implying errors are greater when fitted (predicted) abundance is higher, we can suspect that our data is over-dispersed for the model we are trying to fit to it. Of coarse, we didn't see overdispersion.
+We can also check the diagnostic plots. If we see a **'fan-shape'** in the residuals vs. fitted plot, implying errors are greater when fitted (predicted) abundance is higher, we can suspect that our data is over-dispersed for the model we are trying to fit to it.
 
-Let's simulate over-dispersed species abundance and see for ourselves. To simulate this data, we'll use the negative binomial distribution instead of the poisson. In contrast to the poisson, the mean of a prediction is not expected to equal the variance. Instead, we can define the mean and variance separately, and use this to simulate overdispersed counts.
-
-We'll keep everything as before, except we will use lambda to simulate from the negative binomial, setting the dispersion parameter to 0.8.
+Let's simulate over-dispersed species abundance and see for ourselves. We'll keep everything as before, except we will use lambda to simulate from a negative binomial distribution instead of the poisson and set theta, the shape parameter, to 0.8.
 
 ```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
 set.seed(123)
