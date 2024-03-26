@@ -14,6 +14,8 @@ editor: visual
 embed-resources: true
 ---
 
+*Any questions about these course notes, contact the [author here](https://cabuelow.github.io/personal-website/)*
+
 Whenever you embark on a journey in statistical modelling, it's good to be reminded of the following quote from *George E.P. Box*,
 
 **'All models are wrong, but some are useful.'**.
@@ -41,7 +43,7 @@ This course assumes an understanding of how to wrangle, summarise, and visualise
 
 ## General linear models
 
-We can use linear models to not only estimate the strength and direction of ecological relationships, but also to estimate parameters (often referred to as 'coefficients') in a linear equation that can be used to predict values of one variable based on another. 
+We can use linear models to not only estimate the strength and direction of ecological relationships, but also to estimate parameters (often referred to as 'coefficients') in a linear equation that can be used to predict values of one variable based on another.
 
 The word 'linear' is important - when we use linear models we assume a straight (or linear) relationship between our **response variable** (also referred to as dependent variables) and our **explanatory variables** (also referred to as covariates, predictors, or independent variables - don't let the different terms confuse you).
 
@@ -518,7 +520,7 @@ The model has estimated the coefficients on the 'link scale', which is in this c
 exp(coef(m))
 ```
 
-Voila. Close to what we expected - a mean species abundance of 10 when fire severity is equal to 0 (the y intercept), and for this to be reduced by \~50% with a one unit increase in fire severity. 
+Voila. Close to what we expected - a mean species abundance of 10 when fire severity is equal to 0 (the y intercept), and for this to be reduced by \~50% with a one unit increase in fire severity.
 
 ```{r}
 exp(b0) # known truth for y-intercept

@@ -14,6 +14,8 @@ editor: visual
 embed-resources: true
 ---
 
+*Any questions about these course notes, contact the [author here](https://cabuelow.github.io/personal-website/)*
+
 Here we build upon modelling skills developed in [**Part 1**](Statistical-modelling-Part_1.html) of this course. In **Part 1**, we learned how to fit models to data using *Frequentist* statistics.
 
 Here we will fit the same models in a *Bayesian* paradigm. Then we will build more complex, **multivariate** generalised linear models to demonstrate when they might be preferred over Frequentist approaches.
