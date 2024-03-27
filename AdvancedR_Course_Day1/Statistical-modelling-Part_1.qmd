@@ -135,7 +135,10 @@ In the above example we only have one explanatory variable ($X_{1}$), but we can
 
 When we're fitting **general** linear models, we assume that $\epsilon$, the error term, is drawn from a normal (i.e., gaussian) distribution. We can write that assumption mathematically as,
 
-$$\epsilon \sim Normal(0, \sigma)$$ We would expect this if our response variable ($y$) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). (Note: In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.)
+$$\epsilon \sim Normal(0, \sigma)$$ 
+where the mean is 0 and $\sigma$ is the standard deviation.
+
+We would expect this if our response variable ($y$) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). (Note: In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.)
 
 ### Simulating data to enhance our understanding
 
@@ -416,7 +419,7 @@ Looks great.
 ?factor
 ```
 
-Let's try coding Fire as character string instead of zeros and ones and see what happens and why we need to change `characters` to `factors when modelling. We'll use three categories instead of 2 because its more interesting
+Let's try coding Fire as character string instead of zeros and ones and see what happens and why we need to change `characters` to \`factors when modelling. We'll use three categories instead of 2 because its more interesting
 
 ```{r}
 set.seed(123)
@@ -482,6 +485,7 @@ Much better. Let's try a model on this data.
 m <- lm(Tree_circumference ~ Fire_severity, data = df)
 summary(m)
 ```
+
 Perfect! Now diagnostic check.
 
 ```{r,fig.width=6,fig.height=6, fig.align='center'}
