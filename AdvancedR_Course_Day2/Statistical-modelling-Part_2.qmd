@@ -270,15 +270,15 @@ xycoords <- data.frame(x = runif(n, 152.1,152.5), y = runif(n, 28.1, 28.5)*-1) #
 sigma.spatial <- c(2) # standard deviation of spatial covariance
 alpha.spatial <- c(0.35) # spatial scale parameter 'alpha' for spatial covariance
 sigma <- sigma.spatial^2*exp(-as.matrix(dist(xycoords))/alpha.spatial) # exponentially decreasing spatial covariance matrix
-eta <- mvrnorm(mu=rep(0,n), Sigma=sigma) # draw spatially structured residuals from a multivariate normal distribution (spatially structured latent predictor)
-beta.spatial <- c(1,2,-2,-1,0) # define how species are spatially auto-correlated (i.e., respond to spatially structured latent predictor (eta))
+eta <- mvrnorm(mu=rep(0,n), Sigma=sigma) # draw spatially structured residuals from a multivariate normal distribution (spatially structured latent variable)
+beta.spatial <- c(1,2,-2,-1,0) # define how species are spatially auto-correlated (i.e., respond to spatially structured latent variable (eta))
 spatial_res <- eta%*%t(beta.spatial) # calculate spatially structured residuals for each species
 lambda <- exp((X%*%t(beta))) + spatial_res # add spatial residuals to mean expected abundance of each species due to fire severity
 
 # make final data frame of simulated species abundances with spatial autocorrelation
 y <- data.frame(apply(data.frame(lambda), 2, function(x) rpois(n, x))) # simulate species abundance observations from the poisson distribution
 colnames(y) <- c('spp1', 'spp2', 'spp3', 'spp4', 'spp5') # add column names to data frame
-df <- data.frame(xycoords, y, Fire_severity = X[,2]) # add fire severity
+df <- data.frame(xycoords, y, Fire_severity = X[,2], Spatial_latent_variable = eta) # add fire severity and spatial latent variable
 head(df)
 ```
 
@@ -294,24 +294,36 @@ df_long <- pivot_longer(df, cols = spp1:spp5,
 head(df_long)
 ```
 
-Great, now we can more easily plot a trend line for each species' abundance in response to fire severity.
+Great, now we can more easily plot a trend line for each species' abundance in response to fire severity. We also know how spatial autocorrelation will influence species' abundances, so we can also plot trends in species' abundances in response to the the spatial latent *'unobserved'* variable we simulated above called `eta` ($\eta$).
 
-```{r,fig.width=3.5,fig.height=2.5, fig.align='center'}
-ggplot(df_long) +
+```{r,fig.width=6,fig.height=2.5, fig.align='center'}
+library(patchwork)
+a <- ggplot(df_long) +
   aes(x = Fire_severity, y = abundance, col = spp) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = 'lm') +
+  ggtitle('A) Fire Severity') +
   ylab('Species abundance') +
   xlab('Fire Severity') +
   theme_classic()
+b <- ggplot(df_long) +
+  aes(x = Spatial_latent_variable, y = abundance, col = spp) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = 'lm') +
+  ggtitle('B) Spatial LV') +
+  ylab('Species abundance') +
+  xlab('Spatial Latent Variable') +
+  geom_vline(xintercept = 0, linetype = 'dashed', alpha = 0.5) +
+  theme_classic()
+a+b
 ```
 
 What trends did we expect to see? We can take the exponent of the slope ($b{_1}$ coefficients) to get the expected multiplicative change in species abundance for every one unit increase in fire severity. If we multiply this by the y-intercept (mean abundance at fire severity = 0), that will give us the abundance we expect when fire severity = 1.
 
 ```{r}
 data.frame(Species = colnames(y),
-           Multiplicative_change = exp(b1),
-           Abundance_FS_1 = exp(b0)*exp(b1))
+           Known_truths_beta1 = exp(b1),
+           Expected_abundance_FS_1 = exp(b0)*exp(b1))
 ```
 
 Pretty close for most species, although some deviations from expected (especially for species 3 - we would have expected a flat line around 10). The deviations will stem from the spatial autocorrelation that we simulated in the data. But don't worry about it for now, we'll discuss that in more detail later.
@@ -423,22 +435,13 @@ effectiveSize(mpost$Beta)
 gelman.diag(mpost$Beta,multivariate=FALSE)$psrf
 ```
 
-Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions. We'll use randomised quantile residuals, and this time we'll set up a for loop that will 'loop' through each of our 5 species and plot them separately.
+Okay, so convergence diagnostics look good. Let's take a look at the structural model assumptions. We'll use randomised quantile residuals, and this time we'll use a handy custom made function to calculate and plot these for a multivariate model.
 
 ```{r,fig.width=6,fig.height=12, fig.align='center'}
+source('helper-functions.R')
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
-Fitted.mean <- apply(preds, FUN = mean, MARGIN = c(1,2)) # get the mean predicted value species abundance (n = 4000)
 par(mfrow = c(5,2)) # set graphical parameters
-qresids.df <- data.frame(Fitted.mean)  # dataframe for storing quantile residuals for each species
-for(i in 1:ncol(Fitted.mean)){
-  Fitted.mean.spp <- Fitted.mean[,i]
-  y_spp <- m_fit$Y[,i]
-  a <- ppois(y_spp-1, Fitted.mean.spp)
-  b <- ppois(y_spp, Fitted.mean.spp)
-  qresids.df[,i] <- qnorm(runif(n = length(y_spp), min = a, max = b))
-  plot(Fitted.mean.spp,  qresids.df[,i], main = colnames(Fitted.mean)[i]); abline(a = 0, b = 0) # plot the fitted vs. residuals
-  qqnorm( qresids.df[,i], main = colnames(Fitted.mean)[i]); qqline(qresids.df[,i]) # qq plot
-}
+rq_resid_mult(preds, m_fit)
 ```
 
 Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here?
@@ -469,7 +472,6 @@ We can include a *spatial random effect* that will estimate and adjust for spati
 # set up spatial random effect
 studyDesign <- data.frame(sample = as.factor(1:nrow(df)))
 rL.spatial <- HmscRandomLevel(sData = df[,c(1,2)])
-rL <- HmscRandomLevel(units = studyDesign$sample)
 
 # set up the model
 m <- Hmsc(Y = as.matrix(df[,3:7]),
@@ -493,18 +495,8 @@ Now let's see if our residual diagnostic plots look better.
 
 ```{r,fig.width=6,fig.height=12, fig.align='center'}
 preds <- computePredictedValues(m_fit) # array of fitted (predicted) values for species abundance for each of the 4000 MCMC samples
-Fitted.mean <- apply(preds, FUN = mean, MARGIN = c(1,2)) # get the mean predicted value species abundance (n = 4000)
 par(mfrow = c(5,2)) # set graphical parameters
-qresids.df <- data.frame(Fitted.mean)  # dataframe for storing quantile residuals for each species
-for(i in 1:ncol(Fitted.mean)){
-  Fitted.mean.spp <- Fitted.mean[,i]
-  y_spp <- m_fit$Y[,i]
-  a <- ppois(y_spp-1, Fitted.mean.spp)
-  b <- ppois(y_spp, Fitted.mean.spp)
-  qresids.df[,i] <- qnorm(runif(n = length(y_spp), min = a, max = b))
-  plot(Fitted.mean.spp,  qresids.df[,i], main = colnames(Fitted.mean)[i]); abline(a = 0, b = 0) # plot the fitted vs. residuals
-  qqnorm( qresids.df[,i], main = colnames(Fitted.mean)[i]); qqline(qresids.df[,i]) # qq plot
-}
+rq_resid_mult(preds, m_fit)
 ```
 
 Much better!
@@ -513,7 +505,8 @@ We should also check for spatial autocorrelation in the residuals. We'll do that
 
 ```{r}
 #| warning: false
-qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), qresids.df) %>% pivot_longer(cols = spp1:spp5, names_to = 'spp', values_to = 'residuals') %>% mutate(residuals_size = abs(residuals))
+resids.df <- rq_resid_mult(preds, m_fit, save.df = T)
+qresid.sf <- cbind(select(df.sf, -c(spp1:spp5)), resids.df) %>% pivot_longer(cols = spp1:spp5, names_to = 'spp', values_to = 'residuals') %>% mutate(residuals_size = abs(residuals))
 tmap_mode('plot')
 qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets(by = 'spp', ncol = 3, free.scales = T)
 ```
@@ -530,31 +523,33 @@ print(data.frame(beta, spp = colnames(m_fit$Y)))
 summary(mpost$Beta)$statistics
 ```
 
-Not perfect, but better than our model without spatial autocorrelation. In particular, the coefficient **discrimination** is much better, see here for a more detailed [explanation](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecm.1370).
+Odd, now the coefficients seem even more biased from the *known truth* - in fact the sign of the b1 coefficients for spp 2 and spp 4 have switched. What's going on? When we include a random effect in our generalised linear model, the slope coefficients are no longer interpreted as the mean expected change in species abundance ($y$) in response to a one unit shift in fire severity ($X$), but instead as the mean expected change in species abundance ($y$) in response to a one unit shift in fire severity ($X$) **conditional on the spatial random effect**. So, although the coefficients seem more biased from our *known truths* they are actually the *known truths* conditional on spatial autocorrelation.
 
-So, what's the advantage over algorithmic ordination approaches? With model-based ordination we can account for spatial autocorrelation and obtain more accurate and precise estimates of the effect of fire severity on the abundance of each species.
+We can check whether the model has recovered the scale of spatial autocorrelation that we simulated in the data. Let's remind ourselves of what that was:
+
+```{r}
+alpha.spatial
+```
+
+Now check the posterior distribution for the alpha parameter contains the known truth.
+
+```{r,fig.width=7,fig.height=2.5, fig.align='center'}
+plot(mpost$Alpha[[1]][,1])
+```
+
+Looks great. We can also get a summary for alpha providing the mean estimate. 
+
+```{r}
+summary(mpost$Alpha[[1]][,1])
+```
+Very close to 0.35, our *known truth*.
+
+Now let's plot up the effect sizes with 50% and 95% credible intervals representing uncertainty in the parameter estimates. The credible intervals indicate whether there is weak (50% credible interval does not cross 0) or strong (95% credible interval does not cross 0) evidence for an effect.
 
 ```{r,fig.width=2.5,fig.height=2.5, fig.align='center'}
 # extract beta coefficients
-beta.coefs <- lapply(mpost$Beta, function(x){
-  df <- cbind(data.frame(summary(x)$statistics), 
-              data.frame(summary(x)$quantiles),
-              predictor = rep(as.character(colnames(m_fit$X)), length(colnames(m_fit$Y))),
-              response = rep(as.character(colnames(m_fit$Y)), each = length(colnames(m_fit$X)))) %>% 
-    filter(predictor != '(Intercept)') %>%
-    pivot_longer(Mean:X97.5., names_to = 'stat', values_to = 'val') %>% 
-    mutate(stat = recode(stat, X2.5. = 'CI.2.5',
-                         X97.5. = 'CI.97.5',
-                         X25. = 'CI.25',
-                         X75. = 'CI.75'))
-  return(df)
-})
-
-# summarise across mcmc chains
-beta <- do.call(rbind, beta.coefs) %>%
-  group_by(predictor, response, stat) %>%
-  summarise(val = mean(val)) %>% 
-  pivot_wider(names_from = 'stat', values_from = 'val')
+source('helper-functions.R') # source a custom function to extract and summarise beta coefs for plotting
+beta <- extract_beta(mpost$Beta, m_fit)
 
 # plot effect sizes
 ggplot(beta) +
@@ -655,7 +650,8 @@ library(terra)
 ```{r}
 extent <- st_bbox(df.sf)
 grid <- rast(nrows = 20, ncols = 20, xmin = extent$xmin, xmax = extent$xmax, ymin = extent$ymin, ymax = extent$ymax, crs = "epsg:4326")
-grid_fire <- rasterize(df.sf, grid, 'Fire_severity', fun = mean, touches = T)
+grid_fire <- rasterize(df.sf, grid, 'Fire_severity', fun = mean)
+tmap_mode('plot')
 qtm(grid_fire) + qtm(df.sf)
 ```
 
@@ -670,20 +666,20 @@ library(fields)
 xy <- data.frame(xyFromCell(grid_fire, 1:ncell(grid_fire))) # make a datafame of longitude and latitude coordinates for each grid cell
 tps <- Tps(xy, values(grid_fire)) # fit a thin plate spline regression
 grid_fire_i <- interpolate(rast(grid_fire), tps) # make a raster with interpolated values from the fitted tps regression
+tmap_mode('view')
 qtm(grid_fire_i)
 ```
 
-Now we can make predictions of species abundance using the grid of interpolated fire severity. First, we need to set up our new data for making predictions by extracting x and y coordinates and fire severity values from our interpolated raster.
+Now we can make predictions of species abundance using the grid of interpolated fire severity. First, we need to set up our new data for making predictions by extracting fire severity values from our interpolated raster.
 
 ```{r}
-xy_new <- xyFromCell(grid_fire_i, 1:ncell(grid_fire_i))
 XData_new <- data.frame(Fire_severity = values(grid_fire_i))
 ```
 
 Now we can prepare a gradient for making predictions that combines our new $X$ data and values for a new spatial random effect.
 
 ```{r}
-gradient <- prepareGradient(m_fit, XDataNew = XData_new, sDataNew = list(sample = xy_new))
+gradient <- prepareGradient(m_fit, XDataNew = XData_new, sDataNew = list(sample = xy))
 ```
 
 Finally, we're ready to make predictions. We'll generate an entire posterior predictive distribution (i.e., predictions for our sample of our posterior distribution of parameters), from which we'll summarise as the both the mean predicted abundance value (`preds_abund`) and mean predicted probability of occurrence (`preds_occur`).
