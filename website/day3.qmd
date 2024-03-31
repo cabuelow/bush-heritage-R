@@ -6,7 +6,7 @@ title: "Statistical Modelling in R (Part 2)"
 
 ###### **These files may change before the day of the course**
 
-Access the course [notes](Statistical-modelling-Part_2.html){target="_blank"} and download the [models we will use here](models.zip){target="_blank"}.
+Access the course [notes](Statistical-modelling-Part_2.html){target="_blank"} and download the [models we will use here](models-functions.zip){target="_blank"}.
 
 ### Timetable
 

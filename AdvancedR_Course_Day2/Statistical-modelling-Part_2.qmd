@@ -24,7 +24,7 @@ We'll also compare multivariate generalised linear models (i.e., model-based ord
 
 Finally, we'll show how these techniques can be used to model joint species distributions, and how **R** can handle spatial data.
 
-**Download the models you'll need for today from [here](models.zip)**
+**Download the models you'll need for today from [here](models-functions.zip)**
 
 ## Frequentist vs. Bayesian
 
@@ -537,11 +537,12 @@ Now check the posterior distribution for the alpha parameter contains the known 
 plot(mpost$Alpha[[1]][,1])
 ```
 
-Looks great. We can also get a summary for alpha providing the mean estimate. 
+Looks great. We can also get a summary for alpha providing the mean estimate.
 
 ```{r}
 summary(mpost$Alpha[[1]][,1])
 ```
+
 Very close to 0.35, our *known truth*.
 
 Now let's plot up the effect sizes with 50% and 95% credible intervals representing uncertainty in the parameter estimates. The credible intervals indicate whether there is weak (50% credible interval does not cross 0) or strong (95% credible interval does not cross 0) evidence for an effect.
