@@ -135,8 +135,7 @@ In the above example we only have one explanatory variable ($X_{1}$), but we can
 
 When we're fitting **general** linear models, we assume that $\epsilon$, the error term, is drawn from a normal (i.e., gaussian) distribution. We can write that assumption mathematically as,
 
-$$\epsilon \sim Normal(0, \sigma)$$ 
-where the mean is 0 and $\sigma$ is the standard deviation.
+$$\epsilon \sim Normal(0, \sigma)$$ where the mean is 0 and $\sigma$ is the standard deviation.
 
 We would expect this if our response variable ($y$) is continuous and unbounded (could potentially be any number between $-∞$ and $∞$). (Note: In the next section, we'll learn how to fit **generalised** linear models which allow us to model non-normal error distributions necessary for count data, for example.)
 
@@ -413,13 +412,13 @@ plot(m)
 
 Looks great.
 
-**One important thing to note is that whenever you include a categorical explanatory variable in a model in R, you will need to have it as `factor` data type (instead of `character`). That way R recognises that there are different levels in the categorical predictor, and can dummy code accordingly. You can use the function `factor` to convert a variable to factor data type.**
+One important thing to note is that whenever you include a categorical explanatory variable in a model in R, you will need to have it as `factor` data type (instead of `character`). That way R recognises that there are different levels in the categorical predictor, and can dummy code accordingly. You can use the function `factor` to convert a variable to factor data type.
 
 ```{r}
 ?factor
 ```
 
-Let's try coding Fire as character string instead of zeros and ones and see what happens and why we need to change `characters` to \`factors when modelling. We'll use three categories instead of 2 because its more interesting
+Let's try coding Fire as character string instead of zeros and ones and see what happens and why we need to change `characters` to `factors` when modelling. We'll use three categories instead of 2 because its more interesting
 
 ```{r}
 set.seed(123)
@@ -436,7 +435,6 @@ X <- c(rep(c('Unburned', 'SortOfBurned', 'Burned'), n/3), 'Burned') # un-burned 
 e <- rnorm(n, e_mu, e_sd) # natural error
 
 # dummy code
-
 X1 <- ifelse(X == 'SortOfBurned', 1, 0)
 X2 <- ifelse(X == 'Burned', 1, 0)
 
@@ -461,7 +459,11 @@ ggplot(df) +
 Why did `ggplot` switch the order around. It uses alphabetical order for character strings. So let's turn Fire into an factor and set the reference level to be 'Unburned'.
 
 ```{r}
+#| output: false
 library(dplyr)
+```
+
+```{r}
 df <- df %>% 
   mutate(Fire_severity = factor(Fire_severity, levels = c('Unburned', 'SortOfBurned', 'Burned')))
 str(df)
@@ -573,7 +575,13 @@ m <- lm(Species_abundance ~ Fire_severity, data = df)
 summary(m)
 ```
 
-Right away, we can see that the slope ($b_{1}$) is biased from the **known truth**.
+So the general linear model is on average making biased predictions (the median residual value is -0.4). But the coefficient estimates aren't that bad - it's estimated average species abundance when Fire severity is 0 to be ~10 (the y-intercept) and the slope to be ~-5, meaning that with a one unit increase in Fire severity, species abundance will decrease by 5 units. 
+
+That is pretty close to what we simulated - a 2 factor decrease in species abundance with a one unit increase in fire severity.
+
+```{r}
+exp(b0+b1) # expected species abundance with a one unit increase in Fire severity
+```
 
 Now check the diagnostics.
 
@@ -582,7 +590,15 @@ par(mfrow = c(2,2))
 plot(m)
 ```
 
-Not perfect, but actually not too bad given we know this is a mis-specified model. Let's try a **generalised linear model** with a poisson family (error distribution) and a log link function instead.
+Again, not too bad given we know this is a mis-specified model. So what's the problem with using this model? Well, imagine what would happen if Fire severity increased by 3 units instead of 1, what would the model predict for species abundance?
+
+```{r}
+10 + (-5*4) # predicting species abundance with a 3 unit increase in Fire severity with the additive, general linear model
+```
+
+It has predicted negative species abundance, which of course we know is not possible. 
+
+So let's try a **generalised linear model** with a poisson family (error distribution) and a log link function instead. Remember the purpose of the log link function is to ensure predictions are equal to or greater than zero, and also means that we interpret this as a multiplicative model (instead of additive).
 
 ```{r}
 m <- glm(Species_abundance ~ Fire_severity, data = df, family = poisson(link = 'log'))
