@@ -499,7 +499,7 @@ par(mfrow = c(5,2)) # set graphical parameters
 rq_resid_mult(preds, m_fit)
 ```
 
-Much better!
+Much better.
 
 We should also check for spatial autocorrelation in the residuals. We'll do that visually by mapping the residuals.
 
@@ -523,9 +523,9 @@ print(data.frame(beta, spp = colnames(m_fit$Y)))
 summary(mpost$Beta)$statistics
 ```
 
-Odd, now the coefficients seem even more biased from the *known truth* - in fact the sign of the b1 coefficients for spp 2 and spp 4 have switched. What's going on? When we include a random effect in our generalised linear model, the slope coefficients are no longer interpreted as the mean expected change in species abundance ($y$) in response to a one unit shift in fire severity ($X$), but instead as the mean expected change in species abundance ($y$) in response to a one unit shift in fire severity ($X$) **conditional on the spatial random effect**. So, although the coefficients seem more biased from our *known truths* they are actually the *known truths* conditional on spatial autocorrelation.
+So the coefficients are still biased from the *known truth* even though we've accounted for spatial autocorrelation. This is likely due to the random variation in the data, and so estimates might improve if we up the sample size. But now that we've accounted for dependencies in our observations due to spatial autocorrelation, we can be confident that we have adequately represented uncertainty in the coefficient estimates. Check out [this paper](https://www.nature.com/articles/s41586-024-07236-z) for a nice example of what happens when we don't properly account for lack of independence of observations. 
 
-We can check whether the model has recovered the scale of spatial autocorrelation that we simulated in the data. Let's remind ourselves of what that was:
+We can also check whether the model has recovered the scale of spatial autocorrelation that we simulated in the data. Let's remind ourselves of what that was:
 
 ```{r}
 alpha.spatial
@@ -537,13 +537,13 @@ Now check the posterior distribution for the alpha parameter contains the known 
 plot(mpost$Alpha[[1]][,1])
 ```
 
-Looks great. We can also get a summary for alpha providing the mean estimate.
+Looks good. We can also get a summary for alpha providing the mean estimate.
 
 ```{r}
 summary(mpost$Alpha[[1]][,1])
 ```
 
-Very close to 0.35, our *known truth*.
+So again, the mean estimate is slightly biased from 0.35, our *known truth*, but could improve with more data.
 
 Now let's plot up the effect sizes with 50% and 95% credible intervals representing uncertainty in the parameter estimates. The credible intervals indicate whether there is weak (50% credible interval does not cross 0) or strong (95% credible interval does not cross 0) evidence for an effect.
 
@@ -601,18 +601,18 @@ OmegaCor <- computeAssociations(m_fit)
 ggcorrplot(OmegaCor[[1]]$mean, tl.cex = 7)
 ```
 
-So, after accounting for variability in species abundance due to fire severity, we infer that abundances of species 1 are positively correlated with abundances of species 2, and negatively correlated with species 3 and 4. This is exactly what we expected, given how we simulated spatial autocorrelation in the data.
+So, after accounting for variability in species abundance due to fire severity, we infer that abundances of species 1 are positively correlated with abundances of species 2, and negatively correlated with species 3 and 4. This is exactly what we expected, given how we simulated their reponses to the spatial latent variable.
 
 Now we can extract the posterior means of the $\eta$ and $\lambda$ parameters, which represent the site loadings ($\eta$) and species loadings ($\lambda$) on the spatial latent variables (random effects) estimated by our model. We can use these latent variables to plot an ordination. *Note this will look different from the nMDS ordination we made earlier, as what we've done here is a constrained ordination. The nMDS is an unconstrained ordination*.
 
 ```{r}
 spp <- colnames(m_fit$Y)
-LVs <- c('Latent.variable.1', 'Latent.variable.2', 'Latent.variable.3', 'Latent.variable.4')
+LVs <- c('Latent.variable.1', 'Latent.variable.2', 'Latent.variable.3', 'Latent.variable.4', 'Latent.variable.5')
 site_scores <- data.frame(getPostEstimate(m_fit, "Eta")$mean)
 colnames(site_scores) <- LVs
 species_scores <- data.frame(t(getPostEstimate(m_fit, "Lambda")$mean))
 colnames(species_scores) <- LVs
-species_scores$spp <- spp
+species_scores$LV <- spp
 site_scores <- data.frame(site_scores, Fire_severity = df$Fire_severity) %>% mutate(Fire_class = factor(ifelse(Fire_severity > 0.5, 'Severe', 'Less severe')))
 ```
 
@@ -628,7 +628,7 @@ ggplot() +
   theme_classic()
 ```
 
-Now that we've removed variability in species abundances due to fire severity, we can see site species composition and abundance is longer are associated fire severity.
+Now that we've removed variability in species abundances due to fire severity, we can see species composition and abundance is longer are associated fire severity.
 
 ### Predicting and mapping species abundance everywhere
 
@@ -674,7 +674,8 @@ qtm(grid_fire_i)
 Now we can make predictions of species abundance using the grid of interpolated fire severity. First, we need to set up our new data for making predictions by extracting fire severity values from our interpolated raster.
 
 ```{r}
-XData_new <- data.frame(Fire_severity = values(grid_fire_i))
+XData_new <- data.frame(values(grid_fire_i))
+colnames(XData_new) <- 'Fire_severity'
 ```
 
 Now we can prepare a gradient for making predictions that combines our new $X$ data and values for a new spatial random effect.
