@@ -444,21 +444,7 @@ par(mfrow = c(5,2)) # set graphical parameters
 rq_resid_mult(preds, m_fit)
 ```
 
-Species 1 looks okay, but there are some strong patterns in the residuals vs. fitted plots for species 2-5. What's going on here?
-
-Let's also check whether out coefficient estimates are biased from the **known truths**. Let's remind ourselves what those were for each species.
-
-```{r}
-print(data.frame(beta, spp = colnames(y)))
-```
-
-```{r}
-summary(mpost$Beta)$statistics
-```
-
-So definitely some bias, although generally the sign of the effects are correct (i.e. negative vs. positive).
-
-Let's see if we can improve our model by including a spatial random effect to account for spatial autocorrelation.
+Species 5 looks okay, but there are some patterns in the residuals vs. fitted plots for species 1-4. What's going on here? Let's see if we can improve our model by including a spatial random effect to account for spatial autocorrelation.
 
 ### Accounting for spatial autocorrelation
 
@@ -499,7 +485,7 @@ par(mfrow = c(5,2)) # set graphical parameters
 rq_resid_mult(preds, m_fit)
 ```
 
-Much better.
+Better than the previous model with a non-spatial random effect.
 
 We should also check for spatial autocorrelation in the residuals. We'll do that visually by mapping the residuals.
 
@@ -513,7 +499,7 @@ qtm(qresid.sf, dots.col = 'residuals', dots.size = 'residuals_size') + tm_facets
 
 There isn't any strong spatial clustering of residuals, that's good.
 
-Now, let's see if our coefficient estimates are closer to **known truths**.
+Now, let's see how our coefficient estimates compare to **known truths**.
 
 ```{r}
 print(data.frame(beta, spp = colnames(m_fit$Y)))
@@ -523,27 +509,26 @@ print(data.frame(beta, spp = colnames(m_fit$Y)))
 summary(mpost$Beta)$statistics
 ```
 
-So the coefficients are still biased from the *known truth* even though we've accounted for spatial autocorrelation. This is likely due to the random variation in the data, and so estimates might improve if we up the sample size. But now that we've accounted for dependencies in our observations due to spatial autocorrelation, we can be confident that we have adequately represented uncertainty in the coefficient estimates. Check out [this paper](https://www.nature.com/articles/s41586-024-07236-z) for a nice example of what happens when we don't properly account for lack of independence of observations. 
+The coefficients are a bit biased from the *known truths*, even though we've accounted for spatial autocorrelation. This illustrates an important point regarding interpretation of beta coefficients now that we have included a random effect in the model. The beta coefficients are  *conditional* on the random effect. This means that, the y-intercepts (b0 coefficients) are the average predicted species abundance when Fire severity = 0, *conditional* on the random effect (spatial autocorrelation). Similarly, the slopes (b1 coefficients) are the average predicted change in species abundance in response to a one unit increase in fire severity, *conditional* on the random effect. 
 
-We can also check whether the model has recovered the scale of spatial autocorrelation that we simulated in the data. Let's remind ourselves of what that was:
+Let's remind ourselves what those conditional expectations look like. We plotted this earlier.
 
-```{r}
-alpha.spatial
+```{r,fig.width=3,fig.height=2.5, fig.align='center'}
+ggplot(df_long) +
+  aes(x = Fire_severity, y = abundance, col = spp) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = 'lm') +
+  ggtitle('A) Fire Severity') +
+  ylab('Species abundance') +
+  xlab('Fire Severity') +
+  theme_classic()
 ```
 
-Now check the posterior distribution for the alpha parameter contains the known truth.
+So, we would in fact expect the *conditional* y-intercept for species 3 to be on average higher than the other species. Similarly, we would expect the y-intercept for species 2 to be on average lower than the other. So our model has done a good job of capturing this.
 
-```{r,fig.width=7,fig.height=2.5, fig.align='center'}
-plot(mpost$Alpha[[1]][,1])
-```
+We would also expect that, *conditional* on spatial autocorrelation, the abundance of species 3 to decrease slightly with increasing Fire severity - similar to species 2. The model has captured this too. 
 
-Looks good. We can also get a summary for alpha providing the mean estimate.
-
-```{r}
-summary(mpost$Alpha[[1]][,1])
-```
-
-So again, the mean estimate is slightly biased from 0.35, our *known truth*, but could improve with more data.
+Finally, now that we've accounted for dependencies in our observations due to spatial autocorrelation, we can be confident that we have adequately represented uncertainty in the coefficient estimates. Check out [this paper](https://www.nature.com/articles/s41586-024-07236-z) for a nice example of what happens when we don't properly account for lack of independence of observations.
 
 Now let's plot up the effect sizes with 50% and 95% credible intervals representing uncertainty in the parameter estimates. The credible intervals indicate whether there is weak (50% credible interval does not cross 0) or strong (95% credible interval does not cross 0) evidence for an effect.
 
