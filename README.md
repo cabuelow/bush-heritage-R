@@ -2,6 +2,10 @@
 
 This repository contains code and data for the Bush Heritage R Workshops: a 1-day introductory and 2-day Advanced R workshop for Bush Heritage Australia. The course material builds in complexity, using datasets commonly used in Bush Heritage analyses and reporting. Participants will need to commit to attending the full day session. Participation in all three days is encouraged but not required. Full course notes will be provided so researchers can revisit material in their own time.
 
+## TODO
+
+- Add this to Advanced Part 2 notes: https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13407
+
 ## Feedback from participants on inital workshop:
 
 Summary - 6 hours/day max, could potentially split 2 day Advanced workshop into 3 days. Alternatively, skip over some of the material and refer participants to the notes.
