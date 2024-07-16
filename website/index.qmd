@@ -1,6 +1,6 @@
 ### Hello!
 
-We're very much looking forward to our 3 days of **R**'ing with you (March 26th - 28th).
+We're very much looking forward to our 3 days of **R**'ing with you (July 23rd - 25th).
 
 In preparation, please install [R](https://rstudio-education.github.io/hopr/starting.html) and [RStudio](https://posit.co/download/rstudio-desktop/). See @sec-install-r for instructions.
 
